@@ -5,212 +5,184 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ubair Nisar's Portfolio</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <style>
-        body {
-            background-color: #f0f4f8;
-        }
-        header {
-            background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
-            color: white;
-        }
-        section {
-            position: relative;
-        }
-        .sprinkle {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            animation: sprinkle 5s infinite;
-        }
-        @keyframes sprinkle {
-            0% {
-                transform: translateY(0) scale(1);
-            }
-            50% {
-                transform: translateY(-30px) scale(1.2);
-            }
-            100% {
-                transform: translateY(0) scale(1);
-            }
-        }
-        .project-slider .slick-slide img {
-            transition: transform 0.3s;
-        }
-        .project-slider .slick-slide img:hover {
-            transform: scale(1.1);
-        }
-        .hover:shadow-lg:hover {
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        }
-    </style>
 </head>
-<body class="text-gray-900">
-
-    <header class="shadow p-6 mb-8">
-        <div class="container mx-auto flex items-center">
-            <div class="w-24 h-24 mr-6 rounded-full overflow-hidden">
-                <img src="profile_photo.png" alt="Ubair Nisar's Photo" class="object-cover w-full h-full">
-            </div>
+<body class="antialiased relative text-gray-600">
+    <div class="absolute w-full min-h-screen">
+      <div class="absolute z-0 top-0 w-full h-1/2 bg-cover bg-bottom pt-20 px-12 text-white text-center" style="background-image: url('https://i.ibb.co/wyRmdTs/background.jpg')"></div>
+  
+    </div>
+    <div class="relative z-10 flex min-h-screen h-auto justify-center items-center">
+      <div class="relative max-w-4xl">
+        <div class="absolute z-10 inset-0 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-lg"></div>
+        <div class="relative z-20 bg-white md:flex justify-between p-12 shadow-lg rounded-lg w-full max-w-4xl">
+          <div class="sm:flex flex-col justify-between space-y-6 py-6 md:pr-10">
             <div>
-                <h1 class="text-4xl font-bold animate__animated animate__fadeInLeft">Ubair Nisar</h1>
-                <p class="text-lg animate__animated animate__fadeInRight">Machine Learning Engineer</p>
+              <h2 class="text-lg">Hello, I am</h2>
+              <h1 class="pt-1 text-5xl font-bold text-gray-800">
+                Ryan Riaz
+              </h1>
             </div>
+            <p class="text-xl leading-relaxed">
+              Full-stack web developer who crafts beautiful
+              websites that help your business grow online
+            </p>
+            <div class="inline-flex text-xl text-gray-600 space-x-5">
+              <a href="#">
+                <ion-icon name="logo-youtube" class="hover:text-red-600"></ion-icon>
+              </a>
+              <a href="#">
+                <ion-icon name="logo-twitter" class="hover:text-blue-500"></ion-icon>
+              </a>
+              <a href="#">
+                <ion-icon name="logo-linkedin" class="hover:text-blue-700"></ion-icon>
+              </a>
+              <a href="#">
+                <ion-icon name="logo-github" class="hover:text-blue-500"></ion-icon>
+              </a>
+            </div>
+          </div>
+          <img src="https://i.ibb.co/zNqGN13/profile.jpg" alt="profile" class="flex-shrink-0 w-80 rounded-full border-6 border-white shadow-md" />
         </div>
-    </header>
-
-    <main class="container mx-auto p-6">
-        <section class="mb-8">
-            <div class="sprinkle" style="top: 20px; left: 30px;"></div>
-            <div class="sprinkle" style="top: 80px; right: 40px;"></div>
-            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Contact Information</h2>
-            <ul class="list-none">
-                <li class="hover:shadow-lg p-2 rounded">Phone: +92(309) 612-8600</li>
-                <li class="hover:shadow-lg p-2 rounded">Location: Islamabad, PK</li>
-                <li class="hover:shadow-lg p-2 rounded">Email: <a href="mailto:ubair.nisar15@gmail.com" class="text-blue-500">ubair.nisar15@gmail.com</a></li>
-                <li class="hover:shadow-lg p-2 rounded">LinkedIn: <a href="https://www.linkedin.com/in/ubair-nisar-18b396297" class="text-blue-500">linkedin.com/in/ubair-nisar-18b396297</a></li>
-            </ul>
-        </section>
-
-        <section class="mb-8">
-            <div class="sprinkle" style="top: 30px; left: 50px;"></div>
-            <div class="sprinkle" style="top: 90px; right: 60px;"></div>
-            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Objective</h2>
-            <p>Experienced Machine Learning Engineer with a strong academic foundation in AI and over a year of hands-on industrial experience tackling real-world challenges. Actively seeking full-time roles to leverage expertise in developing innovative solutions and driving business growth through Artificial Intelligence.</p>
-        </section>
-
-        <section class="mb-8">
-            <div class="sprinkle" style="top: 20px; left: 60px;"></div>
-            <div class="sprinkle" style="top: 100px; right: 30px;"></div>
-            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Education</h2>
-            <p><strong>Bachelor of Artificial Intelligence</strong>, FAST NUCES Islamabad PK (2020 - 2024)</p>
-            <p>Core Courses: Programming for AI, Machine Learning, Computer Vision, NLP and MLOps.</p>
-        </section>
-
-        <section class="mb-8">
-            <div class="sprinkle" style="top: 40px; left: 70px;"></div>
-            <div class="sprinkle" style="top: 120px; right: 20px;"></div>
-            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Skills</h2>
-            <p><strong>Technical Skills:</strong> Python, C++, Open-CV, PyTorch, TensorFlow, Flask, FastAPI, AWS, GCP</p>
-            <p><strong>Soft Skills:</strong> Flexibility, Adaptability, Communication Skills</p>
-        </section>
-
-        <section class="mb-8">
-            <div class="sprinkle" style="top: 50px; left: 40px;"></div>
-            <div class="sprinkle" style="top: 130px; right: 50px;"></div>
-            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Experience</h2>
-            <div class="mb-4">
-                <h3 class="text-xl font-semibold">Machine Learning Engineer (May 2023 - Current)</h3>
-                <p><strong>Cowlar Inc (YC W17)</strong>, Islamabad, PK</p>
-                <ul class="list-disc pl-5">
-                    <li>Achieved 95% accuracy for fibre colour detection using object detection and computer vision techniques for industrial automation.</li>
-                    <li>Led the development of a Resume Extraction Tool into Tables using RAG and LLMs(GPTs) which led to 100% improvement in time compared to the human annotator.</li>
-                    <li>Developed a Scalable Queue Management Solution that provided customer and cashier waiting analytics, using real-time CCTV footage, Object Detection, and Tracking.</li>
-                    <li>Implemented the end-to-end training pipeline for Action Detection and Classification (add, remove, other) for Retail smart carts.</li>
-                </ul>
-            </div>
-            <div class="mb-4">
-                <h3 class="text-xl font-semibold">Summer Research Intern (Jun 2023 - Jul 2023)</h3>
-                <p><strong>Iknex Lab</strong>, Islamabad, PK</p>
-                <ul class="list-disc pl-5">
-                    <li>Transformed lengthy excel data into a structured Neo4j graph, defining nodes (ships, ports, routes, locations) and relationships for advanced analytics.</li>
-                    <li>Enabled visualization and analysis of maritime data, improving anomaly detection along the journey of a ship.</li>
-                </ul>
-            </div>
-            <div class="mb-4">
-                <h3 class="text-xl font-semibold">Flask Lead (Feb 2023 - Apr 2023)</h3>
-                <p><strong>Bytewise Limited</strong>, Remote</p>
-                <ul class="list-disc pl-5">
-                    <li>Led Flask development efforts, overseeing task assignments and guiding team members to achieve project objectives effectively.</li>
-                    <li>Fostered a collaborative work environment by providing expert guidance and support, resulting in streamlined workflows and successful project outcomes.</li>
-                </ul>
-            </div>
-            <div class="mb-4">
-                <h3 class="text-xl font-semibold">Freelance Software Engineer (June 2022 - May 2023)</h3>
-                <p><strong>Freelancing</strong>, Remote</p>
-                <ul class="list-disc pl-5">
-                    <li>Developed and deployed a plant classification model using VGG Net and deployed it on Flask, achieving 100% client satisfaction.</li>
-                    <li>Engineered an object-oriented hotel management system for a client's project in C++, delivering a fully functional solution.</li>
-                    <li>Designed a RAG Pipeline for PDF question answering with LlamaIndex and Streamlit, enriching document-based query functionalities.</li>
-                </ul>
-            </div>
-        </section>
-
-        <section class="mb-8">
-            <div class="sprinkle" style="top: 20px; left: 50px;"></div>
-            <div class="sprinkle" style="top: 70px; right: 40px;"></div>
-            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Projects</h2>
-            <div class="project-slider">
-                <div>
-                    <h3 class="text-xl font-semibold">CogniVision(FYP) - AI enhanced video accessibility</h3>
-                    <p>Cognivision enables semantic segmentation of YouTube videos into chunks, interactive transcripts, PDF generation, and contextual chat with video features, enhancing content accessibility and user engagement.</p>
-                </div>
-                <div>
-                    <h3 class="text-xl font-semibold">Flutter App for Visually Impaired</h3>
-                    <p>Developed a Flutter app that uses a TF Lite YOLOv5 model trained on the COCO dataset, providing real-time object detection with speech output for the visually impaired.</p>
-                </div>
-                <div>
-                    <h3 class="text-xl font-semibold">Borehole Document Parser</h3>
-                    <p>Developed a tool for extracting structured information from borehole logs (Image Format) using DONUT (OCR-free Document Understanding Transformer).</p>
-                </div>
-                <div>
-                    <h3 class="text-xl font-semibold">Real Time ASCII Camera</h3>
-                    <p>A Tkinter based desktop app that converts the camera feed into colorful customized ASCII characters. <a href="https://github.com/ubairnisar/ASCII-Cam" class="text-blue-500">Try it here</a></p>
-                </div>
-                <div>
-                    <h3 class="text-xl font-semibold">Bleed the Smart Way</h3>
-                    <p>Bleed is a blood donation and receiving app made on Flask that connects blood donors with those in need of blood transfusions. It aims to make the process of finding and donating blood more efficient and convenient for both donors and recipients. <a href="https://github.com/ubairnisar/bleed" class="text-blue-500">Try it here</a></p>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-8">
-            <div class="sprinkle" style="top: 30px; left: 70px;"></div>
-            <div class="sprinkle" style="top: 90px; right: 60px;"></div>
-            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Extra-Curricular Activities</h2>
-            <ul class="list-disc pl-5">
-                <li>Served as a Vice Head of GDSC AI/DS Fast Islamabad</li>
-                <li>Held a Seminar about "Navigating Career Across the World"</li>
-                <li>Participated and Won Runner Up Award in "Bug Hunting Competition NASCON"</li>
-            </ul>
-        </section>
-
-        <section class="mb-8">
-            <div class="sprinkle" style="top: 40px; left: 60px;"></div>
-            <div class="sprinkle" style="top: 120px; right: 20px;"></div>
-            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Achievements</h2>
-            <ul class="list-disc pl-5">
-                <li>Recognized thrice on the Dean's List, showcasing consistent academic excellence and dedication. <a href="https://www.nu.edu.pk/Campus/Islamabad/DeanLists" class="text-blue-500">(Reference)</a></li>
-                <li>Bronze Medalist for exemplary performance during my third semester.</li>
-                <li>First one in my batch to secure a job offer due to exceptional skills.</li>
-            </ul>
-        </section>
-    </main>
-
-    <footer class="bg-gray-800 text-gray-100 p-6 mt-8">
-        <div class="container mx-auto text-center">
-            <p>&copy; 2024 Ubair Nisar. All rights reserved.</p>
+      </div>
+    </div>
+    <section class="bg-gray-50 pt-20 pb-28 px-8">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center">
+          <h1 class="text-6xl font-bold text-gray-800">Services</h1>
+          <p class="pt-2">Here's what I offer</p>
         </div>
-    </footer>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $('.project-slider').slick({
-                dots: true,
-                infinite: true,
-                speed: 300,
-                slidesToShow: 1,
-                adaptiveHeight: true,
-                autoplay: true,
-                autoplaySpeed: 2000,
-            });
-        });
-    </script>
-</body>
+        <div class="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
+          <div class="relative">
+            <div class="absolute z-10 inset-0 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-lg"></div>
+  
+            <div class="relative z-20 bg-white h-full rounded-md shadow-md px-10 py-12">
+              <ion-icon name="phone-portrait-outline" class="text-5xl text-cyan-500"></ion-icon>
+              <h2 class="pt-3 font-bold text-2xl">
+                Responsive Websites
+              </h2>
+              <p class="pt-3">
+                Lorem ipsum dolor sit amet consectetur
+                adipisicing elit. Consequuntur aperiam quibusdam
+                repudiandae et necessitatibus culpa libero
+                mollitia.
+              </p>
+            </div>
+          </div>
+          <div class="relative">
+            <div class="absolute z-10 inset-0 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-lg"></div>
+  
+            <div class="relative z-20 bg-white h-full rounded-md shadow-md px-10 py-12">
+              <ion-icon name="layers-outline" class="text-5xl text-cyan-500"></ion-icon>
+              <h2 class="pt-3 font-bold text-2xl">Web Apps</h2>
+              <p class="pt-3">
+                Lorem ipsum dolor sit amet consectetur
+                adipisicing elit. Consequuntur aperiam quibusdam
+                repudiandae et necessitatibus culpa libero
+                mollitia.
+              </p>
+            </div>
+          </div>
+          <div class="relative">
+            <div class="absolute z-10 inset-0 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-lg"></div>
+  
+            <div class="relative z-20 bg-white h-full rounded-md shadow-md px-10 py-12">
+              <ion-icon name="chatbubbles-outline" class="text-5xl text-cyan-500"></ion-icon>
+              <h2 class="pt-3 font-bold text-2xl">
+                Consultation
+              </h2>
+              <p class="pt-3">
+                Lorem ipsum dolor sit amet consectetur
+                adipisicing elit. Consequuntur aperiam quibusdam
+                repudiandae et necessitatibus culpa libero
+                mollitia.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="py-20 px-8">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center">
+          <h1 class="text-6xl font-bold text-gray-800">Work</h1>
+          <p class="pt-2">The best of my works</p>
+        </div>
+        <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-14">
+          <div class="bg-white rounded-md shadow-md lg:col-span-2">
+            <img src="https://i.ibb.co/S3WsBXd/work1.jpg" alt="work1" class="object-cover w-full h-80" />
+            <div class="p-8">
+              <h3 class="font-bold text-2xl">Task Management</h3>
+              <p class="pt-3">
+                Lorem ipsum dolor sit amet consectetur
+                adipisicing elit. Repellat sequi minima vero
+                sunt perferendis.
+              </p>
+              <a href="#" class="inline-block mt-4 px-6 py-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 rounded-md shadow-md text-sm font-bold text-white">View More</a>
+            </div>
+          </div>
+          <div class="bg-white rounded-md shadow-md">
+            <img src="https://i.ibb.co/0ChMRxf/work2.jpg" alt="work2" class="object-cover w-full h-80" />
+            <div class="p-8">
+              <h3 class="font-bold text-2xl">My Team Builder</h3>
+              <p class="pt-3">
+                Lorem ipsum dolor sit amet consectetur
+                adipisicing elit.
+              </p>
+              <a href="#" class="inline-block mt-4 px-6 py-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 rounded-md shadow-md text-sm font-bold text-white">View More</a>
+            </div>
+          </div>
+          <div class="bg-white rounded-md shadow-md">
+            <img src="https://i.ibb.co/CwbrMdm/work3.jpg" alt="work3" class="object-cover w-full h-80" />
+            <div class="p-8">
+              <h3 class="font-bold text-2xl">
+                Currency Converter
+              </h3>
+              <p class="pt-3">
+                Lorem ipsum dolor sit amet consectetur
+                adipisicing elit.
+              </p>
+              <a href="#" class="inline-block mt-4 px-6 py-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 rounded-md shadow-md text-sm font-bold text-white">View More</a>
+            </div>
+          </div>
+          <div class="bg-white rounded-md shadow-md lg:col-span-2">
+            <img src="https://i.ibb.co/6ydZgDS/work4.jpg" alt="work4" class="object-cover w-full h-80" />
+            <div class="p-8">
+              <h3 class="font-bold text-2xl">Unsplash Clone</h3>
+              <p class="pt-3">
+                Lorem ipsum dolor sit amet consectetur
+                adipisicing elit. Repellat sequi minima vero
+                sunt perferendis.
+              </p>
+              <a href="#" class="inline-block mt-4 px-6 py-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 rounded-md shadow-md text-sm font-bold text-white">View More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="pt-20 pb-36 px-8 bg-gray-50">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center">
+          <h1 class="text-6xl font-bold text-gray-800">Contact</h1>
+          <p class="pt-2">Get in touch with me</p>
+        </div>
+      </div>
+      <div class="mt-16 relative max-w-4xl mx-auto">
+        <div class="absolute z-10 inset-0 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-lg"></div>
+        <div class="relative z-20 bg-white rounded-md shadow-md p-12">
+          <form action="">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+              <input type="text" placeholder="Name" class="border border-gray-200 outline-none px-4 py-2 rounded-md hover:border-gray-400 focus:border-gray-400" />
+              <input type="text" placeholder="Email" class="border border-gray-200 outline-none px-4 py-2 rounded-md hover:border-gray-400 focus:border-gray-400" />
+              <input type="text" placeholder="Subject" class="border border-gray-200 outline-none px-4 py-2 rounded-md hover:border-gray-400 focus:border-gray-400 md:col-span-2" />
+              <textarea rows="5" placeholder="Message" class="border border-gray-200 outline-none px-4 py-2 rounded-md hover:border-gray-400 focus:border-gray-400 md:col-span-2"></textarea>
+            </div>
+            <button class="inline-block w-auto mt-4 px-6 py-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 rounded-md shadow-md text-sm font-bold text-white">
+              Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+    <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
+  </body>
 </html>
