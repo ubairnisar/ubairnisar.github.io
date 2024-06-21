@@ -7,51 +7,102 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        body {
+            background-color: #f0f4f8;
+        }
+        header {
+            background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+            color: white;
+        }
+        section {
+            position: relative;
+        }
+        .sprinkle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: sprinkle 5s infinite;
+        }
+        @keyframes sprinkle {
+            0% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-30px) scale(1.2);
+            }
+            100% {
+                transform: translateY(0) scale(1);
+            }
+        }
+        .project-slider .slick-slide img {
+            transition: transform 0.3s;
+        }
+        .project-slider .slick-slide img:hover {
+            transform: scale(1.1);
+        }
+        .hover:shadow-lg:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 text-gray-900">
+<body class="text-gray-900">
 
-    <header class="bg-white shadow p-6 mb-8">
+    <header class="shadow p-6 mb-8">
         <div class="container mx-auto flex items-center">
-            <div class="w-24 h-24 mr-6">
-                <img src="profile_photo.png" alt="Ubair Nisar's Photo" class="rounded-full object-cover w-full h-full">
+            <div class="w-24 h-24 mr-6 rounded-full overflow-hidden">
+                <img src="profile_photo.png" alt="Ubair Nisar's Photo" class="object-cover w-full h-full">
             </div>
             <div>
-                <h1 class="text-4xl font-bold">Ubair Nisar</h1>
-                <p class="text-lg">Machine Learning Engineer</p>
+                <h1 class="text-4xl font-bold animate__animated animate__fadeInLeft">Ubair Nisar</h1>
+                <p class="text-lg animate__animated animate__fadeInRight">Machine Learning Engineer</p>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto p-6">
         <section class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Contact Information</h2>
+            <div class="sprinkle" style="top: 20px; left: 30px;"></div>
+            <div class="sprinkle" style="top: 80px; right: 40px;"></div>
+            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Contact Information</h2>
             <ul class="list-none">
-                <li>Phone: +92(309) 612-8600</li>
-                <li>Location: Islamabad, PK</li>
-                <li>Email: <a href="mailto:ubair.nisar15@gmail.com" class="text-blue-500">ubair.nisar15@gmail.com</a></li>
-                <li>LinkedIn: <a href="https://www.linkedin.com/in/ubair-nisar-18b396297" class="text-blue-500">linkedin.com/in/ubair-nisar-18b396297</a></li>
+                <li class="hover:shadow-lg p-2 rounded">Phone: +92(309) 612-8600</li>
+                <li class="hover:shadow-lg p-2 rounded">Location: Islamabad, PK</li>
+                <li class="hover:shadow-lg p-2 rounded">Email: <a href="mailto:ubair.nisar15@gmail.com" class="text-blue-500">ubair.nisar15@gmail.com</a></li>
+                <li class="hover:shadow-lg p-2 rounded">LinkedIn: <a href="https://www.linkedin.com/in/ubair-nisar-18b396297" class="text-blue-500">linkedin.com/in/ubair-nisar-18b396297</a></li>
             </ul>
         </section>
 
         <section class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Objective</h2>
+            <div class="sprinkle" style="top: 30px; left: 50px;"></div>
+            <div class="sprinkle" style="top: 90px; right: 60px;"></div>
+            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Objective</h2>
             <p>Experienced Machine Learning Engineer with a strong academic foundation in AI and over a year of hands-on industrial experience tackling real-world challenges. Actively seeking full-time roles to leverage expertise in developing innovative solutions and driving business growth through Artificial Intelligence.</p>
         </section>
 
         <section class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Education</h2>
+            <div class="sprinkle" style="top: 20px; left: 60px;"></div>
+            <div class="sprinkle" style="top: 100px; right: 30px;"></div>
+            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Education</h2>
             <p><strong>Bachelor of Artificial Intelligence</strong>, FAST NUCES Islamabad PK (2020 - 2024)</p>
             <p>Core Courses: Programming for AI, Machine Learning, Computer Vision, NLP and MLOps.</p>
         </section>
 
         <section class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Skills</h2>
+            <div class="sprinkle" style="top: 40px; left: 70px;"></div>
+            <div class="sprinkle" style="top: 120px; right: 20px;"></div>
+            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Skills</h2>
             <p><strong>Technical Skills:</strong> Python, C++, Open-CV, PyTorch, TensorFlow, Flask, FastAPI, AWS, GCP</p>
             <p><strong>Soft Skills:</strong> Flexibility, Adaptability, Communication Skills</p>
         </section>
 
         <section class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Experience</h2>
+            <div class="sprinkle" style="top: 50px; left: 40px;"></div>
+            <div class="sprinkle" style="top: 130px; right: 50px;"></div>
+            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Experience</h2>
             <div class="mb-4">
                 <h3 class="text-xl font-semibold">Machine Learning Engineer (May 2023 - Current)</h3>
                 <p><strong>Cowlar Inc (YC W17)</strong>, Islamabad, PK</p>
@@ -90,30 +141,27 @@
         </section>
 
         <section class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Projects</h2>
+            <div class="sprinkle" style="top: 20px; left: 50px;"></div>
+            <div class="sprinkle" style="top: 70px; right: 40px;"></div>
+            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Projects</h2>
             <div class="project-slider">
-                <div class="p-4">
-                    <img src="https://via.placeholder.com/600x400" alt="Project 1" class="rounded-lg shadow-lg mb-4">
-                    <h3 class="text-xl font-semibold">CogniVision(FYP) - AI Enhanced Video Accessibility</h3>
+                <div>
+                    <h3 class="text-xl font-semibold">CogniVision(FYP) - AI enhanced video accessibility</h3>
                     <p>Cognivision enables semantic segmentation of YouTube videos into chunks, interactive transcripts, PDF generation, and contextual chat with video features, enhancing content accessibility and user engagement.</p>
                 </div>
-                <div class="p-4">
-                    <img src="https://via.placeholder.com/600x400" alt="Project 2" class="rounded-lg shadow-lg mb-4">
+                <div>
                     <h3 class="text-xl font-semibold">Flutter App for Visually Impaired</h3>
                     <p>Developed a Flutter app that uses a TF Lite YOLOv5 model trained on the COCO dataset, providing real-time object detection with speech output for the visually impaired.</p>
                 </div>
-                <div class="p-4">
-                    <img src="https://via.placeholder.com/600x400" alt="Project 3" class="rounded-lg shadow-lg mb-4">
+                <div>
                     <h3 class="text-xl font-semibold">Borehole Document Parser</h3>
                     <p>Developed a tool for extracting structured information from borehole logs (Image Format) using DONUT (OCR-free Document Understanding Transformer).</p>
                 </div>
-                <div class="p-4">
-                    <img src="https://via.placeholder.com/600x400" alt="Project 4" class="rounded-lg shadow-lg mb-4">
+                <div>
                     <h3 class="text-xl font-semibold">Real Time ASCII Camera</h3>
-                    <p>A Tkinter-based desktop app that converts the camera feed into colorful customized ASCII characters. <a href="https://github.com/ubairnisar/ASCII-Cam" class="text-blue-500">Try it here</a></p>
+                    <p>A Tkinter based desktop app that converts the camera feed into colorful customized ASCII characters. <a href="https://github.com/ubairnisar/ASCII-Cam" class="text-blue-500">Try it here</a></p>
                 </div>
-                <div class="p-4">
-                    <img src="https://via.placeholder.com/600x400" alt="Project 5" class="rounded-lg shadow-lg mb-4">
+                <div>
                     <h3 class="text-xl font-semibold">Bleed the Smart Way</h3>
                     <p>Bleed is a blood donation and receiving app made on Flask that connects blood donors with those in need of blood transfusions. It aims to make the process of finding and donating blood more efficient and convenient for both donors and recipients. <a href="https://github.com/ubairnisar/bleed" class="text-blue-500">Try it here</a></p>
                 </div>
@@ -121,7 +169,9 @@
         </section>
 
         <section class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Extra-Curricular Activities</h2>
+            <div class="sprinkle" style="top: 30px; left: 70px;"></div>
+            <div class="sprinkle" style="top: 90px; right: 60px;"></div>
+            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Extra-Curricular Activities</h2>
             <ul class="list-disc pl-5">
                 <li>Served as a Vice Head of GDSC AI/DS Fast Islamabad</li>
                 <li>Held a Seminar about "Navigating Career Across the World"</li>
@@ -130,7 +180,9 @@
         </section>
 
         <section class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Achievements</h2>
+            <div class="sprinkle" style="top: 40px; left: 60px;"></div>
+            <div class="sprinkle" style="top: 120px; right: 20px;"></div>
+            <h2 class="text-2xl font-semibold mb-4 animate__animated animate__fadeInUp">Achievements</h2>
             <ul class="list-disc pl-5">
                 <li>Recognized thrice on the Dean's List, showcasing consistent academic excellence and dedication. <a href="https://www.nu.edu.pk/Campus/Islamabad/DeanLists" class="text-blue-500">(Reference)</a></li>
                 <li>Bronze Medalist for exemplary performance during my third semester.</li>
