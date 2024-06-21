@@ -1,7 +1,7 @@
 # Ubair Nisar
 
 <div style="float: right; margin: 0 10px 10px 0;">
-  <img src="photo.png.png" alt="Ubair Nisar's Photo" width="150"/>
+  <img src="profile_photo.png" alt="Ubair Nisar's Photo" width="150"/>
 </div>
 
 **Contact Information:**
