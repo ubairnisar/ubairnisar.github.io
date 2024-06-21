@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ubair Nisar's Portfolio</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
 </head>
 <body class="bg-gray-100 text-gray-900">
 
@@ -89,13 +91,33 @@
 
         <section class="mb-8">
             <h2 class="text-2xl font-semibold mb-4">Projects</h2>
-            <ul class="list-disc pl-5">
-                <li><strong>CogniVision(FYP) - AI Enhanced Video Accessibility:</strong> Cognivision enables semantic segmentation of YouTube videos into chunks, interactive transcripts, PDF generation, and contextual chat with video features, enhancing content accessibility and user engagement.</li>
-                <li><strong>Flutter App for Visually Impaired:</strong> Developed a Flutter app that uses a TF Lite YOLOv5 model trained on the COCO dataset, providing real-time object detection with speech output for the visually impaired.</li>
-                <li><strong>Borehole Document Parser:</strong> Developed a tool for extracting structured information from borehole logs (Image Format) using DONUT (OCR-free Document Understanding Transformer).</li>
-                <li><strong>Real Time ASCII Camera:</strong> A Tkinter-based desktop app that converts the camera feed into colorful customized ASCII characters. <a href="https://github.com/ubairnisar/ASCII-Cam" class="text-blue-500">Try it here</a></li>
-                <li><strong>Bleed the Smart Way:</strong> Bleed is a blood donation and receiving app made on Flask that connects blood donors with those in need of blood transfusions. It aims to make the process of finding and donating blood more efficient and convenient for both donors and recipients. <a href="https://github.com/ubairnisar/bleed" class="text-blue-500">Try it here</a></li>
-            </ul>
+            <div class="project-slider">
+                <div class="p-4">
+                    <img src="https://via.placeholder.com/600x400" alt="Project 1" class="rounded-lg shadow-lg mb-4">
+                    <h3 class="text-xl font-semibold">CogniVision(FYP) - AI Enhanced Video Accessibility</h3>
+                    <p>Cognivision enables semantic segmentation of YouTube videos into chunks, interactive transcripts, PDF generation, and contextual chat with video features, enhancing content accessibility and user engagement.</p>
+                </div>
+                <div class="p-4">
+                    <img src="https://via.placeholder.com/600x400" alt="Project 2" class="rounded-lg shadow-lg mb-4">
+                    <h3 class="text-xl font-semibold">Flutter App for Visually Impaired</h3>
+                    <p>Developed a Flutter app that uses a TF Lite YOLOv5 model trained on the COCO dataset, providing real-time object detection with speech output for the visually impaired.</p>
+                </div>
+                <div class="p-4">
+                    <img src="https://via.placeholder.com/600x400" alt="Project 3" class="rounded-lg shadow-lg mb-4">
+                    <h3 class="text-xl font-semibold">Borehole Document Parser</h3>
+                    <p>Developed a tool for extracting structured information from borehole logs (Image Format) using DONUT (OCR-free Document Understanding Transformer).</p>
+                </div>
+                <div class="p-4">
+                    <img src="https://via.placeholder.com/600x400" alt="Project 4" class="rounded-lg shadow-lg mb-4">
+                    <h3 class="text-xl font-semibold">Real Time ASCII Camera</h3>
+                    <p>A Tkinter-based desktop app that converts the camera feed into colorful customized ASCII characters. <a href="https://github.com/ubairnisar/ASCII-Cam" class="text-blue-500">Try it here</a></p>
+                </div>
+                <div class="p-4">
+                    <img src="https://via.placeholder.com/600x400" alt="Project 5" class="rounded-lg shadow-lg mb-4">
+                    <h3 class="text-xl font-semibold">Bleed the Smart Way</h3>
+                    <p>Bleed is a blood donation and receiving app made on Flask that connects blood donors with those in need of blood transfusions. It aims to make the process of finding and donating blood more efficient and convenient for both donors and recipients. <a href="https://github.com/ubairnisar/bleed" class="text-blue-500">Try it here</a></p>
+                </div>
+            </div>
         </section>
 
         <section class="mb-8">
@@ -110,18 +132,33 @@
         <section class="mb-8">
             <h2 class="text-2xl font-semibold mb-4">Achievements</h2>
             <ul class="list-disc pl-5">
-                <li>Recognized thrice on the Dean's List, showcasing consistent academic excellence and dedication. <a href="https://www.nu.edu.pk/Campus/Islamabad/DeanLists" class="text-blue-500">Reference</a></li>
+                <li>Recognized thrice on the Dean's List, showcasing consistent academic excellence and dedication. <a href="https://www.nu.edu.pk/Campus/Islamabad/DeanLists" class="text-blue-500">(Reference)</a></li>
                 <li>Bronze Medalist for exemplary performance during my third semester.</li>
                 <li>First one in my batch to secure a job offer due to exceptional skills.</li>
             </ul>
         </section>
     </main>
 
-    <footer class="bg-white shadow p-6 mt-8">
+    <footer class="bg-gray-800 text-gray-100 p-6 mt-8">
         <div class="container mx-auto text-center">
             <p>&copy; 2024 Ubair Nisar. All rights reserved.</p>
         </div>
     </footer>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.project-slider').slick({
+                dots: true,
+                infinite: true,
+                speed: 300,
+                slidesToShow: 1,
+                adaptiveHeight: true,
+                autoplay: true,
+                autoplaySpeed: 2000,
+            });
+        });
+    </script>
 </body>
 </html>
