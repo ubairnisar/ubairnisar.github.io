@@ -1,188 +1,875 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ubair Nisar's Portfolio</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title> Ubair Nisar | ML Engineer </title>
+
+    <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+:root{
+    --black:#000;
+    --white:#fff;
+    --gray:#333;
+    --primary:#8BFBFF;
+    --secondary:#FB38C8;
+    --third:#FF602A;
+
+    
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: all .3s;
+}
+body{
+    background-color: var(--black);
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+}
+body.dark{
+    transition: all 0.3s ease;
+    --black:#fff;
+    --white:#000;
+    --gray:#333;
+    --secondary:#8BFBFF;
+    --primary:#FB38C8;
+    --third:#FF602A;
+}
+body.overflow{
+    overflow: hidden;
+}
+
+a{
+    text-decoration: none;
+}
+li{
+    list-style: none;
+}
+.pre-loader{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--gray);
+}
+.pre-loader i{
+    color: var(--primary);
+    font-size: 50px;
+    animation: rotate  2s linear infinite;
+}
+.day{
+    position: fixed;
+    top: 200px;
+    right: 10px;
+    z-index: 10;
+    border: none;
+    background-color: transparent;
+    animation: rotate 2s linear infinite;
+}
+.day i{
+    font-size: 30px;
+    color: var(--white);
+}
+.night{
+    display: none;
+    position: fixed;
+    top: 200px;
+    right: 10px;
+    z-index: 10;
+    border: none;
+    background-color: transparent;
+    animation: rotate 2s linear infinite;
+}
+.night i{
+    font-size: 30px;
+    color: var(--white);
+}
+header{
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    background-color: var(--black);
+}
+.navbar{
+    padding: 40px 100px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.logo{
+    color: var(--white);
+    user-select: none;
+}
+.navbar ul {
+    margin-left: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    transition: all .3s;
+}
+.navbar ul li a{
+    color: var(--white);
+    margin: 0 20px;
+}
+.navbar ul li:hover a:not(.active){
+    color: var(--primary);
+}
+.navbar ul li a.active{
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary);
+}
+.ham-btn{
+    color: var(--white);
+    font-size: 25px;
+    display: none;
+}.ham-btn:hover{
+    color: var(--primary);
+    transform: scale(1.1);
+}
+.row{
+    display: none;
+    width: auto;
+    margin-left: 150px;
+    margin-top: 60px;
+    justify-content: center;
+}
+.heading{
+    margin-top: 30px;
+    flex-basis: 50%;
+}
+.heading h3{
+    color: var(--gray);
+    font-size: 40px;
+    text-transform: uppercase;
+    font-weight: 900;
+}
+.heading h1{
+    line-height: 20px;
+    font-size: 50px;
+    letter-spacing: -4px;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 20px;
+}
+.heading h1 span{
+    color: var(--primary);
+}
+.heading h4{
+    color: var(--white);
+    font-size: 20px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 30px;
+    letter-spacing: 5px;
+}
+.heading p{
+    width: 80%;
+    margin-bottom: 30px;
+    color: var(--white);
+}
+.btn{
+    width: 165px;
+    height: 35px;
+    font-size: 15px;
+    border: none;
+    position: relative;
+    font-weight: 600;
+    overflow: hidden;
+    cursor: pointer;
+    color: var(--black);
+    transition: all 0.3s;
+    background-color: var(--white);
+}
+.btn:before{
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-100px) rotate(45deg);
+    background-color: var(--secondary);
+    transition: transform 0.3s;
+}
+.btn:after{
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-110px) rotate(45deg);
+    background-color: var(--primary);
+    transition: transform 0.3s;
+}
+.btn:hover{
+    border: 1px solid var(--white);
+    color: var(--white);
+    background-color: var(--black);
+}
+.btn:hover::before{
+    transform: translateX(100px) rotate(45deg);
+}
+.btn:hover::after{
+    transform: translateX(110px) rotate(45deg);
+}
+.header-img{
+    flex-basis: 50%;
+}
+.header-img img{
+    width: 370px;
+    transform: translateY(50px);
+}
+
+.effects span{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 220px;
+    left: -20px;
+    border-radius: 50%;
+    background-color: var(--primary);
+}
+.section{
+    display: flex;
+    width: auto;
+    flex-direction: column;
+    margin: 0px 100px;
+    align-items: center;
+    justify-content: center;
+}
+.skills{
+    display: none;
+}
+.section .section-title{
+    text-transform: uppercase;
+    font-size: 50px;
+    color: var(--white);
+}
+.section .section-desc{
+    text-align: center;
+    color: var(--white);
+}
+.section a{
+    color: var(--primary);
+}
+.skill-container{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+    color: var(--white);
+    text-align: center;
+    margin-top: 50px;
+    grid-auto-rows: minmax(100px, auto);
+}
+.skill h1{
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    color: var(--white);
+}
+.skill h3{
+    color: var(--primary);
+    margin-bottom: 5px;
+    font-weight: 400;
+}
+.skill p{
+    margin-bottom: 10px;
+    font-weight: 300;
+    color: var(--white);
+}
+.skill i{
+    margin-bottom: 10px;
+    font-size: 30px;
+    color: var(--primary);
+}
+.portfolio-container{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    color: var(--white);
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    grid-auto-rows: minmax(100px, auto);
+}
+.portfolio .img{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 200px;
+    border: 1px solid var(--white);
+    border-radius: 10px;
+    position: relative;
+    background-image: url(img1.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.portfolio .pi2{
+    background-image: url(img2.png);
+}
+.portfolio .pi3{
+    background-image: url(img3.png);
+}
+.portfolio .pi4{
+    background-image: url(img4.png);
+}
+.portfolio .pi5{
+    background-image: url(img5.png);
+}
+.portfolio .pi6{
+    background-image: url(img6.png);
+}
+.portfolio .img::before{
+    content: '';
+    position: absolute;
+    opacity: 0;
+    border-radius: 10px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity .3s;
+    backdrop-filter: blur(2px);
+    background-color: rgba(9, 32, 43, 0.493);
+}
+.portfolio .img:hover::before{
+    opacity: 1;
+}
+.portfolio .img p{
+    width: 80%;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity .3s;
+    margin-bottom: 20px;
+    color: white;
+}
+.portfolio .img button {
+    opacity: 0;
+    transition: opacity .3s;
+}
+.portfolio .img:hover p,
+.portfolio .img:hover button{
+    opacity: 1;
+}
+.portfolios{
+    display: none;
+}
+
+.services-container{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+    color: var(--white);
+    text-align: center;
+    margin-top: 50px;
+    grid-auto-rows: minmax(100px, auto);
+}
+.service h1{
+
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    color: var(--white);
+}
+
+.service p{
+    margin-bottom: 10px;
+    font-weight: 300;
+    color: var(--white);
+}
+.service i{
+    margin-bottom: 10px;
+    font-size: 30px;
+    color: var(--primary);
+}
+.services{
+    display: none;
+}
+.contact-container{
+    text-align: center;
+}
+.contact-form{
+    margin-top:50px;
+}
+.contact-form input{
+    margin-bottom: 10px;
+    height: 30px;
+    padding: 10px;
+    outline: none;
+    color: var(--white);
+    background-color: transparent;
+    border: 1px solid var(--white);
+    border-radius: 30px;
+    display: block;
+    width: 400px;
+}
+.contact-form textarea{
+    color: var(--white);
+    margin-bottom: 30px;
+    height: 200px;
+    padding: 20px;
+    outline: none;
+    background-color: transparent;
+    border: 1px solid var(--white);
+    border-radius: 10px;
+    display: block;
+    width: 400px;
+    width: 400px;
+    resize: none;
+}
+.contact{
+    display: none;
+}
+
+
+.sec-dis{
+    display: flex;
+}
+@keyframes rotate {
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+@media screen and (max-width:905px) {
+    header{
+        height: 120vh;
+    }
+    .navbar {
+        padding: 20px 40px;
+    }
+    .navbar ul{
+        position: absolute;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        flex-direction: column;
+        top: 0;
+        left: 0;
+        display: none;
+        visibility: hidden;
+        opacity: 0;
+        transform: translateX(-50px) translateY(-50px);
+        width: 100vw;
+        height: 110vh;
+        z-index: 100;
+        display: none;
+        background-color: var(--black);
+    }
+    .navbar .dis{
+        display: flex;
+        opacity: 1;
+        visibility: visible;
+    }
+    .navbar ul li {
+        margin-top: 30px;
+    }
+    .navbar ul li a{
+        font-size: 20px;
+        position: relative;
+        letter-spacing: 2px;
+    }
+    .navbar ul:before{
+        content: 'Navigation';
+        color: rgba(158, 158, 158, 0.158);
+        font-size: 80px;
+        font-weight: 900;
+        text-transform: uppercase;
+        font-family: 'popins' ,sans-serif;
+        transform: translateY(230px) translateX(-50px) rotate(90deg);
+    }
+    .ham-btn {
+        display: block;
+        opacity: 1;
+        z-index: 100;
+    }
+    
+    .row{
+        flex-direction: column-reverse;
+        text-align: center;
+        height: 100vh;
+        margin: 0 40px;
+    }
+    .heading h1{
+        line-height: 40px;
+    }
+    .heading p{
+        width: 100%;
+
+    }
+    .heading{
+        margin: 0;
+        margin-top: 50px;
+        flex-basis: 100%;
+    }
+   
+    .header-img img{
+        width: 200px;
+    }
+    .effects span:nth-child(2){
+        display: none;
+    }
+    .section-desc{
+        width: 300px;
+    }
+    .skill-container{
+    grid-template-columns: repeat(1, 1fr);
+    grid-auto-rows: minmax(100px, auto);
+    }
+    .skill-container p{
+        width: 300px;
+    }
+    .portfolio-container{
+    grid-template-columns: repeat(1, 1fr);
+    grid-auto-rows: minmax(100px, auto);
+    }
+    .portfolio{
+        width: 300px;
+        margin-bottom: 10px;
+    }
+    .services-container{
+        grid-template-columns: repeat(1, 1fr);
+        grid-auto-rows: minmax(100px, auto);
+        }
+        .services p{
+            width: 300px;
+        }
+        .section .section-title{
+            font-size: 40px;
+        }
+}
+@media screen and (max-width:905px) {
+    .contact-form input{
+        width: 300px;
+    }
+    .contact-form textarea{
+        width: 300px;
+    }
+
+}
+
+  </style>
+
 </head>
-<body class="antialiased relative text-gray-600">
-    <div class="absolute w-full min-h-screen">
-      <div class="absolute z-0 top-0 w-full h-1/2 bg-cover bg-bottom pt-20 px-12 text-white text-center" style="background-image: url('https://i.ibb.co/wyRmdTs/background.jpg')"></div>
-  
-    </div>
-    <div class="relative z-10 flex min-h-screen h-auto justify-center items-center">
-      <div class="relative max-w-4xl">
-        <div class="absolute z-10 inset-0 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-lg"></div>
-        <div class="relative z-20 bg-white md:flex justify-between p-12 shadow-lg rounded-lg w-full max-w-4xl">
-          <div class="sm:flex flex-col justify-between space-y-6 py-6 md:pr-10">
-            <div>
-              <h2 class="text-lg">Hello, I am</h2>
-              <h1 class="pt-1 text-5xl font-bold text-gray-800">
-                Ryan Riaz
-              </h1>
-            </div>
-            <p class="text-xl leading-relaxed">
-              Full-stack web developer who crafts beautiful
-              websites that help your business grow online
-            </p>
-            <div class="inline-flex text-xl text-gray-600 space-x-5">
-              <a href="#">
-                <ion-icon name="logo-youtube" class="hover:text-red-600"></ion-icon>
-              </a>
-              <a href="#">
-                <ion-icon name="logo-twitter" class="hover:text-blue-500"></ion-icon>
-              </a>
-              <a href="#">
-                <ion-icon name="logo-linkedin" class="hover:text-blue-700"></ion-icon>
-              </a>
-              <a href="#">
-                <ion-icon name="logo-github" class="hover:text-blue-500"></ion-icon>
-              </a>
-            </div>
-          </div>
-          <img src="https://i.ibb.co/zNqGN13/profile.jpg" alt="profile" class="flex-shrink-0 w-80 rounded-full border-6 border-white shadow-md" />
+
+<body>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <div class="pre-loader">
+            <i class="fas fa-spinner loader"></i>
         </div>
-      </div>
-    </div>
-    <section class="bg-gray-50 pt-20 pb-28 px-8">
-      <div class="max-w-6xl mx-auto">
-        <div class="text-center">
-          <h1 class="text-6xl font-bold text-gray-800">Services</h1>
-          <p class="pt-2">Here's what I offer</p>
+        <button class="day"><i class="fas fa-sun"></i></button>
+        <button class="night"> <i class="fas fa-moon"></i></button>
+    <header>
+        
+        <nav class="navbar">
+            <h1><a href="index.html" class="logo">Ubair Nisar</a></h1>
+            <ul class="nav">
+                <li><a class="nav-btn1 active" href="#about">About</a></li>
+                <li><a class="nav-btn2" href="#skills">Skills</a></li>
+                <li><a class="nav-btn3" href="#portfolio">Portfolio</a></li>
+                <li><a class="nav-btn4" href="#services">Services</a></li>
+                <li><a class="nav-btn5" href="#contact">Contact</a></li>
+            </ul>
+            <i class="ham-btn fas fa-bars"></i>
+        </nav>
+        <div class="row sec-dis">
+        <div class="heading">
+            <h3>I'm</h3>
+            <h1>Ubair<span>Nisar</span>.</h1>
+            <h4>MACHINE LEARNING ENGINEER</h4>
+            <p>Experienced Machine Learning Engineer with a strong academic foundation in AI and over a year of hands-on industrial experience tackling real-world challenges. Actively seeking full-time roles to leverage expertise in developing innovative solutions and driving business growth through Artificial Intelligence.</p>
+            <button class="btn conbtn">Hire Me</button>
         </div>
-        <div class="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
-          <div class="relative">
-            <div class="absolute z-10 inset-0 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-lg"></div>
-  
-            <div class="relative z-20 bg-white h-full rounded-md shadow-md px-10 py-12">
-              <ion-icon name="phone-portrait-outline" class="text-5xl text-cyan-500"></ion-icon>
-              <h2 class="pt-3 font-bold text-2xl">
-                Responsive Websites
-              </h2>
-              <p class="pt-3">
-                Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Consequuntur aperiam quibusdam
-                repudiandae et necessitatibus culpa libero
-                mollitia.
-              </p>
-            </div>
-          </div>
-          <div class="relative">
-            <div class="absolute z-10 inset-0 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-lg"></div>
-  
-            <div class="relative z-20 bg-white h-full rounded-md shadow-md px-10 py-12">
-              <ion-icon name="layers-outline" class="text-5xl text-cyan-500"></ion-icon>
-              <h2 class="pt-3 font-bold text-2xl">Web Apps</h2>
-              <p class="pt-3">
-                Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Consequuntur aperiam quibusdam
-                repudiandae et necessitatibus culpa libero
-                mollitia.
-              </p>
-            </div>
-          </div>
-          <div class="relative">
-            <div class="absolute z-10 inset-0 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-lg"></div>
-  
-            <div class="relative z-20 bg-white h-full rounded-md shadow-md px-10 py-12">
-              <ion-icon name="chatbubbles-outline" class="text-5xl text-cyan-500"></ion-icon>
-              <h2 class="pt-3 font-bold text-2xl">
-                Consultation
-              </h2>
-              <p class="pt-3">
-                Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Consequuntur aperiam quibusdam
-                repudiandae et necessitatibus culpa libero
-                mollitia.
-              </p>
-            </div>
-          </div>
+        <div class="header-img">
+            <img src="profile_photo.png" alt="">
         </div>
-      </div>
-    </section>
-    <section class="py-20 px-8">
-      <div class="max-w-6xl mx-auto">
-        <div class="text-center">
-          <h1 class="text-6xl font-bold text-gray-800">Work</h1>
-          <p class="pt-2">The best of my works</p>
         </div>
-        <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-14">
-          <div class="bg-white rounded-md shadow-md lg:col-span-2">
-            <img src="https://i.ibb.co/S3WsBXd/work1.jpg" alt="work1" class="object-cover w-full h-80" />
-            <div class="p-8">
-              <h3 class="font-bold text-2xl">Task Management</h3>
-              <p class="pt-3">
-                Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Repellat sequi minima vero
-                sunt perferendis.
-              </p>
-              <a href="#" class="inline-block mt-4 px-6 py-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 rounded-md shadow-md text-sm font-bold text-white">View More</a>
-            </div>
-          </div>
-          <div class="bg-white rounded-md shadow-md">
-            <img src="https://i.ibb.co/0ChMRxf/work2.jpg" alt="work2" class="object-cover w-full h-80" />
-            <div class="p-8">
-              <h3 class="font-bold text-2xl">My Team Builder</h3>
-              <p class="pt-3">
-                Lorem ipsum dolor sit amet consectetur
-                adipisicing elit.
-              </p>
-              <a href="#" class="inline-block mt-4 px-6 py-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 rounded-md shadow-md text-sm font-bold text-white">View More</a>
-            </div>
-          </div>
-          <div class="bg-white rounded-md shadow-md">
-            <img src="https://i.ibb.co/CwbrMdm/work3.jpg" alt="work3" class="object-cover w-full h-80" />
-            <div class="p-8">
-              <h3 class="font-bold text-2xl">
-                Currency Converter
-              </h3>
-              <p class="pt-3">
-                Lorem ipsum dolor sit amet consectetur
-                adipisicing elit.
-              </p>
-              <a href="#" class="inline-block mt-4 px-6 py-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 rounded-md shadow-md text-sm font-bold text-white">View More</a>
-            </div>
-          </div>
-          <div class="bg-white rounded-md shadow-md lg:col-span-2">
-            <img src="https://i.ibb.co/6ydZgDS/work4.jpg" alt="work4" class="object-cover w-full h-80" />
-            <div class="p-8">
-              <h3 class="font-bold text-2xl">Unsplash Clone</h3>
-              <p class="pt-3">
-                Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Repellat sequi minima vero
-                sunt perferendis.
-              </p>
-              <a href="#" class="inline-block mt-4 px-6 py-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 rounded-md shadow-md text-sm font-bold text-white">View More</a>
-            </div>
-          </div>
+        <div class="effects">
+            <span></span>
+            <span></span>
         </div>
-      </div>
-    </section>
-    <section class="pt-20 pb-36 px-8 bg-gray-50">
-      <div class="max-w-6xl mx-auto">
-        <div class="text-center">
-          <h1 class="text-6xl font-bold text-gray-800">Contact</h1>
-          <p class="pt-2">Get in touch with me</p>
-        </div>
-      </div>
-      <div class="mt-16 relative max-w-4xl mx-auto">
-        <div class="absolute z-10 inset-0 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-lg"></div>
-        <div class="relative z-20 bg-white rounded-md shadow-md p-12">
-          <form action="">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-              <input type="text" placeholder="Name" class="border border-gray-200 outline-none px-4 py-2 rounded-md hover:border-gray-400 focus:border-gray-400" />
-              <input type="text" placeholder="Email" class="border border-gray-200 outline-none px-4 py-2 rounded-md hover:border-gray-400 focus:border-gray-400" />
-              <input type="text" placeholder="Subject" class="border border-gray-200 outline-none px-4 py-2 rounded-md hover:border-gray-400 focus:border-gray-400 md:col-span-2" />
-              <textarea rows="5" placeholder="Message" class="border border-gray-200 outline-none px-4 py-2 rounded-md hover:border-gray-400 focus:border-gray-400 md:col-span-2"></textarea>
+        <section class="section skills ">
+            <h1 class="section-title">expertise</h1>
+            <p class="section-desc">I have handfull experience in following skills and still learning and practicing more and more.</p>
+            <div class="skill-container">
+                <div class="skill">
+                    <i class="fas fa-palette"></i>
+                    <h1>designer</h1>
+                    <p>I value simple content structure, clean design patterns, and thoughtful interactions.</p>
+                    <h3>Things I enjoy designing</h3>
+                    <p>UX, UI, Web, Mobile, Apps, Logos</p>
+                    <h3>Design Tools:</h3>
+                    <p>Balsamiq Mockups, Figma, Invision, Marvel, Pen & Paper, Sketch, Webflow, Zeplin</p>
+                </div>
+                <div class="skill">
+                    <i class="fas fa-laptop-code"></i>
+                    <h1>developer</h1>
+                    <p>I like to code things from scratch, and enjoy bringing ideas to life in the browser.</p>
+                    <h3>Languages I speak</h3>
+                    <p>HTML, Pug, Slim, CSS, Sass, Less</p>
+                    <h3>Dev Tools</h3>
+                    <p>Atom, Bitbucket, Bootstrap, Bulma, Codekit, Codepen, Github, Gitlab, Terminal</p>
+                </div>
+                <div class="skill">
+                    <i class="fas fa-code"></i>
+                    <h1>Coder</h1>
+                    <p>I genuinely care about people, and love helping fellow designers work on their craft.</p>
+                    <h3>Languages I speak</h3>
+                    <p>HTML, Pug, Slim, CSS, Sass, Less</p>
+                    <h3>Design Tools</h3>
+                    <p>Balsamiq Mockups
+                        Figma, Invision, Marvel, Pen & Paper, Sketch, Webflow, Zeplin</p>
+                </div>
             </div>
-            <button class="inline-block w-auto mt-4 px-6 py-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 rounded-md shadow-md text-sm font-bold text-white">
-              Send Message
-            </button>
-          </form>
-        </div>
-      </div>
-    </section>
-    <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
-  </body>
+        </section>
+        <section class="section portfolios ">
+            <h1 class="section-title">portfolio</h1>
+            <p class="section-desc">Here are a few design projects I've worked on recently. Want to see more? <a href="mailto:waseemaofficial@gmail.com">Email me</a>.</p>
+            <div class="portfolio-container">
+                
+                <div class="portfolio">
+                    <div class="img">
+                    <p class="portfolio-desc">
+                        Results-oriented, responsive and flexible full service website.</p>
+                        <button class="btn">View Website &#x0003E;</button>
+                        </div>
+                </div>
+                <div class="portfolio">
+                    <div class="img pi2">
+                    <p class="portfolio-desc">
+                        Results-oriented, responsive and flexible full service website.</p>
+                        <button class="btn">View Website &#x0003E;</button>
+                        </div>
+                </div>
+                <div class="portfolio">
+                    <div class="img pi3">
+                    <p class="portfolio-desc">
+                        Results-oriented, responsive and flexible full service website.</p>
+                        <button class="btn">View Website &#x0003E;</button>
+                        </div>
+                </div>
+                <div class="portfolio">
+                    <div class="img pi4">
+                    <p class="portfolio-desc">
+                        Results-oriented, responsive and flexible full service website.</p>
+                        <button class="btn">View Website &#x0003E;</button>
+                        </div>
+                </div>
+                <div class="portfolio">
+                    <div class="img pi5">
+                    <p class="portfolio-desc">
+                        Results-oriented, responsive and flexible full service website.</p>
+                        <button class="btn">View Website &#x0003E;</button>
+                        </div>
+                </div>
+                <div class="portfolio">
+                    <div class="img pi6">
+                    <p class="portfolio-desc">
+                        Results-oriented, responsive and flexible full service website.</p>
+                        <button class="btn">View Website &#x0003E;</button>
+                        </div>
+                </div>
+
+                </div>
+        </section>
+                
+        <section class="section services ">
+            <h1 class="section-title">Services</h1>
+            <p class="section-desc">I'm a bit of a digital product junky. Over the years, I've used hundreds of web and mobile apps in different industries and verticals.</p>
+            <div class="services-container">
+                <div class="service">
+                    <i class="fas fa-fast-forward"></i>
+                    <h1>Fast</h1>
+                    <p>Fast load times and lag free interaction, my highest priority.</p>
+                </div>
+                <div class="service">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h1>Responsive</h1>
+                    <p>My layouts will work on any device, big or small.</p>
+                </div>
+                <div class="service">
+                    <i class="fas fa-lightbulb"></i>
+                    <h1>Intuitive</h1>
+                    <p>Strong preference for easy to use, intuitive UX/UI.</p>
+                </div>
+                <div class="service">
+                    <i class="fas fa-rocket"></i>
+                    <h1>Dynamic</h1>
+                    <p>Websites don't have to be static, I love making pages come to life.</p>
+                </div>
+                <div class="service">
+                    <i class="fas fa-clock"></i>
+                    <h1>on time</h1>
+                    <p>Delivery on time with no issues and bugs.</p>
+                </div>
+                <div class="service">
+                    <i class="fas fa-layer-group"></i>
+                    <h1>Full-Stack</h1>
+                    <p>Full-Stack developer anykind of front-end and back-end work</p>
+                </div>
+            </div>
+        </section>
+        <section class="section contact ">
+            <h1 class="section-title">Contact</h1>
+            <p class="section-desc">Have a question or want to work together? Contact me now or send a email <a href="mailto:waseemaofficial@gmail.com">here</a>.</p>
+            <div class="contact-container">
+
+                <form class="contact-form">
+                    <input type="text" placeholder="Full Name">
+                    <input type="email" placeholder="Email Address">
+                    <input type="text" placeholder="Subject">
+                    <textarea name="message" placeholder="Message Here..."></textarea>
+                    <button class="btn">Send</button>
+                </form>
+
+                </div>
+                </section>
+    </header>
+<script>
+
+const hamBtn = document.querySelector(".ham-btn");
+const nav = document.querySelector(".nav");
+
+hamBtn.addEventListener("click", () => {
+  nav.classList.toggle("dis");
+  document.body.classList.toggle("overflow");
+});
+const day = document.querySelector(".day");
+
+day.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  day.style.display = "none";
+  night.style.display = "block";
+});
+const night = document.querySelector(".night");
+
+night.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  night.style.display = "none";
+  day.style.display = "block";
+});
+
+const preloader = document.querySelector(".pre-loader");
+
+window.addEventListener("load", () => (preloader.style.display = "none"));
+
+
+const conbtn = document.querySelector(".conbtn");
+const navBtn1 = document.querySelector(".nav-btn1");
+const navBtn2 = document.querySelector(".nav-btn2");
+const navBtn3 = document.querySelector(".nav-btn3");
+const navBtn4 = document.querySelector(".nav-btn4");
+const navBtn5 = document.querySelector(".nav-btn5");
+
+const about = document.querySelector(".row");
+const skills = document.querySelector(".skills");
+const portfolio = document.querySelector(".portfolios");
+const services = document.querySelector(".services");
+const contact = document.querySelector(".contact");
+
+navBtn2.addEventListener('click',() =>{
+portfolio.classList.remove("sec-dis")
+about.classList.remove("sec-dis")
+services.classList.remove("sec-dis")
+
+contact.classList.remove("sec-dis")
+
+navBtn5.classList.remove("active")
+
+navBtn1.classList.remove("active")
+navBtn3.classList.remove("active")
+navBtn4.classList.remove("active")
+
+navBtn2.classList.add("active")
+skills.classList.add("sec-dis")
+nav.classList.toggle("dis");
+document.body.classList.toggle("overflow");
+
+})
+navBtn1.addEventListener('click',() =>{
+portfolio.classList.remove("sec-dis")
+about.classList.add("sec-dis")
+navBtn1.classList.add("active")
+navBtn3.classList.remove("active")
+navBtn4.classList.remove("active")
+contact.classList.remove("sec-dis")
+
+navBtn5.classList.remove("active")
+services.classList.remove("sec-dis")
+navBtn2.classList.remove("active")
+skills.classList.remove("sec-dis")
+nav.classList.toggle("dis");
+document.body.classList.toggle("overflow");
+
+})
+navBtn3.addEventListener('click',() =>{
+portfolio.classList.add("sec-dis")
+about.classList.remove("sec-dis")
+navBtn1.classList.remove("active")
+navBtn3.classList.add("active")
+navBtn4.classList.remove("active")
+contact.classList.remove("sec-dis")
+
+navBtn5.classList.remove("active")
+services.classList.remove("sec-dis")
+navBtn2.classList.remove("active")
+skills.classList.remove("sec-dis")
+nav.classList.toggle("dis");
+document.body.classList.toggle("overflow");
+
+})
+navBtn4.addEventListener('click',() =>{
+portfolio.classList.remove("sec-dis")
+about.classList.remove("sec-dis")
+navBtn1.classList.remove("active")
+navBtn3.classList.remove("active")
+navBtn4.classList.add("active")
+contact.classList.remove("sec-dis")
+
+navBtn5.classList.remove("active")
+services.classList.add("sec-dis")
+navBtn2.classList.remove("active")
+skills.classList.remove("sec-dis")
+nav.classList.toggle("dis");
+document.body.classList.toggle("overflow");
+
+})
+navBtn5.addEventListener('click',() =>{
+portfolio.classList.remove("sec-dis")
+about.classList.remove("sec-dis")
+navBtn1.classList.remove("active")
+navBtn3.classList.remove("active")
+navBtn4.classList.remove("active")
+contact.classList.add("sec-dis")
+
+navBtn5.classList.add("active")
+services.classList.remove("sec-dis")
+navBtn2.classList.remove("active")
+skills.classList.remove("sec-dis")
+nav.classList.toggle("dis");
+document.body.classList.toggle("overflow");
+
+})
+conbtn.addEventListener('click',() =>{
+about.classList.remove("sec-dis")
+navBtn1.classList.remove("active")
+contact.classList.add("sec-dis")
+navBtn5.classList.add("active")
+
+})
+
+</script>
+</body>
 </html>
