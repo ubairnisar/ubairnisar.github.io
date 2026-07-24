@@ -1,1147 +1,1102 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Ubair Nisar | ML Engineer </title>
-    <style>
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ubair Nisar | AI/ML Engineer — Player One</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
 :root{
-    --black:#000;
-    --white:#fff;
-    --gray:#333;
-    --primary:#8BFBFF;
-    --secondary:#5538fb;
-    --third:#FF602A;
-
-    
+  --bg:#05060d;
+  --bg2:#0a0e1e;
+  --panel:#0d1224e6;
+  --line:#1c2440;
+  --cyan:#4deaff;
+  --magenta:#ff3ec8;
+  --amber:#ffcb47;
+  --violet:#8a5bff;
+  --green:#5dffb0;
+  --text:#dce6f5;
+  --dim:#7f8bb3;
+  --pixel:'Press Start 2P', cursive;
+  --mono:'JetBrains Mono', monospace;
+  --body:'Space Grotesk', sans-serif;
 }
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    transition: all .3s;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:auto;}
 body{
-    background-color: var(--black);
-    font-family: 'Poppins', sans-serif;
-    overflow-x: hidden;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--body);
+  overflow-x:hidden;
 }
-body.dark{
-    transition: all 0.3s ease;
-    --black:#fff;
-    --white:#000;
-    --gray:#333;
-    --secondary:#8BFBFF;
-    --primary:#3842fb;
-    --third:#FF602A;
-}
-body.overflow{
-    overflow: hidden;
-}
+a{color:var(--cyan);text-decoration:none;}
+ul{list-style:none;}
+::selection{background:var(--magenta);color:#000;}
 
-a{
-    text-decoration: underline;
-}
-li{
-    list-style: none;
-}
+/* ---------- scrollbar ---------- */
+::-webkit-scrollbar{width:10px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:repeating-linear-gradient(180deg, var(--cyan) 0 5px, transparent 5px 8px);}
+
+/* ---------- bg canvas ---------- */
+#bg-canvas{position:fixed;inset:0;z-index:0;opacity:.55;}
+
+/* ---------- preloader ---------- */
 .pre-loader{
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--gray);
+  position:fixed;inset:0;z-index:10000;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
 }
-.pre-loader i{
-    color: var(--primary);
-    font-size: 50px;
-    animation: rotate  2s linear infinite;
+.pre-loader .boot-text{font-family:var(--mono);color:var(--green);font-size:14px;letter-spacing:1px;}
+.pre-loader .boot-bar{width:260px;height:10px;border:2px solid var(--green);overflow:hidden;}
+.pre-loader .boot-fill{height:100%;width:0%;background:repeating-linear-gradient(90deg, var(--green) 0 8px, transparent 8px 12px);animation:boot 1.6s steps(20) forwards;}
+@keyframes boot{to{width:100%;}}
+.pre-loader.hide{opacity:0;visibility:hidden;transition:opacity .5s ease;}
+
+/* ---------- HUD top bar ---------- */
+.hud{
+  position:fixed;top:0;left:0;width:100%;z-index:500;
+  background:rgba(5,6,13,.92);
+  border-bottom:1px solid var(--line);
 }
-.day{
-    position: fixed;
-    top: 200px;
-    right: 10px;
-    z-index: 10;
-    border: none;
-    background-color: transparent;
-    animation: rotate 2s linear infinite;
+.xp-bar{height:4px;width:100%;background:var(--bg2);}
+.xp-fill{height:100%;width:0%;background:repeating-linear-gradient(90deg, var(--green) 0 6px, transparent 6px 9px);box-shadow:0 0 8px var(--green);transition:width .1s linear;}
+.hud-row{display:flex;align-items:center;justify-content:space-between;padding:14px 40px;}
+.hud-brand{font-family:var(--pixel);font-size:11px;color:var(--cyan);letter-spacing:1px;display:flex;align-items:center;gap:10px;}
+.hud-brand .lvl{color:var(--amber);}
+.hud-nav ul{display:flex;gap:6px;}
+.hud-nav a{
+  font-family:var(--mono);font-size:12px;color:var(--dim);padding:8px 14px;border:1px solid transparent;border-radius:6px;
+  display:block;letter-spacing:.5px;
 }
-.day i{
-    font-size: 30px;
-    color: var(--white);
+.hud-nav a:hover{color:var(--cyan);border-color:var(--line);}
+.hud-nav a.active{color:var(--bg);background:var(--cyan);box-shadow:0 0 14px var(--cyan);}
+.ham-btn{display:none;color:var(--cyan);font-size:22px;background:none;border:none;cursor:pointer;}
+
+@media screen and (max-width:920px){
+  .hud-row{padding:14px 20px;}
+  .hud-nav{position:fixed;top:53px;left:0;width:100%;height:0;overflow:hidden;background:var(--bg);transition:height .3s ease;}
+  .hud-nav.open{height:calc(100vh - 53px);}
+  .hud-nav ul{flex-direction:column;padding:30px;gap:14px;}
+  .hud-nav a{font-size:16px;}
+  .ham-btn{display:block;}
 }
-.night{
-    display: none;
-    position: fixed;
-    top: 200px;
-    right: 10px;
-    z-index: 10;
-    border: none;
-    background-color: transparent;
-    animation: rotate 2s linear infinite;
+
+/* ---------- sections generic ---------- */
+section{position:relative;z-index:1;padding:120px 8vw;}
+.eyebrow{font-family:var(--pixel);font-size:10px;color:var(--magenta);letter-spacing:2px;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.eyebrow::before{content:'>';color:var(--green);}
+.sec-title{font-family:var(--pixel);font-size:clamp(20px,4vw,36px);color:#fff;margin-bottom:20px;line-height:1.5;text-shadow:0 0 18px rgba(77,234,255,.35);}
+.sec-desc{font-family:var(--body);color:var(--dim);max-width:640px;margin-bottom:60px;font-size:16px;line-height:1.7;}
+
+/* ---------- HERO ---------- */
+.hero{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:140px 8vw 80px;
+  position:relative;overflow:hidden;
 }
-.night i{
-    font-size: 30px;
-    color: var(--white);
+.hero-grid{
+  position:absolute;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(77,234,255,.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(77,234,255,.12) 1px, transparent 1px);
+  background-size:44px 44px;
+  opacity:.6;
+  animation:gridmove 12s linear infinite;
 }
-header{
-    position: relative;
-    height: 100vh;
-    width: 100%;
-    background-color: var(--black);
+@keyframes gridmove{from{background-position:0 0;}to{background-position:44px 44px;}}
+@keyframes blink{50%{opacity:0;}}
+.hero-inner{
+  position:relative;z-index:2;display:flex;align-items:center;gap:60px;flex-wrap:wrap;justify-content:center;width:100%;max-width:1200px;
 }
-.navbar{
-    padding: 40px 100px;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
+.hero-text{flex:1 1 460px;min-width:280px;}
+.hero-tag{font-family:var(--mono);color:var(--green);font-size:13px;letter-spacing:2px;margin-bottom:14px;}
+.hero-tag .blink{animation:blink 1s step-end infinite;}
+.hero-title{font-family:var(--pixel);font-size:clamp(28px,5vw,48px);line-height:1.6;color:#fff;text-shadow:0 0 24px rgba(255,62,200,.35);margin-bottom:20px;}
+.hero-title span{color:var(--cyan);}
+.hero-sub{font-family:var(--mono);font-size:14px;color:var(--amber);letter-spacing:1px;margin-bottom:26px;}
+.hero-p{color:var(--dim);max-width:520px;margin-bottom:34px;line-height:1.8;}
+.hero-stats{display:flex;gap:26px;margin-bottom:34px;flex-wrap:wrap;}
+.hero-stat b{display:block;font-family:var(--pixel);font-size:20px;color:var(--cyan);}
+.hero-stat span{font-family:var(--mono);font-size:11px;color:var(--dim);}
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap;}
+
+.hero-char{flex:0 0 320px;position:relative;display:flex;justify-content:center;}
+.char-frame{
+  position:relative;width:300px;height:340px;border:2px solid var(--cyan);
+  background:rgba(77,234,255,.06);
+  box-shadow:0 0 40px rgba(77,234,255,.25);
+  overflow:hidden;animation:float 4s ease-in-out infinite;
 }
-.logo{
-    color: var(--white);
-    user-select: none;
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+.char-frame img{width:100%;height:100%;object-fit:cover;object-position:top;filter:drop-shadow(0 0 20px rgba(77,234,255,.4));}
+.char-tag{
+  position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);
+  background:var(--bg);border:1px solid var(--amber);color:var(--amber);
+  font-family:var(--pixel);font-size:9px;padding:6px 12px;border-radius:20px;white-space:nowrap;
 }
-.navbar ul {
-    margin-left: 50px;
-    display: flex;
-    flex-wrap: wrap;
-    transition: all .3s;
-}
-.navbar ul li a{
-    color: var(--white);
-    margin: 0 20px;
-}
-.navbar ul li:hover a:not(.active){
-    color: var(--white);
-}
-.navbar ul li a.active{
-    padding-bottom: 8px;
-    border-bottom: 2px solid var(--primary);
-}
-.ham-btn{
-    color: var(--white);
-    font-size: 25px;
-    display: none;
-}.ham-btn:hover{
-    color: var(--primary);
-    transform: scale(1.1);
-}
-.row{
-    display: none;
-    width: auto;
-    margin-left: 150px;
-    margin-top: 60px;
-    justify-content: center;
-}
-.heading{
-    margin-top: 30px;
-    flex-basis: 50%;
-}
-.heading h3{
-    color: var(--gray);
-    font-size: 40px;
-    text-transform: uppercase;
-    font-weight: 900;
-}
-.heading h1{
-    line-height: 20px;
-    font-size: 50px;
-    letter-spacing: -4px;
-    text-transform: uppercase;
-    color: var(--white);
-    margin-bottom: 20px;
-}
-.heading h1 span{
-    color: var(--primary);
-}
-.heading h4{
-    color: var(--white);
-    font-size: 20px;
-    text-transform: uppercase;
-    font-weight: 500;
-    margin-bottom: 30px;
-    letter-spacing: 5px;
-}
-.heading p{
-    width: 80%;
-    margin-bottom: 30px;
-    color: var(--white);
-}
+
 .btn{
-    width: 165px;
-    height: 35px;
-    font-size: 15px;
-    border: none;
-    position: relative;
-    font-weight: 600;
-    overflow: hidden;
-    cursor: pointer;
-    color: var(--black);
-    transition: all 0.3s;
-    background-color: var(--white);
+  font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:1px;
+  padding:14px 26px;border-radius:8px;border:1px solid var(--cyan);color:var(--cyan);background:transparent;
+  cursor:pointer;position:relative;overflow:hidden;transition:.2s;text-transform:uppercase;
 }
-.btn:before{
-    content: '';
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translateX(-100px) rotate(45deg);
-    background-color: var(--secondary);
-    transition: transform 0.3s;
+.btn:hover{background:var(--cyan);color:#000;box-shadow:0 0 22px var(--cyan);transform:translateY(-2px);}
+.btn.solid{background:var(--cyan);color:#000;}
+.btn.solid:hover{background:var(--magenta);border-color:var(--magenta);box-shadow:0 0 22px var(--magenta);}
+.btn.ghost{border-color:var(--magenta);color:var(--magenta);}
+.btn.ghost:hover{background:var(--magenta);color:#000;box-shadow:0 0 22px var(--magenta);}
+
+.hero-scroll{
+  position:absolute;bottom:26px;left:50%;transform:translateX(-50%);font-family:var(--mono);
+  color:var(--dim);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:2;
 }
-.btn:after{
-    content: '';
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translateX(-110px) rotate(45deg);
-    background-color: var(--primary);
-    transition: transform 0.3s;
+.hero-scroll i{animation:bob 1.4s ease-in-out infinite;color:var(--cyan);}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+
+/* ---------- SITE-WIDE DRIVING CAR ---------- */
+#car{
+  position:fixed;top:0;left:0;z-index:9998;pointer-events:none;
+  filter:drop-shadow(0 0 14px rgba(77,234,255,.75));
+  transform:translate(-50%,-50%);
+  will-change:transform;
 }
-.btn:hover{
-    border: 1px solid var(--white);
-    color: var(--white);
-    background-color: var(--black);
+#car .car-glyph{display:block;width:38px;height:58px;transition:filter .12s ease;}
+#car .car-glyph svg{width:100%;height:100%;display:block;overflow:visible;}
+#car.boost .car-glyph{filter:drop-shadow(0 0 22px rgba(255,203,71,.95));}
+.flame{transform-origin:20px 46px;animation:flameFlicker .12s ease-in-out infinite alternate;}
+@keyframes flameFlicker{from{transform:scaleY(1) scaleX(1);}to{transform:scaleY(1.25) scaleX(0.9);}}
+#car.boost .flame{fill:#ff3ec8;}
+.drive-hint{
+  position:fixed;z-index:9996;pointer-events:none;font-family:var(--mono);font-size:11px;color:var(--amber);
+  background:var(--panel);border:1px solid var(--amber);padding:5px 10px;border-radius:14px;white-space:nowrap;
+  transform:translate(-50%,-140%);opacity:0;transition:opacity .3s ease;
 }
-.btn:hover::before{
-    transform: translateX(100px) rotate(45deg);
+.drive-hint.show{opacity:1;animation:hintBob 1.2s ease-in-out infinite;}
+@keyframes hintBob{0%,100%{transform:translate(-50%,-140%);}50%{transform:translate(-50%,-160%);}}
+.trail{
+  position:fixed;z-index:9996;pointer-events:none;
+  background:transparent;border:1px dashed var(--cyan);opacity:.6;
+  animation:trailFade .45s steps(4) forwards;
 }
-.btn:hover::after{
-    transform: translateX(110px) rotate(45deg);
+@keyframes trailFade{
+  from{opacity:.55;transform:translate(-50%,-50%) scale(1);}
+  to{opacity:0;transform:translate(-50%,-50%) scale(0.3);}
 }
-.header-img{
-    flex-basis: 50%;
+/* ---------- TRACK PATH ---------- */
+#trackCanvas{position:fixed;inset:0;z-index:9990;pointer-events:none;width:100%;height:100%;}
+@media (hover:none){ #car, #trackCanvas{display:none;} }
+
+/* ---------- SKILLS / STAT BARS ---------- */
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:36px;}
+.stat-card{
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:26px 28px;
+  position:relative;
 }
-.header-img img{
-    width: 400px;
-    transform:translateY(40px);
-    filter: drop-shadow(0 5px 5px var(--white));
+.stat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-family:var(--pixel);font-size:12px;color:#fff;}
+.stat-head i{color:var(--cyan);margin-right:10px;}
+.stat-pct{font-family:var(--mono);color:var(--amber);font-size:12px;}
+.stat-track{height:12px;border-radius:8px;background:var(--bg2);border:1px solid var(--line);overflow:hidden;margin-bottom:14px;}
+.stat-fill{height:100%;width:0%;background:repeating-linear-gradient(90deg, var(--cyan) 0 6px, transparent 6px 9px);transition:width 1.4s steps(24);box-shadow:0 0 10px var(--cyan);}
+.stat-desc{color:var(--dim);font-size:13.5px;line-height:1.7;margin-bottom:14px;}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{
+  font-family:var(--mono);font-size:11px;color:var(--cyan);border:1px solid var(--line);
+  background:var(--bg2);padding:5px 10px;border-radius:20px;
+}
+@media screen and (max-width:800px){.stat-grid{grid-template-columns:1fr;}}
+
+/* ---------- CAREER MAP ---------- */
+.map-wrap{position:relative;padding-left:6px;}
+.map-line{
+  position:absolute;left:20px;top:0;bottom:0;width:2px;
+  background:repeating-linear-gradient(180deg, var(--cyan) 0 10px, transparent 10px 20px);
+}
+.map-node{position:relative;padding-left:60px;margin-bottom:56px;opacity:0;transform:translateX(-20px);transition:opacity .6s ease, transform .6s ease;}
+.map-node.in{opacity:1;transform:translateX(0);}
+.map-dot{
+  position:absolute;left:8px;top:4px;width:26px;height:26px;border-radius:50%;
+  background:var(--bg2);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;
+  font-family:var(--pixel);font-size:9px;color:var(--cyan);box-shadow:0 0 14px rgba(77,234,255,.5);
+}
+.map-node.current .map-dot{background:var(--cyan);color:#000;animation:pulse 1.6s ease-in-out infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 8px var(--cyan);}50%{box-shadow:0 0 26px var(--cyan);}}
+.map-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;}
+.map-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;}
+.map-role{font-family:var(--pixel);font-size:13px;color:#fff;}
+.map-date{font-family:var(--mono);font-size:11px;color:var(--amber);}
+.map-org{font-family:var(--mono);font-size:12.5px;color:var(--magenta);margin-bottom:14px;}
+.map-badge{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--green);border:1px solid var(--green);border-radius:20px;padding:2px 9px;margin-left:10px;}
+.map-list{color:var(--dim);font-size:13.5px;line-height:1.9;padding-left:18px;}
+.map-list li{margin-bottom:4px;}
+.map-list li::marker{color:var(--cyan);}
+.current-flag{
+  font-family:var(--pixel);font-size:9px;color:#000;background:var(--amber);padding:4px 10px;border-radius:20px;
 }
 
-.effects span{
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    top: 220px;
-    left: -20px;
-    border-radius: 50%;
-    background-color: var(--primary);
+/* ---------- PROJECT CARTRIDGES ---------- */
+.filter-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px;}
+.filter-btn{
+  font-family:var(--mono);font-size:11.5px;color:var(--dim);background:var(--panel);border:1px solid var(--line);
+  padding:8px 16px;border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:.2s;
 }
-.section{
-    display: flex;
-    width: auto;
-    flex-direction: column;
-    margin: 0px 100px;
-    align-items: center;
-    justify-content: center;
+.filter-btn:hover{color:var(--cyan);border-color:var(--cyan);}
+.filter-btn.active{color:#000;background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 14px rgba(77,234,255,.4);}
+.cart-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+.cart{
+  background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;position:relative;
+  transition:transform .25s ease, box-shadow .25s ease, opacity .25s ease;
 }
-.skills{
-    display: none;
+.cart.hidden{display:none;}
+.cart:hover{transform:translateY(-8px);box-shadow:0 12px 40px rgba(77,234,255,.25);border-color:var(--cyan);}
+.cart-img{height:170px;background-size:cover;background-position:center;position:relative;}
+.cart-img::after{content:'';position:absolute;left:0;right:0;bottom:0;height:30%;background:var(--panel);opacity:.85;}
+.cart-tag{
+  position:absolute;top:10px;left:10px;font-family:var(--mono);font-size:10px;background:var(--bg);
+  color:var(--amber);border:1px solid var(--amber);padding:3px 9px;border-radius:20px;z-index:2;
 }
-.section .section-title{
-    text-transform: uppercase;
-    font-size: 50px;
-    color: var(--white);
-}
-.section .section-desc{
-    text-align: center;
-    color: var(--white);
-}
-.section a{
-    color: var(--black);
-}
-.skill-container{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 50px;
-    color: var(--white);
-    text-align: center;
-    margin-top: 50px;
-    grid-auto-rows: minmax(100px, auto);
-}
-.skill h1{
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    color: var(--white);
-}
-.skill h3{
-    color: var(--primary);
-    margin-bottom: 5px;
-    font-weight: 400;
-}
-.skill p{
-    margin-bottom: 10px;
-    font-weight: 300;
-    color: var(--white);
-}
-.skill i{
-    margin-bottom: 10px;
-    font-size: 30px;
-    color: var(--primary);
-}
-.portfolio-container{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    color: var(--white);
-    text-align: center;
-    margin-top: 50px;
-    margin-bottom: 30px;
-    grid-auto-rows: minmax(100px, auto);
-}
-.portfolio .img{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    height: 200px;
-    border: 1px solid var(--white);
-    border-radius: 10px;
-    position: relative;
-    background-image: url("WhatsApp Image 2024-06-05 at 15.02.01_3b898467.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-}
-.portfolio .pi2{
-    background-image: url("val_batch0_labels.jpg");
-}
-.portfolio .pi3{
-    background-image: url("sneak(1).png");
-}
-.portfolio .pi4{
-    background-image: url("tryon.jpg");
-}
-.portfolio .pi5{
-    background-image: url("image copy.png");
-}
-.portfolio .pi6{
-    background-image: url("m5.png");
-}
-.portfolio .img::before{
-    content: '';
-    position: absolute;
-    opacity: 0;
-    border-radius: 10px;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transition: opacity .3s;
-    backdrop-filter: blur(2px);
-    background-color: rgba(9, 32, 43, 0.493);
-}
-.portfolio .img:hover::before{
-    opacity: 1;
-}
-.portfolio .img p{
-    width: 80%;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity .3s;
-    margin-bottom: 20px;
-    color: white;
-}
-.portfolio .img button {
-    opacity: 0;
-    transition: opacity .3s;
-}
-.portfolio .img:hover p,
-.portfolio .img:hover button{
-    opacity: 1;
-}
-.portfolios{
-    display: none;
-}
+.cart-body{padding:18px 20px 22px;}
+.cart-title{font-family:var(--pixel);font-size:11.5px;color:#fff;margin-bottom:12px;line-height:1.7;}
+.cart-desc{color:var(--dim);font-size:13px;line-height:1.7;margin-bottom:14px;}
+.cart-foot{display:flex;justify-content:space-between;align-items:center;}
+.cart-foot span{font-family:var(--mono);font-size:11px;color:var(--cyan);}
+@media screen and (max-width:920px){.cart-grid{grid-template-columns:repeat(2,1fr);}}
+@media screen and (max-width:620px){.cart-grid{grid-template-columns:1fr;}}
 
-.services-container{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 50px;
-    color: var(--white);
-    text-align: center;
-    margin-top: 50px;
-    grid-auto-rows: minmax(100px, auto);
+/* ---------- ACHIEVEMENTS ---------- */
+.ach-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.ach{
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px 18px;text-align:center;
+  opacity:0;transform:scale(.85);transition:opacity .5s ease, transform .5s ease;
 }
-.service h1{
+.ach.in{opacity:1;transform:scale(1);}
+.ach i{font-size:30px;color:var(--amber);margin-bottom:14px;text-shadow:0 0 16px rgba(255,203,71,.6);}
+.ach h3{font-family:var(--pixel);font-size:11px;color:#fff;margin-bottom:8px;line-height:1.6;}
+.ach p{color:var(--dim);font-size:12px;line-height:1.6;}
+.ach .unlocked{font-family:var(--mono);font-size:9px;color:var(--green);letter-spacing:1px;margin-top:10px;display:block;}
+@media screen and (max-width:920px){.ach-grid{grid-template-columns:repeat(2,1fr);}}
+@media screen and (max-width:500px){.ach-grid{grid-template-columns:1fr;}}
 
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    color: var(--white);
+/* ---------- CONTACT / FINAL LEVEL ---------- */
+.contact-wrap{
+  background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:50px;
+  display:flex;gap:50px;flex-wrap:wrap;justify-content:space-between;position:relative;overflow:hidden;
 }
+.contact-left{flex:1 1 320px;}
+.contact-links{display:flex;flex-direction:column;gap:16px;margin-top:26px;}
+.contact-links a{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:13px;color:var(--text);}
+.contact-links a i{color:var(--cyan);width:20px;text-align:center;}
+.contact-links a:hover{color:var(--cyan);}
+.contact-form{flex:1 1 340px;display:flex;flex-direction:column;gap:14px;}
+.contact-form input, .contact-form textarea{
+  background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:14px 16px;color:var(--text);
+  font-family:var(--mono);font-size:13px;outline:none;
+}
+.contact-form input:focus, .contact-form textarea:focus{border-color:var(--cyan);box-shadow:0 0 10px rgba(77,234,255,.3);}
+.contact-form textarea{resize:none;height:120px;}
+.game-over-tag{font-family:var(--pixel);font-size:10px;color:var(--magenta);margin-bottom:10px;}
 
-.service p{
-    margin-bottom: 10px;
-    font-weight: 300;
-    color: var(--white);
-}
-.service i{
-    margin-bottom: 10px;
-    font-size: 30px;
-    color: var(--primary);
-}
-.services{
-    display: none;
-}
-.contact-container{
-    text-align: center;
-}
-.contact-form{
-    margin-top:50px;
-}
-.contact-form input{
-    margin-bottom: 10px;
-    height: 30px;
-    padding: 10px;
-    outline: none;
-    color: var(--white);
-    background-color: transparent;
-    border: 1px solid var(--white);
-    border-radius: 30px;
-    display: block;
-    width: 400px;
-}
-.contact-form textarea{
-    color: var(--white);
-    margin-bottom: 30px;
-    height: 200px;
-    padding: 20px;
-    outline: none;
-    background-color: transparent;
-    border: 1px solid var(--white);
-    border-radius: 10px;
-    display: block;
-    width: 400px;
-    width: 400px;
-    resize: none;
-}
-.contact{
-    display: none;
-}
+footer{text-align:center;padding:34px 20px;font-family:var(--mono);font-size:11px;color:var(--dim);position:relative;z-index:1;}
+footer a{color:var(--cyan);}
 
-
-.sec-dis{
-    display: flex;
+/* ---------- AI companion ---------- */
+.ai-fab{
+  position:fixed;bottom:26px;right:26px;z-index:800;width:64px;height:64px;border-radius:50%;
+  background:var(--bg2);border:2px dashed var(--cyan);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(77,234,255,.5);
+  animation:fabPulse 2.4s steps(2) infinite;
 }
-@keyframes rotate {
-    from{
-        transform: rotate(0deg);
-    }
-    to{
-        transform: rotate(360deg);
-    }
+@keyframes fabPulse{0%,100%{box-shadow:0 0 18px rgba(77,234,255,.5);}50%{box-shadow:0 0 32px rgba(77,234,255,.8);}}
+.ai-fab img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
+.ai-fab .ping{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--green);border-radius:50%;border:2px solid var(--bg);}
+
+.ai-panel{
+  position:fixed;bottom:104px;right:26px;z-index:800;width:340px;max-width:88vw;height:440px;max-height:70vh;
+  background:var(--bg2);border:1px solid var(--cyan);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.6);
+  display:flex;flex-direction:column;overflow:hidden;
+  transform:translateY(20px) scale(.96);opacity:0;pointer-events:none;transition:.25s ease;
 }
-@media screen and (max-width:905px) {
-    header{
-        height: 120vh;
-    }
-    .navbar {
-        padding: 20px 40px;
-    }
-    .navbar ul{
-        position: absolute;
-        justify-content: center;
-        align-items: center;
-        align-content: center;
-        flex-direction: column;
-        top: 0;
-        left: 0;
-        display: none;
-        visibility: hidden;
-        opacity: 0;
-        transform: translateX(-50px) translateY(-50px);
-        width: 100vw;
-        height: 110vh;
-        z-index: 100;
-        display: none;
-        background-color: var(--black);
-    }
-    .navbar .dis{
-        display: flex;
-        opacity: 1;
-        visibility: visible;
-    }
-    .navbar ul li {
-        margin-top: 30px;
-    }
-    .navbar ul li a{
-        font-size: 20px;
-        position: relative;
-        letter-spacing: 2px;
-    }
-    .navbar ul:before{
-        content: '';
-        color: rgba(158, 158, 158, 0.158);
-        font-size: 80px;
-        font-weight: 900;
-        text-transform: uppercase;
-        font-family: 'popins' ,sans-serif;
-        transform: translateY(230px) translateX(-50px) rotate(90deg);
-    }
-    .ham-btn {
-        display: block;
-        opacity: 1;
-        z-index: 100;
-    }
-    
-    .row{
-        flex-direction: column-reverse;
-        text-align: center;
-        height: 100vh;
-        margin: 0 40px;
-    }
-    .heading h1{
-        line-height: 40px;
-    }
-    .heading p{
-        width: 100%;
-
-    }
-    .heading{
-        margin: 0;
-        margin-top: 50px;
-        flex-basis: 100%;
-    }
-   
-    .header-img img{
-        width: 200px;
-    }
-    .effects span:nth-child(2){
-        display: none;
-    }
-    .section-desc{
-        width: 300px;
-    }
-    .skill-container{
-    grid-template-columns: repeat(1, 1fr);
-    grid-auto-rows: minmax(100px, auto);
-    }
-    .skill-container p{
-        width: 300px;
-    }
-    .portfolio-container{
-    grid-template-columns: repeat(1, 1fr);
-    grid-auto-rows: minmax(100px, auto);
-    }
-    .portfolio{
-        width: 300px;
-        margin-bottom: 10px;
-    }
-    .services-container{
-        grid-template-columns: repeat(1, 1fr);
-        grid-auto-rows: minmax(100px, auto);
-        }
-        .services p{
-            width: 300px;
-        }
-        .section .section-title{
-            font-size: 40px;
-        }
+.ai-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:auto;}
+.ai-head{
+  background:rgba(77,234,255,.1);
+  padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);
 }
-@media screen and (max-width:905px) {
-    .contact-form input{
-        width: 300px;
-    }
-    .contact-form textarea{
-        width: 300px;
-    }
-
+.ai-head img{width:32px;height:32px;border-radius:50%;object-fit:cover;}
+.ai-head .who{font-family:var(--mono);font-size:12.5px;color:#fff;}
+.ai-head .who small{display:block;color:var(--green);font-size:10px;}
+.ai-close{margin-left:auto;background:none;border:none;color:var(--dim);font-size:16px;cursor:pointer;}
+.ai-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;}
+.msg{max-width:85%;font-family:var(--mono);font-size:12.5px;line-height:1.6;padding:10px 13px;border-radius:10px;white-space:pre-wrap;}
+.msg.bot{background:var(--panel);border:1px solid var(--line);color:var(--text);align-self:flex-start;border-bottom-left-radius:2px;}
+.msg.user{background:var(--cyan);color:#000;align-self:flex-end;border-bottom-right-radius:2px;}
+.quick-replies{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 12px;}
+.qr-btn{
+  font-family:var(--mono);font-size:10.5px;color:var(--cyan);border:1px solid var(--line);background:var(--panel);
+  padding:6px 10px;border-radius:20px;cursor:pointer;
 }
+.qr-btn:hover{border-color:var(--cyan);background:rgba(77,234,255,.1);}
+.ai-input-row{display:flex;border-top:1px solid var(--line);}
+.ai-input-row input{
+  flex:1;background:transparent;border:none;padding:14px 16px;color:var(--text);font-family:var(--mono);font-size:12.5px;outline:none;
+}
+.ai-input-row button{background:none;border:none;color:var(--cyan);font-size:16px;padding:0 18px;cursor:pointer;}
+.typing-dots span{display:inline-block;width:5px;height:5px;background:var(--dim);border-radius:50%;margin-right:3px;animation:tdot 1s infinite;}
+.typing-dots span:nth-child(2){animation-delay:.2s;}
+.typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes tdot{0%,60%,100%{opacity:.3;}30%{opacity:1;}}
 
-  </style>
-
+@media screen and (max-width:500px){
+  .ai-panel{right:12px;bottom:96px;width:92vw;}
+  .ai-fab{right:16px;bottom:16px;width:56px;height:56px;}
+}
+</style>
 </head>
-
-<script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
 <body>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-        <div class="pre-loader">
-            <i class="fas fa-spinner loader"></i>
-        </div>
-        <button class="day"><i class="fas fa-sun"></i></button>
-        <button class="night"> <i class="fas fa-moon"></i></button>
-    <header>
-        
-        <nav class="navbar">
-            <ul class="nav">
-                <li><a class="nav-btn1 active" href="#about">About</a></li>
-                <li><a class="nav-btn2" href="#skills">Skills</a></li>
-                <li><a class="nav-btn3" href="#portfolio">Portfolio</a></li>
-                <li><a class="nav-btn4" href="#services">Services</a></li>
-                <li><a class="nav-btn5" href="#contact">Contact</a></li>
-            </ul>
-            <i class="ham-btn fas fa-bars"></i>
-        </nav>
-        <div class="row sec-dis">
-        <div class="heading">
-            <a  href="https://pk.linkedin.com/in/ubairnisar0/">Visit My Linkedin Proflie</a>
-            <h3>I'm</h3>
-            <h1>Ubair<span>Nisar. 🚀 </span></h1>
-            <h4>MACHINE LEARNING ENGINEER </h4>
-            <p>An Experienced Machine Learning Engineer 🤖 with a strong academic foundation in AI 🎓 having hands-on industrial experience tackling real-world challenges 🌍. Actively seeking full-time roles to leverage expertise in developing innovative solutions 💡 and driving business growth 📈 through Artificial Intelligence.</p>
-            <button class="btn conbtn">Hire Me</button>
-        </div>
-        <div class="header-img ">
-            <img src="profile_port.png" alt="">
-        </div>
-        </div>
-        <div class="effects">
-            <span></span>
-            <span></span>
-        </div>
-        <section class="section skills">
-            <h1 class="section-title">🛠️ Expertise</h1>
-            <p class="section-desc">I have a wealth of experience in the following skills and am continually learning and practicing more and more.</p>
-            <div class="skill-container">
-                <div class="skill">
-                    <i class="fas fa-eye"></i>
-                    <h1>👁️ Computer Vision</h1>
-                    <p>I can provide end-to-end computer vision solutions for productivity enhancement as well as industrial automation.</p>
-                    <h3>🔍 Things I Enjoy Implementing</h3>
-                    <p>Object Detection, Instance and Semantic Segmentation, Image Classification, Action Recognition, Pose Estimation, Zero Shot Learning</p>
-                    <h3>📚 Libraries and Technologies</h3>
-                    <p>OpenCV, PIL, torchvision, Mediapipe, Ultralytics, MMCV, Pytorch, Tensorflow</p>
-                </div>
-                <div class="skill">
-                    <i class="fas fa-comments"></i>
-                    <h1>🗣️ NLP (Natural Language Processing)</h1>
-                    <p>Language is at the forefront of AI, and I can develop intelligent systems that understand human speech and texts.</p>
-                    <h3>✨ Stuff I Like to Do</h3>
-                    <p>TTS (Text to Speech), STT (Speech to Text), Text Classification and Segmentation, RAGs, LLMs Fine-tuning, Speech Analysis</p>
-                    <h3>🛠️ Development Tools</h3>
-                    <p>NLTK, Langchain, LLamaIndex, Whisper, HuggingFace, Spacy, Pytorch, Tensorflow, Unsloth</p>
-                </div>
-                <div class="skill">
-                    <i class="fas fa-brain"></i>
-                    <h1>🎨 Generative AI</h1>
-                    <p>Let AI imagine and create a beautiful world.</p>
-                    <h3>🖼️ Stuff I Do</h3>
-                    <p>Text to Image Generation, Image to Image Generation, Style Transfer, Image Inpainting and Outpainting, Controlled Diffusion</p>
-                    <h3>🛠️ Tools</h3>
-                    <p>Pytorch, ComfyUI, A1111, Stable Diffusion, ControlNet, IP Adapters, RunwayML, Midjourney, DALL-E 3</p>
-                </div>
-            </div>
-        </section>
-        
-        <section class="section portfolios ">
-            <h1 class="section-title">portfolio</h1>
-            <p class="section-desc">Here are a few AI projects I've worked on recently. Want to see more? <a href="mailto:waseemaofficial@gmail.com">Email me</a>.</p>
-            <div class="portfolio-container">
-                
-                <div class="portfolio">
-                    <div class="img">
-                    <p class="portfolio-desc">
-                        CogniVision - Intelligent Youtube Video Intraction System using LLMs and MultiModels</p>
-                        <!-- <button class="btn">View Website &#x0003E;</button> -->
-                        </div>
-                </div>
-                <div class="portfolio">
-                    <div class="img pi2">
-                    <p class="portfolio-desc">
-                        Walls Cracks Segmentation and Detection using YOLOv8</p>
-                        <!-- <button class="btn">View Website &#x0003E;</button> -->
-                        </div>
-                </div>
-                <div class="portfolio">
-                    <div class="img pi3">
-                    <p class="portfolio-desc">
-                        Diffusion Based Face Emotion Changer custom workflow on ComfyUI</p>
-                        <!-- <button class="btn">View Website &#x0003E;</button> -->
-                        </div>
-                </div>
-                <div class="portfolio">
-                    <div class="img pi4">
-                    <p class="portfolio-desc">
-                        Diffusion Based Virtual Cloth Try On - Gradio App</p>
-                        <button class="btn">View Website &#x0003E;</button>
-                        </div>
-                </div>
-                <div class="portfolio">
-                    <div class="img pi5">
-                    <p class="portfolio-desc">
-                        Ascii Cam - Converting Raw photo into interactive Ascii Characters</p>
-                        <!-- <button class="btn">View Website &#x0003E;</button> -->
-                        </div>
-                </div>
-                <div class="portfolio">
-                    <div class="img pi6">
-                    <p class="portfolio-desc">
-                        Bleed the smart way -  Full Stack Blood Donation App</p>
-                        <!-- <button class="btn">View Website &#x0003E;</button> -->
-                        </div>
-                </div>
+<canvas id="bg-canvas"></canvas>
 
-                </div>
-        </section>
-                
-        <section class="section services ">
-            <h1 class="section-title">Services</h1>
-            <p class="section-desc">As a Machine Learning Engineer, I specialize in creating advanced AI solutions across various domains.</p>
-            <div class="services-container">
-                <div class="service">
-                    <i class="fas fa-eye"></i>
-                    <h1>Computer Vision</h1>
-                    <p>Developing robust computer vision applications for image and video analysis.</p>
-                </div>
-                <div class="service">
-                    <i class="fas fa-project-diagram"></i>
-                    <h1>Knowledge Graphs</h1>
-                    <p>Building and utilizing knowledge graphs for structured information retrieval and reasoning.</p>
-                </div>
-                <div class="service">
-                    <i class="fas fa-comment-dots"></i>
-                    <h1>Natural Language Processing</h1>
-                    <p>Creating NLP solutions for text analysis, sentiment detection, and language understanding.</p>
-                </div>
-                <div class="service">
-                    <i class="fas fa-brain"></i>
-                    <h1>Generative AI</h1>
-                    <p>Designing generative models for content creation, data augmentation, and creative AI applications.</p>
-                </div>
-                <div class="service">
-                    <i class="fas fa-network-wired"></i>
-                    <h1>Deep Learning</h1>
-                    <p>Implementing deep learning algorithms for complex pattern recognition and predictive modeling.</p>
-                </div>
-                <div class="service">
-                    <i class="fas fa-robot"></i>
-                    <h1>AI Solutions</h1>
-                    <p>Delivering end-to-end AI solutions tailored to meet diverse business needs and challenges.</p>
-                </div>
-            </div>
-        </section>
-        
-        <section class="section contact ">
+<div class="pre-loader">
+  <div class="boot-text">INITIALIZING UBAIR_NISAR.EXE ...</div>
+  <div class="boot-bar"><div class="boot-fill"></div></div>
+</div>
 
-            <h1 class="section-title">Contact</h1>
-            <p class="section-desc">Have a question or want to work together? Contact me now or send a email <a href="mailto:ubair.nisar15@gmail.com">here</a>.</p>
-            <div class="contact-container">
+<!-- HUD -->
+<div class="hud">
+  <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+  <div class="hud-row">
+    <div class="hud-brand">UBAIR_NISAR<span class="lvl" id="lvlTag">// LVL.01</span></div>
+    <nav class="hud-nav" id="hudNav">
+      <ul>
+        <li><a href="#hero" class="active" data-sec="hero">Start</a></li>
+        <li><a href="#skills" data-sec="skills">Stats</a></li>
+        <li><a href="#career" data-sec="career">Career Map</a></li>
+        <li><a href="#projects" data-sec="projects">Cartridges</a></li>
+        <li><a href="#achievements" data-sec="achievements">Achievements</a></li>
+        <li><a href="#contact" data-sec="contact">Continue?</a></li>
+      </ul>
+    </nav>
+    <button class="ham-btn" id="hamBtn"><i class="fas fa-bars"></i></button>
+  </div>
+</div>
 
-                <form id="contact-me" class="contact-form" method="post" action="https://forms.un-static.com/forms/8e79cc75f73da83d8e580033016262bb463512d6">
-                    <input type="text" name="name" placeholder="Full Name">
-                    <input type="email" name="email" placeholder="Email Address">
-                    <input type="text" name="subject" placeholder="Subject">
-                    <textarea name="message" placeholder="Message Here..."></textarea>
-                    <button type="submit" class="btn" >Send</button>
-                </form>
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-tag">$ whoami<span class="blink">_</span></div>
+      <h1 class="hero-title">UBAIR NISAR<br><span>AI / ML ENGINEER</span></h1>
+      <div class="hero-sub">⚡ 4+ YRS XP · COMPUTER VISION · LLMs · AGENTIC AI</div>
+      <p class="hero-p">Building and deploying production AI systems — document understanding, LLM fine-tuning, and computer vision pipelines that ship. Currently leveling up document AI at Siparadigm Diagnostic. Open to relocation & remote-first roles.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><b>4+</b><span>YEARS XP</span></div>
+        <div class="hero-stat"><b>5</b><span>COMPANIES</span></div>
+        <div class="hero-stat"><b>YC</b><span>BACKED ALUM</span></div>
+      </div>
+      <div class="hero-cta">
+        <button class="btn solid" onclick="document.getElementById('career').scrollIntoView({behavior:'smooth'})">Blast Off ▶</button>
+        <a class="btn ghost" href="mailto:ubair.nisar15@gmail.com" style="display:inline-block;text-decoration:none;">Hire Me</a>
+      </div>
+    </div>
+    <div class="hero-char">
+      <div class="char-frame">
+        <img src="profile_port.png" alt="Ubair Nisar">
+      </div>
+      <div class="char-tag">PLAYER ONE</div>
+    </div>
+  </div>
+  <div class="hero-scroll">USE ↑ ↓ ← → TO FLY THROUGH THE SITE <i class="fas fa-chevron-down"></i></div>
+</section>
 
-                </div>
-                </section>
+<!-- SKILLS / STATS -->
+<section id="skills">
+  <div class="eyebrow">Character Stats</div>
+  <h2 class="sec-title">Skill Tree Unlocked</h2>
+  <p class="sec-desc">Four core stat trees, leveled up over 4+ years of shipping real AI systems in production.</p>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-head"><span><i class="fas fa-eye"></i>Computer Vision</span><span class="stat-pct">92%</span></div>
+      <div class="stat-track"><div class="stat-fill" data-pct="92"></div></div>
+      <p class="stat-desc">Object detection, segmentation, layout & OCR pipelines shipped to production — from retail smart carts to medical document extraction.</p>
+      <div class="chip-row"><span class="chip">YOLOv5/v8</span><span class="chip">Florence-2</span><span class="chip">DONUT</span><span class="chip">OpenCV</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-head"><span><i class="fas fa-brain"></i>LLMs & GenAI</span><span class="stat-pct">90%</span></div>
+      <div class="stat-track"><div class="stat-fill" data-pct="90"></div></div>
+      <p class="stat-desc">Fine-tuning, agentic workflows and RAG systems — from QLoRA fine-tunes on Qwen3-8B to full agentic document understanding pipelines.</p>
+      <div class="chip-row"><span class="chip">QLoRA / LoRA</span><span class="chip">Unsloth</span><span class="chip">RAG</span><span class="chip">Agentic Workflows</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-head"><span><i class="fas fa-server"></i>MLOps & Deployment</span><span class="stat-pct">88%</span></div>
+      <div class="stat-track"><div class="stat-fill" data-pct="88"></div></div>
+      <p class="stat-desc">Self-hosted LLM inference at scale — quantization, speculative decoding, multi-node serving with fault tolerance.</p>
+      <div class="chip-row"><span class="chip">vLLM</span><span class="chip">FastAPI</span><span class="chip">Docker</span><span class="chip">Nginx</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-head"><span><i class="fas fa-cloud"></i>Cloud & GPU</span><span class="stat-pct">85%</span></div>
+      <div class="stat-track"><div class="stat-fill" data-pct="85"></div></div>
+      <p class="stat-desc">Deploying and scaling GPU workloads across major clouds and specialized GPU providers.</p>
+      <div class="chip-row"><span class="chip">GCP</span><span class="chip">AWS</span><span class="chip">Azure</span><span class="chip">Paperspace</span></div>
+    </div>
+  </div>
+</section>
 
+<!-- CAREER MAP -->
+<section id="career">
+  <div class="eyebrow">World Map</div>
+  <h2 class="sec-title">Career Progression</h2>
+  <p class="sec-desc">Every job is a level cleared. Here's the path so far — five stages, one XP grind.</p>
+  <div class="map-wrap">
+    <div class="map-line"></div>
 
-            </div>
-    </header>
+    <div class="map-node current">
+      <div class="map-dot">05</div>
+      <div class="map-card">
+        <div class="map-top"><span class="map-role">ML/AI Engineer L5 <span class="current-flag">YOU ARE HERE</span></span><span class="map-date">Aug 2025 – Present</span></div>
+        <div class="map-org">Siparadigm Diagnostic</div>
+        <ul class="map-list">
+          <li>Built ADONUT — SOTA agentic document understanding system benchmarked across medical, financial & general docs.</li>
+          <li>Deployed self-hosted LLM inference on vLLM with quantization + speculative decoding for high-throughput pipelines.</li>
+          <li>Fine-tuned Florence-2 for document layout detection and Qwen3-8B (QLoRA/Unsloth) for OCR & layout grounding.</li>
+          <li>Built an automatic PII/PHI redaction pipeline combining agentic workflows with self-trained detection models.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="map-node">
+      <div class="map-dot">04</div>
+      <div class="map-card">
+        <div class="map-top"><span class="map-role">ML/AI Engineer L2</span><span class="map-date">Sep 2024 – Aug 2025</span></div>
+        <div class="map-org">Melior ITS</div>
+        <ul class="map-list">
+          <li>Monteur AI — AI-assisted machine manuals with answer grounding, global search & voice chat.</li>
+          <li>Global Talk Tender Assist — agentic tender-response generation from past & current documents.</li>
+          <li>Surveillance AI — real-time IoT + CV system for vehicle safety threat detection.</li>
+          <li>Mart AI — legal document parsing & Q&A system for lawyers.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="map-node">
+      <div class="map-dot">03</div>
+      <div class="map-card">
+        <div class="map-top"><span class="map-role">ML/AI Engineer <span class="map-badge">YC W17</span></span><span class="map-date">May 2023 – Sep 2024</span></div>
+        <div class="map-org">Cowlar LLC</div>
+        <ul class="map-list">
+          <li>95% accuracy fibre colour detection for industrial automation.</li>
+          <li>Led Resume Extraction Tool using RAG + DONUT — 3x faster than human annotators.</li>
+          <li>Built scalable queue management using real-time CCTV + object tracking analytics.</li>
+          <li>Built a multi-node inference server with Nginx — fault-tolerant, one-click scalable.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="map-node">
+      <div class="map-dot">02</div>
+      <div class="map-card">
+        <div class="map-top"><span class="map-role">Research Fellow</span><span class="map-date">Jun 2023 – Jul 2023</span></div>
+        <div class="map-org">Iknex Lab</div>
+        <ul class="map-list">
+          <li>Transformed maritime Excel data into a structured Neo4j graph — ships, ports, routes.</li>
+          <li>Enabled anomaly detection along ship journeys through graph visualization.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="map-node">
+      <div class="map-dot">01</div>
+      <div class="map-card">
+        <div class="map-top"><span class="map-role">Flask Lead</span><span class="map-date">Feb 2023 – Apr 2023</span></div>
+        <div class="map-org">Bytewise Limited</div>
+        <ul class="map-list">
+          <li>Led Flask development, task assignment and team guidance.</li>
+          <li>Streamlined workflows through collaborative technical leadership.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="eyebrow">Item Inventory</div>
+  <h2 class="sec-title">Project Cartridges</h2>
+  <p class="sec-desc">19 shipped builds pulled straight from the live Upwork vault — real clients, real results. Filter by category or insert any cartridge to read the full brief.</p>
+  <div class="filter-row" id="filterRow">
+    <button class="filter-btn active" data-filter="all">All (19)</button>
+    <button class="filter-btn" data-filter="cv">Computer Vision</button>
+    <button class="filter-btn" data-filter="genai">GenAI</button>
+    <button class="filter-btn" data-filter="agent">LLM & Agents</button>
+    <button class="filter-btn" data-filter="automation">Automation</button>
+    <button class="filter-btn" data-filter="fullstack">Full-Stack</button>
+  </div>
+  <div class="cart-grid" id="cartGrid">
+
+    <div class="cart" data-cat="cv genai">
+      <div class="cart-img" style="background-image:url('projects/satellite-roof.jpg')"><span class="cart-tag">Computer Vision</span></div>
+      <div class="cart-body">
+        <div class="cart-title">Satellite Roof AI Segmentation, Edge Classification & Depth Prediction</div>
+        <p class="cart-desc">First-of-its-kind rooftop measurement SaaS using satellite imagery + Solar API — segments roof sections, classifies structural edges, and predicts slope via dense prediction models, trained on millions of point-annotated images.</p>
+        <div class="chip-row"><span class="chip">Semantic Segmentation</span><span class="chip">3D Modeling</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="genai agent">
+      <div class="cart-img" style="background-image:url('projects/cognivision.png')"><span class="cart-tag">GenAI</span></div>
+      <div class="cart-body">
+        <div class="cart-title">CogniVision — RAG + CLIP Text-to-Video Retrieval & T5 Summaries</div>
+        <p class="cart-desc">Chat with any video or YouTube link using RAG + CLIP for text-to-video alignment, with automatic segment titles via Google's T5-Flan and an interactive transcript.</p>
+        <div class="chip-row"><span class="chip">Vision-Language Model</span><span class="chip">Llama 3</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="automation agent">
+      <div class="cart-img" style="background-image:url('projects/gohighlevel.jpg')"><span class="cart-tag">Automation</span></div>
+      <div class="cart-body">
+        <div class="cart-title">GoHighLevel AI Lead Engagement & Intelligent Scoring — n8n</div>
+        <p class="cart-desc">Intelligent lead system for a marketing agency — classifies leads, filters spam, and auto-replies via Gemini. Cut response time to under 2 minutes with 100% spam eliminated.</p>
+        <div class="chip-row"><span class="chip">n8n</span><span class="chip">Gemini</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="cv">
+      <div class="cart-img" style="background-image:url('projects/crack-segmentation.jpg')"><span class="cart-tag">Computer Vision</span></div>
+      <div class="cart-body">
+        <div class="cart-title">Crack Segmentation using YOLOv8-seg</div>
+        <p class="cart-desc">Trained a crack detection and segmentation model with Ultralytics YOLOv8n-Seg to find cracks in tiles and walls.</p>
+        <div class="chip-row"><span class="chip">YOLO</span><span class="chip">OpenCV</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="cv">
+      <div class="cart-img" style="background-image:url('projects/edge-ai-ocr.jpg')"><span class="cart-tag">Computer Vision</span></div>
+      <div class="cart-body">
+        <div class="cart-title">Edge AI Price Tag OCR — YOLOv8 + TFLite + DocTR/TrOCR/PaddleOCR</div>
+        <p class="cart-desc">Mobile-ready price tag OCR pipeline: TFLite-converted YOLOv8 detection + fine-tuned OCR models validating shelf prices against catalog data in real time on edge devices.</p>
+        <div class="chip-row"><span class="chip">Edge AI</span><span class="chip">TensorFlow Lite</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="cv">
+      <div class="cart-img" style="background-image:url('projects/optical-fibre.jpg')"><span class="cart-tag">Computer Vision</span></div>
+      <div class="cart-body">
+        <div class="cart-title">Optical Fibre Detection — 95% Accuracy, 500% Throughput</div>
+        <p class="cart-desc">Industrial CV system sorting 250-micron optical fibers at 95% color accuracy — cut sort time from 3 minutes to 8 seconds, scaling output 500% in a live Aurora, IL production line.</p>
+        <div class="chip-row"><span class="chip">MLOps</span><span class="chip">CI/CD</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="cv">
+      <div class="cart-img" style="background-image:url('projects/smart-cart.png')"><span class="cart-tag">Computer Vision</span></div>
+      <div class="cart-body">
+        <div class="cart-title">Smart Cart AI — Action Recognition, Android NPU + Docker Swarm</div>
+        <p class="cart-desc">Production-grade real-time action recognition for smart shopping carts — edge inference on Android NPU with a multi-node GPU cluster (Docker Swarm, NGINX) for cloud-side streaming.</p>
+        <div class="chip-row"><span class="chip">Edge AI</span><span class="chip">Docker Swarm</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="automation fullstack">
+      <div class="cart-img" style="background-image:url('projects/us-permit.jpg')"><span class="cart-tag">Automation</span></div>
+      <div class="cart-body">
+        <div class="cart-title">US Permit Data Platform — 60+ Cities, Playwright + LLM + FastAPI</div>
+        <p class="cart-desc">Production permit-data aggregator scraping 60+ US city portals with Playwright + public APIs, using LLMs to parse unstructured HTML, deduped in MongoDB, served via FastAPI with scheduled email exports.</p>
+        <div class="chip-row"><span class="chip">Web Scraping</span><span class="chip">MongoDB</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="fullstack">
+      <div class="cart-img" style="background-image:url('projects/3d-product.jpg')"><span class="cart-tag">Full-Stack</span></div>
+      <div class="cart-body">
+        <div class="cart-title">3D Product Rendering SaaS — Next.js, Stripe & Supabase</div>
+        <p class="cart-desc">Full-stack SaaS where e-commerce sellers order 3D product renders for Amazon/GS1 — Stripe checkout, file uploads, approval workflow, and a real-time order dashboard.</p>
+        <div class="chip-row"><span class="chip">Next.js</span><span class="chip">Supabase</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="agent genai">
+      <div class="cart-img" style="background-image:url('projects/monteur-ai.png')"><span class="cart-tag">LLM & Agents</span></div>
+      <div class="cart-body">
+        <div class="cart-title">Monteur AI — RAG Document Grounding, Open-Source LLM + Embeddings</div>
+        <p class="cart-desc">RAG-powered document grounding for mechanics — every answer is grounded to the exact document, page, and section, built on a self-hosted open-source LLM for fully private inference.</p>
+        <div class="chip-row"><span class="chip">RAG</span><span class="chip">Document AI</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="agent">
+      <div class="cart-img" style="background-image:url('projects/fiscalchat.jpg')"><span class="cart-tag">LLM & Agents</span></div>
+      <div class="cart-body">
+        <div class="cart-title">FiscalChat — MCP Server + Treasury API + FastAPI Conversational AI</div>
+        <p class="cart-desc">Real-time conversational AI over US Treasury data via a custom-built MCP server — instant spending summaries, historical comparisons, and debt insights in natural language.</p>
+        <div class="chip-row"><span class="chip">MCP</span><span class="chip">FastAPI</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="agent cv">
+      <div class="cart-img" style="background-image:url('projects/adonut.jpg')"><span class="cart-tag">Document AI</span></div>
+      <div class="cart-body">
+        <div class="cart-title">ADONUT — SOTA Document Extraction: LLM, OCR & Complex Layout AI</div>
+        <p class="cart-desc">Agentic Document Understanding system — SOTA complex-layout extraction benchmarked across medical, financial, and general documents. Currently shipping in production at Siparadigm.</p>
+        <div class="chip-row"><span class="chip">AI Agent Development</span><span class="chip">OCR</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="agent">
+      <div class="cart-img" style="background-image:url('projects/react-agent.jpg')"><span class="cart-tag">LLM & Agents</span></div>
+      <div class="cart-body">
+        <div class="cart-title">ReAct Agent — DeepSeek LLM, Stripe & Calendar API, Telegram Bot</div>
+        <p class="cart-desc">Reasoning + Acting agent on DeepSeek LLM deployed as a Telegram bot — autonomously verifies payments, parses transactions, and books calendar invites through natural conversation.</p>
+        <div class="chip-row"><span class="chip">Prompt Engineering</span><span class="chip">Telegram API</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="genai">
+      <div class="cart-img" style="background-image:url('projects/face-emotion.jpg')"><span class="cart-tag">GenAI</span></div>
+      <div class="cart-body">
+        <div class="cart-title">Face Emotion Changer (ComfyUI)</div>
+        <p class="cart-desc">Robust generative-AI face emotion changer built on a custom ComfyUI workflow, deployed via API and packaged into a Python script.</p>
+        <div class="chip-row"><span class="chip">Stable Diffusion</span><span class="chip">FastAPI</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="cv">
+      <div class="cart-img" style="background-image:url('projects/ascii-camera.jpg')"><span class="cart-tag">Computer Vision</span></div>
+      <div class="cart-body">
+        <div class="cart-title">ASCII Camera</div>
+        <p class="cart-desc">Live camera feed converted into real-time ASCII art using Python and OpenCV — a playful desktop app, terminal and GUI included.</p>
+        <div class="chip-row"><span class="chip">OpenCV</span><span class="chip">PyQt</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="genai">
+      <div class="cart-img" style="background-image:url('projects/virtual-tryon.jpg')"><span class="cart-tag">GenAI</span></div>
+      <div class="cart-body">
+        <div class="cart-title">Virtual Try-On Cloth</div>
+        <p class="cart-desc">Gradio app for virtual try-ons — body segmentation, upper-body masking, and latent-space inpainting with a diffusion model to render clothing onto any photo.</p>
+        <div class="chip-row"><span class="chip">Gradio</span><span class="chip">Image Segmentation</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="automation agent">
+      <div class="cart-img" style="background-image:url('projects/freshdesk.jpg')"><span class="cart-tag">Automation</span></div>
+      <div class="cart-body">
+        <div class="cart-title">Freshdesk Customer Support Agent with Shopify — n8n</div>
+        <p class="cart-desc">Autonomous support automation integrating Freshdesk, OpenAI and Shopify — classifies tickets by intent/sentiment, drafts contextual replies, and flags low-confidence cases for humans. Cut response time 80%.</p>
+        <div class="chip-row"><span class="chip">n8n</span><span class="chip">OpenAI API</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="cv">
+      <div class="cart-img" style="background-image:url('projects/cctv-queue.png')"><span class="cart-tag">Computer Vision</span></div>
+      <div class="cart-body">
+        <div class="cart-title">CCTV-Based Queue Intelligence — Object Detection, Tracking & Analytics</div>
+        <p class="cart-desc">Scalable queue management solution delivering customer and cashier waiting analytics from real-time CCTV footage using object detection and multi-face tracking.</p>
+        <div class="chip-row"><span class="chip">Object Tracking</span><span class="chip">MLflow</span></div>
+      </div>
+    </div>
+
+    <div class="cart" data-cat="agent">
+      <div class="cart-img" style="background-image:url('projects/nl-database.jpg')"><span class="cart-tag">LLM & Agents</span></div>
+      <div class="cart-body">
+        <div class="cart-title">AI-Powered NL Database Engine — Dual LLM & Graph Schema Intelligence</div>
+        <p class="cart-desc">Manage databases through natural language — dual LLM orchestration (GPT-4o-mini + Claude), a conversational schema planner, and graph-based schema intelligence via FalkorDB.</p>
+        <div class="chip-row"><span class="chip">Knowledge Graph</span><span class="chip">Prompt Engineering</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="eyebrow">Trophy Case</div>
+  <h2 class="sec-title">Achievements Unlocked</h2>
+  <p class="sec-desc">Badges earned along the way.</p>
+  <div class="ach-grid">
+    <div class="ach"><i class="fas fa-medal"></i><h3>Dean's List x4</h3><p>Recognized four times for consistent academic excellence.</p><span class="unlocked">✓ UNLOCKED</span></div>
+    <div class="ach"><i class="fas fa-award"></i><h3>Bronze Medalist</h3><p>Exemplary performance during third semester.</p><span class="unlocked">✓ UNLOCKED</span></div>
+    <div class="ach"><i class="fas fa-bolt"></i><h3>First to Offer</h3><p>First in my batch to secure a job offer.</p><span class="unlocked">✓ UNLOCKED</span></div>
+    <div class="ach"><i class="fas fa-rocket"></i><h3>YC Alum</h3><p>Shipped production AI at Cowlar LLC (Y Combinator W17).</p><span class="unlocked">✓ UNLOCKED</span></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="eyebrow">Final Level</div>
+  <h2 class="sec-title">Continue?</h2>
+  <p class="sec-desc">Insert coin to start a conversation — or just send a message below.</p>
+  <div class="contact-wrap">
+    <div class="contact-left">
+      <div class="game-over-tag">PLAYER 1 — READY</div>
+      <p style="color:var(--dim);line-height:1.8;max-width:380px;">Open to full-time and remote-first ML/AI roles. Flexible time-zone availability, based in Islamabad, Pakistan.</p>
+      <div class="contact-links">
+        <a href="mailto:ubair.nisar15@gmail.com"><i class="fas fa-envelope"></i>ubair.nisar15@gmail.com</a>
+        <a href="tel:+923096128600"><i class="fas fa-phone"></i>+92 309 612 8600</a>
+        <a href="https://pk.linkedin.com/in/ubairnisar0/" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i>linkedin.com/in/ubairnisar0</a>
+        <a href="https://www.upwork.com/" target="_blank" rel="noopener"><i class="fab fa-upwork"></i>Upwork Profile</a>
+      </div>
+    </div>
+    <form id="contact-me" class="contact-form" method="post" action="https://forms.un-static.com/forms/8e79cc75f73da83d8e580033016262bb463512d6">
+      <input type="text" name="name" placeholder="Full Name" required>
+      <input type="email" name="email" placeholder="Email Address" required>
+      <input type="text" name="subject" placeholder="Subject">
+      <textarea name="message" placeholder="Message Here..." required></textarea>
+      <button type="submit" class="btn solid">Send Transmission ▶</button>
+    </form>
+  </div>
+</section>
+
+<footer>© 2026 Ubair Nisar — Rendered in the browser, not in Unreal Engine. Built with <a href="mailto:ubair.nisar15@gmail.com">a lot of coffee</a>.</footer>
+
+<!-- AI Companion -->
+<button class="ai-fab" id="aiFab"><img src="profile_photo.png" alt="AI guide"><span class="ping"></span></button>
+<div class="ai-panel" id="aiPanel">
+  <div class="ai-head">
+    <img src="profile_photo.png" alt="AI guide">
+    <div class="who">AI_UBAIR.bot<small>● online — scripted guide, not a live model</small></div>
+    <button class="ai-close" id="aiClose"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="ai-body" id="aiBody"></div>
+  <div class="quick-replies" id="quickReplies"></div>
+  <div class="ai-input-row">
+    <input type="text" id="aiInput" placeholder="Ask about experience, skills, projects...">
+    <button id="aiSend"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
+
+<!-- Driving car overlay -->
+<canvas id="trackCanvas"></canvas>
+<div id="car"><span class="car-glyph"><svg viewBox="0 0 40 60" xmlns="http://www.w3.org/2000/svg">
+  <path class="flame" d="M14 46 L20 60 L26 46 Z" fill="#ffcb47"/>
+  <path d="M11 39 L2 51 L12 45 Z" fill="#ff3ec8"/>
+  <path d="M29 39 L38 51 L28 45 Z" fill="#ff3ec8"/>
+  <path d="M20 2 C27 2 31 12 31 22 L31 41 C31 45 26 47 20 47 C14 47 9 45 9 41 L9 22 C9 12 13 2 20 2 Z" fill="#4deaff" stroke="#fff" stroke-width="1.6"/>
+  <circle cx="20" cy="19" r="5.2" fill="#0a0e1e"/>
+  <circle cx="20" cy="19" r="5.2" fill="none" stroke="#ff3ec8" stroke-width="1.6"/>
+</svg></span></div>
+<div class="drive-hint" id="driveHint">🚀 psst — try ↑ ↓ ← → to fly!</div>
 
 <script>
-const hamBtn = document.querySelector(".ham-btn");
-const nav = document.querySelector(".nav");
-
-hamBtn.addEventListener("click", () => {
-  nav.classList.toggle("dis");
-  document.body.classList.toggle("overflow");
-});
-const day = document.querySelector(".day");
-
-day.addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-  day.style.display = "none";
-  night.style.display = "block";
-});
-const night = document.querySelector(".night");
-
-night.addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-  night.style.display = "none";
-  day.style.display = "block";
+/* ---------- preloader ---------- */
+window.addEventListener('load', () => {
+  setTimeout(() => document.querySelector('.pre-loader').classList.add('hide'), 900);
 });
 
-const preloader = document.querySelector(".pre-loader");
 
-window.addEventListener("load", () => (preloader.style.display = "none"));
-
-
-const conbtn = document.querySelector(".conbtn");
-const navBtn1 = document.querySelector(".nav-btn1");
-const navBtn2 = document.querySelector(".nav-btn2");
-const navBtn3 = document.querySelector(".nav-btn3");
-const navBtn4 = document.querySelector(".nav-btn4");
-const navBtn5 = document.querySelector(".nav-btn5");
-
-const about = document.querySelector(".row");
-const skills = document.querySelector(".skills");
-const portfolio = document.querySelector(".portfolios");
-const services = document.querySelector(".services");
-const contact = document.querySelector(".contact");
-
-navBtn2.addEventListener('click',() =>{
-portfolio.classList.remove("sec-dis")
-about.classList.remove("sec-dis")
-services.classList.remove("sec-dis")
-
-contact.classList.remove("sec-dis")
-
-navBtn5.classList.remove("active")
-
-navBtn1.classList.remove("active")
-navBtn3.classList.remove("active")
-navBtn4.classList.remove("active")
-
-navBtn2.classList.add("active")
-skills.classList.add("sec-dis")
-nav.classList.toggle("dis");
-document.body.classList.toggle("overflow");
-
-})
-navBtn1.addEventListener('click',() =>{
-portfolio.classList.remove("sec-dis")
-about.classList.add("sec-dis")
-navBtn1.classList.add("active")
-navBtn3.classList.remove("active")
-navBtn4.classList.remove("active")
-contact.classList.remove("sec-dis")
-
-navBtn5.classList.remove("active")
-services.classList.remove("sec-dis")
-navBtn2.classList.remove("active")
-skills.classList.remove("sec-dis")
-nav.classList.toggle("dis");
-document.body.classList.toggle("overflow");
-
-})
-navBtn3.addEventListener('click',() =>{
-portfolio.classList.add("sec-dis")
-about.classList.remove("sec-dis")
-navBtn1.classList.remove("active")
-navBtn3.classList.add("active")
-navBtn4.classList.remove("active")
-contact.classList.remove("sec-dis")
-
-navBtn5.classList.remove("active")
-services.classList.remove("sec-dis")
-navBtn2.classList.remove("active")
-skills.classList.remove("sec-dis")
-nav.classList.toggle("dis");
-document.body.classList.toggle("overflow");
-
-})
-navBtn4.addEventListener('click',() =>{
-portfolio.classList.remove("sec-dis")
-about.classList.remove("sec-dis")
-navBtn1.classList.remove("active")
-navBtn3.classList.remove("active")
-navBtn4.classList.add("active")
-contact.classList.remove("sec-dis")
-
-navBtn5.classList.remove("active")
-services.classList.add("sec-dis")
-navBtn2.classList.remove("active")
-skills.classList.remove("sec-dis")
-nav.classList.toggle("dis");
-document.body.classList.toggle("overflow");
-
-})
-navBtn5.addEventListener('click',() =>{
-portfolio.classList.remove("sec-dis")
-about.classList.remove("sec-dis")
-navBtn1.classList.remove("active")
-navBtn3.classList.remove("active")
-navBtn4.classList.remove("active")
-contact.classList.add("sec-dis")
-
-navBtn5.classList.add("active")
-services.classList.remove("sec-dis")
-navBtn2.classList.remove("active")
-skills.classList.remove("sec-dis")
-nav.classList.toggle("dis");
-document.body.classList.toggle("overflow");
-
-})
-conbtn.addEventListener('click',() =>{
-about.classList.remove("sec-dis")
-navBtn1.classList.remove("active")
-contact.classList.add("sec-dis")
-navBtn5.classList.add("active")
-
-
-})
-
-
-
-var colour="#FB78AB"; // "random" can be replaced with any valid colour ie: "red"...
-var sparkles=80;// increase of decrease for number of sparkles falling
-
-
-var x=ox=400;
-var y=oy=300;
-var swide=800;
-var shigh=600;
-var sleft=sdown=0;
-var tiny=new Array();
-var star=new Array();
-var starv=new Array();
-var starx=new Array();
-var stary=new Array();
-var tinyx=new Array();
-var tinyy=new Array();
-var tinyv=new Array();
-
-colours=new Array('#ff0000','#00ff00','#ffffff','#ff00ff','#ffa500','#ffff00','#00ff00','#ffffff','ff00ff')
-
-n = 10;
-y = 0;
-x = 0;
-n6=(document.getElementById&&!document.all);
-ns=(document.layers);
-ie=(document.all);
-d=(ns||ie)?'document.':'document.getElementById("';
-a=(ns||n6)?'':'all.';
-n6r=(n6)?'")':'';
-s=(ns)?'':'.style';
-
-if (ns){
-	for (i = 0; i < n; i++)
-		document.write('<layer name="dots'+i+'" top=0 left=0 width='+i/2+' height='+i/2+' bgcolor=#ff0000></layer>');
+/* ---------- background starfield/grid canvas ---------- */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W,H, stars=[];
+function resize(){ W=canvas.width=innerWidth; H=canvas.height=innerHeight;
+  stars = Array.from({length:120},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+0.3,s:Math.random()*0.4+0.1}));
 }
-
-if (ie)
-	document.write('<div id="con" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
-
-if (ie||n6){
-	for (i = 0; i < n; i++)
-		document.write('<div id="dots'+i+'" style="position:absolute;top:0px;left:0px;width:'+i/2+'px;height:'+i/2+'px;background:#ff0000;font-size:'+i/2+'"></div>');
+resize(); window.addEventListener('resize', resize);
+function drawStars(){
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='rgba(77,234,255,0.8)';
+  stars.forEach(st=>{
+    st.y += st.s; if(st.y>H){st.y=0; st.x=Math.random()*W;}
+    ctx.globalAlpha = 0.4 + Math.sin(st.y*0.05)*0.3;
+    ctx.beginPath(); ctx.arc(st.x, st.y, st.r, 0, Math.PI*2); ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(drawStars);
 }
+drawStars();
 
-if (ie)
-	document.write('</div></div>');
-(ns||n6)?window.captureEvents(Event.MOUSEMOVE):0;
+/* ---------- SITE-WIDE DRIVING CAR: arrow-key NFS-style controls ---------- */
+(function(){
+  const car = document.getElementById('car');
+  const glyph = car.querySelector('.car-glyph');
+  const driveHint = document.getElementById('driveHint');
+  const trackCanvas = document.getElementById('trackCanvas');
+  const tctx = trackCanvas.getContext('2d');
+  if(window.matchMedia('(hover: none)').matches) return;
 
-function Mouse(evnt){
+  const RADIUS = 20;
+  const BASE_ROTATION = 180; // sprite noses "up" by default, so 180 faces it down the page
+  const MAX_SPEED = 24, ACCEL = 1.1, BRAKE_ACCEL = 1.1, FRICTION = 0.06;
+  const STEER_ACCEL = 1.7, STEER_MAX = 17, STEER_FRICTION = 0.93;
+  const HEADING_EASE = 0.1;
 
-	y = (ns||n6)?evnt.pageY+4 - window.pageYOffset:event.y+4;
-	x = (ns||n6)?evnt.pageX+1:event.x+1;
+  // --- winding track path: both edges are a function of absolute document Y,
+  // so the road is a fixed, real path baked into the page (not random per frame) ---
+  const MARGIN_BASE = 30, MARGIN_AMP = 20, WAVELEN = 820;
+  function leftEdgeAt(docY){ return MARGIN_BASE + MARGIN_AMP * Math.sin(docY / WAVELEN); }
+  function rightEdgeAt(docY){ return innerWidth - MARGIN_BASE - MARGIN_AMP * Math.sin(docY / WAVELEN + 2.1); }
+
+  let dpr = Math.min(window.devicePixelRatio||1, 2);
+  function resizeTrack(){
+    dpr = Math.min(window.devicePixelRatio||1, 2);
+    trackCanvas.width = innerWidth*dpr; trackCanvas.height = innerHeight*dpr;
+    trackCanvas.style.width = innerWidth+'px'; trackCanvas.style.height = innerHeight+'px';
+    tctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  window.addEventListener('resize', resizeTrack);
+  resizeTrack();
+
+  function drawTrack(){
+    tctx.clearRect(0,0,innerWidth,innerHeight);
+    const scrollY = window.scrollY;
+    tctx.lineWidth = 3;
+    tctx.strokeStyle = 'rgba(77,234,255,0.65)';
+    tctx.shadowColor = '#4deaff';
+    tctx.shadowBlur = 10;
+    tctx.setLineDash([18,14]);
+    tctx.lineDashOffset = -scrollY;
+    [leftEdgeAt, rightEdgeAt].forEach(fn=>{
+      tctx.beginPath();
+      for(let sy=0; sy<=innerHeight; sy+=8){
+        const x = fn(scrollY + sy);
+        if(sy===0) tctx.moveTo(x, sy); else tctx.lineTo(x, sy);
+      }
+      tctx.stroke();
+    });
+    tctx.shadowBlur = 0;
+  }
+
+  const DIR_ANGLE = {ArrowUp:0, ArrowRight:90, ArrowDown:180, ArrowLeft:270};
+
+  let cx = innerWidth/2, cy = innerHeight*0.75;
+  let speed = 0, steerVel = 0, heading = BASE_ROTATION;
+  let activeDir = 'ArrowDown'; // rocket rests nose-down, ready to fly further into the site
+  let heldOrder = [];
+  let frame = 0, hintShown = false, hintHidden = false;
+  const keys = {};
+
+  driveHint.style.left = cx + 'px';
+  driveHint.style.top = cy + 'px';
+
+  function showHint(){
+    if(hintShown) return;
+    hintShown = true;
+    driveHint.classList.add('show');
+  }
+  function hideHint(){
+    if(hintHidden) return;
+    hintHidden = true;
+    driveHint.classList.remove('show');
+  }
+
+  window.addEventListener('keydown', e=>{
+    if(DIR_ANGLE.hasOwnProperty(e.key)){
+      keys[e.key] = true;
+      if(!heldOrder.includes(e.key)) heldOrder.push(e.key);
+      activeDir = e.key;
+      hideHint();
+      e.preventDefault();
+    }
+  });
+  window.addEventListener('keyup', e=>{
+    keys[e.key] = false;
+    heldOrder = heldOrder.filter(k=>k!==e.key);
+    if(activeDir === e.key) activeDir = heldOrder[heldOrder.length-1] || activeDir;
+  });
+  setTimeout(showHint, 1400);
+
+  function spawnTrail(x,y,scale){
+    const t = document.createElement('div');
+    t.className = 'trail';
+    const size = 10 + scale*14;
+    t.style.left = x+'px'; t.style.top = y+'px';
+    t.style.width = size+'px'; t.style.height = size+'px';
+    document.body.appendChild(t);
+    setTimeout(()=> t.remove(), 450);
+  }
+
+  function loop(){
+    frame++;
+    // forward/back (drives the page — Down drives further down the site, Up backs up)
+    if(keys['ArrowDown']){ speed = Math.min(speed + ACCEL, MAX_SPEED); hideHint(); }
+    else if(keys['ArrowUp']){ speed = Math.max(speed - BRAKE_ACCEL, -MAX_SPEED); hideHint(); }
+    else speed *= (1 - FRICTION);
+    if(Math.abs(speed) < 0.05) speed = 0;
+    if(speed !== 0) window.scrollBy(0, speed);
+
+    // steering (left/right) — loose friction = fast, drifty slides
+    if(keys['ArrowLeft']){ steerVel -= STEER_ACCEL; hideHint(); }
+    if(keys['ArrowRight']){ steerVel += STEER_ACCEL; hideHint(); }
+    steerVel *= STEER_FRICTION;
+    steerVel = Math.max(-STEER_MAX, Math.min(STEER_MAX, steerVel));
+    cx += steerVel;
+
+    // stay on the track — edges are a real winding path baked into the page
+    const docY = window.scrollY + cy;
+    const minX = leftEdgeAt(docY) + RADIUS, maxX = rightEdgeAt(docY) - RADIUS;
+    if(cx < minX){ cx = minX; steerVel = Math.abs(steerVel)*0.4; }
+    if(cx > maxX){ cx = maxX; steerVel = -Math.abs(steerVel)*0.4; }
+
+    const movingFast = Math.abs(speed) > MAX_SPEED*0.2;
+    const steeringHard = Math.abs(steerVel) > 4;
+    const drifting = movingFast || steeringHard;
+    car.classList.toggle('boost', drifting);
+    if(drifting && frame % 2 === 0){
+      const behindY = cy - Math.sign(speed || 1) * 36;
+      const jitterX = cx + (Math.random()-0.5)*8 - steerVel*0.35;
+      const scale = Math.max(Math.abs(steerVel)/STEER_MAX, Math.abs(speed)/MAX_SPEED);
+      spawnTrail(jitterX, behindY, Math.min(1, scale));
+    }
+
+    // face whichever arrow key is active — up=up, down=down, left=left, right=right —
+    // easing via the shortest rotational path so it doesn't spin the long way around
+    const targetHeading = DIR_ANGLE[activeDir];
+    let diff = ((targetHeading - heading + 540) % 360) - 180;
+    heading += diff * HEADING_EASE;
+    glyph.style.transform = 'rotate(' + heading + 'deg)';
+    car.style.transform = 'translate(' + cx + 'px,' + cy + 'px) translate(-50%,-50%)';
+
+    drawTrack();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+/* ---------- HUD nav toggle + active link + xp bar ---------- */
+const hamBtn = document.getElementById('hamBtn');
+const hudNav = document.getElementById('hudNav');
+hamBtn.addEventListener('click', ()=> hudNav.classList.toggle('open'));
+document.querySelectorAll('.hud-nav a').forEach(a=>{
+  a.addEventListener('click', (e)=>{
+    hudNav.classList.remove('open');
+    const target = document.getElementById(a.dataset.sec);
+    if(target){ e.preventDefault(); target.scrollIntoView({behavior:'smooth'}); }
+  });
+});
+
+const navLinks = document.querySelectorAll('.hud-nav a');
+const sections = Array.from(navLinks).map(a => document.getElementById(a.dataset.sec));
+const xpFill = document.getElementById('xpFill');
+const lvlTag = document.getElementById('lvlTag');
+
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - innerHeight;
+  const pct = Math.min(100, (scrollTop/docHeight)*100);
+  xpFill.style.width = pct+'%';
+
+  let activeIdx = 0;
+  sections.forEach((sec,i)=>{
+    if(sec && sec.getBoundingClientRect().top < innerHeight*0.4) activeIdx = i;
+  });
+  navLinks.forEach(a=>a.classList.remove('active'));
+  navLinks[activeIdx].classList.add('active');
+  lvlTag.textContent = '// LVL.0'+(activeIdx+1);
+}, {passive:true});
+
+/* ---------- intersection reveals: stat bars, map nodes, achievements ---------- */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const el = entry.target;
+      if(el.classList.contains('stat-card')){
+        const fill = el.querySelector('.stat-fill');
+        fill.style.width = fill.dataset.pct+'%';
+      }
+      if(el.classList.contains('map-node') || el.classList.contains('ach')){
+        el.classList.add('in');
+      }
+      io.unobserve(el);
+    }
+  });
+},{threshold:0.3});
+document.querySelectorAll('.stat-card, .map-node, .ach').forEach(el=>io.observe(el));
+
+/* ---------- project filter ---------- */
+const filterBtns = document.querySelectorAll('.filter-btn');
+const cartItems = document.querySelectorAll('#cartGrid .cart');
+filterBtns.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    filterBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    cartItems.forEach(card=>{
+      const cats = (card.dataset.cat || '').split(' ');
+      card.classList.toggle('hidden', f!=='all' && !cats.includes(f));
+    });
+  });
+});
+
+/* ---------- AI companion (scripted, no external API) ---------- */
+const aiFab = document.getElementById('aiFab');
+const aiPanel = document.getElementById('aiPanel');
+const aiClose = document.getElementById('aiClose');
+const aiBody = document.getElementById('aiBody');
+const aiInput = document.getElementById('aiInput');
+const aiSend = document.getElementById('aiSend');
+const quickReplies = document.getElementById('quickReplies');
+
+const KB = {
+  experience: "Ubair has 4+ years across 5 orgs:\n▸ Siparadigm Diagnostic (L5, current) — agentic document AI, vLLM serving\n▸ Melior ITS (L2) — RAG/agentic apps\n▸ Cowlar LLC (YC W17) — CV + inference infra\n▸ Iknex Lab — Neo4j graph research\n▸ Bytewise — Flask lead\nScroll the Career Map section for the full quest log.",
+  skills: "Core stat trees: Computer Vision (YOLO, Florence-2, DONUT), LLMs & GenAI (QLoRA/LoRA, RAG, agentic workflows, vLLM), MLOps (FastAPI, Docker, Nginx), Cloud (GCP/AWS/Azure/Paperspace). Check the Stats section for the full breakdown.",
+  projects: "19 real shipped projects pulled straight from Ubair's Upwork portfolio — spanning computer vision (satellite roof segmentation, optical fibre detection, smart cart AI), GenAI (CogniVision, virtual try-on, face emotion changer), and LLM agents (ADONUT, FiscalChat, ReAct Agent, n8n automations for GoHighLevel & Freshdesk). Scroll to Project Cartridges and use the filters to browse by category.",
+  achievements: "Trophy case: Dean's List x4, Bronze Medalist, first in his batch to land a job offer, and a Y Combinator (W17) company alum badge.",
+  contact: "Reach Ubair directly: ubair.nisar15@gmail.com or +92 309 612 8600. LinkedIn: pk.linkedin.com/in/ubairnisar0. Or just use the contact form at the bottom of this page.",
+  hire: "Ubair is open to full-time & remote-first ML/AI roles, flexible on time zones. Best next step: email ubair.nisar15@gmail.com or hit the contact form below — mention what you're building and he'll reply fast.",
+  llm: "On the LLM side: fine-tuning with QLoRA/LoRA via Unsloth, agentic workflows, RAG pipelines, and self-hosted serving on vLLM with quantization + speculative decoding for lower latency/cost.",
+  vision: "Computer vision work spans object detection & segmentation (YOLOv5/v8), document layout understanding (Florence-2, DONUT), and OCR (PaddleOCR, trOCR, docTR).",
+  yc: "Yes — Cowlar LLC is backed by Y Combinator (W17 batch). Ubair worked there as an ML/AI Engineer from May 2023–Sep 2024 building CV and inference systems.",
+  education: "Bachelor of Artificial Intelligence, FAST NUCES Islamabad (2020–2024), CGPA 3.37. Core courses: Programming for AI, Machine Learning, Computer Vision, NLP, MLOps.",
+  hello: "Hey, buddy!  Ask me about his experience, skills, projects, or how to get in touch."
+};
+
+function addMsg(text, who){
+  const div = document.createElement('div');
+  div.className = 'msg '+who;
+  div.textContent = text;
+  aiBody.appendChild(div);
+  aiBody.scrollTop = aiBody.scrollHeight;
+  return div;
 }
-
-(ns)?window.onMouseMove=Mouse:document.onmousemove=Mouse;
-
-function animate(){
-
-	o=(ns||n6)?window.pageYOffset:0;
-
-	if (ie)con.style.top=document.body.scrollTop + 'px';
-
-	for (i = 0; i < n; i++){
-
-		var temp1 = eval(d+a+"dots"+i+n6r+s);
-
-		randcolours = colours[Math.floor(Math.random()*colours.length)];
-
-		(ns)?temp1.bgColor = randcolours:temp1.background = randcolours; 
-
-		if (i < n-1){
-
-			var temp2 = eval(d+a+"dots"+(i+1)+n6r+s);
-			temp1.top = parseInt(temp2.top) + 'px';
-			temp1.left = parseInt(temp2.left) + 'px';
-
-		} 
-		else{
-
-			temp1.top = y+o + 'px';
-			temp1.left = x + 'px';
-		}
-	}
-
-	setTimeout("animate()",10);
+function botTyping(text){
+  const typing = addMsg('', 'bot');
+  typing.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span>';
+  setTimeout(()=>{ typing.textContent = text; aiBody.scrollTop = aiBody.scrollHeight; }, 550);
 }
-
-animate();
-
-window.onload=function() { if (document.getElementById) {
-	var i, rats, rlef, rdow;
-	for (var i=0; i<sparkles; i++) {
-		var rats=createDiv(3, 3);
-		rats.style.visibility="hidden";
-		rats.style.zIndex="999";
-		document.body.appendChild(tiny[i]=rats);
-		starv[i]=0;
-		tinyv[i]=0;
-		var rats=createDiv(5, 5);
-		rats.style.backgroundColor="transparent";
-		rats.style.visibility="hidden";
-		rats.style.zIndex="999";
-		var rlef=createDiv(1, 5);
-		var rdow=createDiv(5, 1);
-		rats.appendChild(rlef);
-		rats.appendChild(rdow);
-		rlef.style.top="2px";
-		rlef.style.left="0px";
-		rdow.style.top="0px";
-		rdow.style.left="2px";
-		document.body.appendChild(star[i]=rats);
-	}
-	set_width();
-	sparkle();
-}}
-
-function sparkle() {
-	var c;
-	if (Math.abs(x-ox)>1 || Math.abs(y-oy)>1) {
-		ox=x;
-		oy=y;
-		for (c=0; c<sparkles; c++) if (!starv[c]) {
-			star[c].style.left=(starx[c]=x)+"px";
-			star[c].style.top=(stary[c]=y+1)+"px";
-			star[c].style.clip="rect(0px, 5px, 5px, 0px)";
-			star[c].childNodes[0].style.backgroundColor=star[c].childNodes[1].style.backgroundColor=(colour=="random")?newColour():colour;
-			star[c].style.visibility="visible";
-			starv[c]=50;
-			break;
-		}
-	}
-	for (c=0; c<sparkles; c++) {
-		if (starv[c]) update_star(c);
-		if (tinyv[c]) update_tiny(c);
-	}
-	setTimeout("sparkle()", 40);
+function matchKB(raw){
+  const t = raw.toLowerCase();
+  if(/exper|career|job|work|company|siparadigm|melior|cowlar|iknex|bytewise/.test(t)) return KB.experience;
+  if(/skill|stat|tech|stack|tool/.test(t)) return KB.skills;
+  if(/project|cartridge|build|app|portfolio work/.test(t)) return KB.projects;
+  if(/achiev|award|medal|trophy|dean/.test(t)) return KB.achievements;
+  if(/contact|email|phone|reach|linkedin/.test(t)) return KB.contact;
+  if(/hire|job offer|available|recruit|opportunity/.test(t)) return KB.hire;
+  if(/llm|gpt|rag|fine[- ]?tun|lora|agent/.test(t)) return KB.llm;
+  if(/vision|cv |yolo|ocr|detect|segment/.test(t)) return KB.vision;
+  if(/yc |combinator|cowlar/.test(t)) return KB.yc;
+  if(/educat|degree|university|fast nuces|cgpa/.test(t)) return KB.education;
+  if(/hi|hello|hey|yo\b/.test(t)) return KB.hello;
+  // will say a counter question from its oringal question, a style of conversation
+  return "Let's keep it focused on Ubair's experience, skills, and projects. Ask me about those!";
 }
-
-function update_star(i) {
-	if (--starv[i]==25) star[i].style.clip="rect(1px, 4px, 4px, 1px)";
-	if (starv[i]) {
-		stary[i]+=1+Math.random()*3;
-		starx[i]+=(i%5-2)/5;
-		if (stary[i]<shigh+sdown) {
-			star[i].style.top=stary[i]+"px";
-			star[i].style.left=starx[i]+"px";
-		}
-		else {
-			star[i].style.visibility="hidden";
-			starv[i]=0;
-			return;
-		}
-	}
-	else {
-		tinyv[i]=50;
-		tiny[i].style.top=(tinyy[i]=stary[i])+"px";
-		tiny[i].style.left=(tinyx[i]=starx[i])+"px";
-		tiny[i].style.width="2px";
-		tiny[i].style.height="2px";
-		tiny[i].style.backgroundColor=star[i].childNodes[0].style.backgroundColor;
-		star[i].style.visibility="hidden";
-		tiny[i].style.visibility="visible"
-	}
+const QUICK = ["Experience","Skills","Projects","Achievements","Contact","Hire him"];
+function renderQuickReplies(){
+  quickReplies.innerHTML = '';
+  QUICK.forEach(q=>{
+    const b = document.createElement('button');
+    b.className = 'qr-btn'; b.textContent = q;
+    b.addEventListener('click', ()=> handleUserMessage(q));
+    quickReplies.appendChild(b);
+  });
 }
-
-function update_tiny(i) {
-	if (--tinyv[i]==25) {
-		tiny[i].style.width="1px";
-		tiny[i].style.height="1px";
-	}
-	if (tinyv[i]) {
-		tinyy[i]+=1+Math.random()*3;
-		tinyx[i]+=(i%5-2)/5;
-		if (tinyy[i]<shigh+sdown) {
-			tiny[i].style.top=tinyy[i]+"px";
-			tiny[i].style.left=tinyx[i]+"px";
-		}
-		else {
-			tiny[i].style.visibility="hidden";
-			tinyv[i]=0;
-			return;
-		}
-	}
-	else tiny[i].style.visibility="hidden";
+function handleUserMessage(text){
+  if(!text.trim()) return;
+  addMsg(text,'user');
+  aiInput.value='';
+  botTyping(matchKB(text));
 }
-
-document.onmousemove=mouse;
-function mouse(e) {
-	if (e) {
-		y=e.pageY;
-		x=e.pageX;
-	}
-	else {
-		set_scroll();
-		y=event.y+sdown;
-		x=event.x+sleft;
-	}
-}
-
-window.onscroll=set_scroll;
-function set_scroll() {
-	if (typeof(self.pageYOffset)=='number') {
-		sdown=self.pageYOffset;
-		sleft=self.pageXOffset;
-	}
-	else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
-		sdown=document.body.scrollTop;
-		sleft=document.body.scrollLeft;
-	}
-	else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
-		sleft=document.documentElement.scrollLeft;
-		sdown=document.documentElement.scrollTop;
-	}
-	else {
-		sdown=0;
-		sleft=0;
-	}
-}
-
-window.onresize=set_width;
-function set_width() {
-	var sw_min=999999;
-	var sh_min=999999;
-	if (document.documentElement && document.documentElement.clientWidth) {
-		if (document.documentElement.clientWidth>0) sw_min=document.documentElement.clientWidth;
-		if (document.documentElement.clientHeight>0) sh_min=document.documentElement.clientHeight;
-	}
-	if (typeof(self.innerWidth)=='number' && self.innerWidth) {
-		if (self.innerWidth>0 && self.innerWidth<sw_min) sw_min=self.innerWidth;
-		if (self.innerHeight>0 && self.innerHeight<sh_min) sh_min=self.innerHeight;
-	}
-	if (document.body.clientWidth) {
-		if (document.body.clientWidth>0 && document.body.clientWidth<sw_min) sw_min=document.body.clientWidth;
-		if (document.body.clientHeight>0 && document.body.clientHeight<sh_min) sh_min=document.body.clientHeight;
-	}
-	if (sw_min==999999 || sh_min==999999) {
-		sw_min=800;
-		sh_min=600;
-	}
-	swide=sw_min;
-	shigh=sh_min;
-}
-
-function createDiv(height, width) {
-	var div=document.createElement("div");
-	div.style.position="absolute";
-	div.style.height=height+"px";
-	div.style.width=width+"px";
-	div.style.overflow="hidden";
-	return (div);
-}
-
-function newColour() {
-	var c=new Array();
-	c[0]=255;
-	c[1]=Math.floor(Math.random()*256);
-	c[2]=Math.floor(Math.random()*(256-c[1]/2));
-	c.sort(function(){return (0.5 - Math.random());});
-	return ("rgb("+c[0]+", "+c[1]+", "+c[2]+")");
-}
-// ]]>
-
-
+let aiBooted = false;
+aiFab.addEventListener('click', ()=>{
+  aiPanel.classList.toggle('open');
+  if(!aiBooted){
+    aiBooted = true;
+    botTyping(KB.hello);
+    renderQuickReplies();
+  }
+});
+aiClose.addEventListener('click', ()=> aiPanel.classList.remove('open'));
+aiSend.addEventListener('click', ()=> handleUserMessage(aiInput.value));
+aiInput.addEventListener('keydown', e=>{ if(e.key==='Enter') handleUserMessage(aiInput.value); });
 </script>
 </body>
 </html>
