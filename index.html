@@ -122,12 +122,10 @@ section{position:relative;z-index:1;padding:120px 8vw;}
 .hero-stat span{font-family:var(--mono);font-size:11px;color:var(--dim);}
 .hero-cta{display:flex;gap:16px;flex-wrap:wrap;}
 
-.hero-char{flex:0 0 320px;position:relative;display:flex;justify-content:center;}
+.hero-char{flex:0 0 460px;position:relative;display:flex;justify-content:center;}
 .char-frame{
-  position:relative;width:300px;height:340px;border:2px solid var(--cyan);
-  background:rgba(77,234,255,.06);
-  box-shadow:0 0 40px rgba(77,234,255,.25);
-  overflow:hidden;animation:float 4s ease-in-out infinite;
+  position:relative;width:440px;height:500px;
+  animation:float 4s ease-in-out infinite;
 }
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
 .char-frame img{width:100%;height:100%;object-fit:cover;object-position:top;filter:drop-shadow(0 0 20px rgba(77,234,255,.4));}
@@ -138,8 +136,9 @@ section{position:relative;z-index:1;padding:120px 8vw;}
 }
 #asciiFrame{cursor:grab;}
 #asciiFrame:active{cursor:grabbing;}
-#asciiFrame table{margin:0 auto;}
-#asciiFrame td{font-family:'JetBrains Mono',monospace !important;}
+#asciiFrame table{margin:0 auto;background:transparent !important;}
+#asciiFrame tr{background:transparent !important;}
+#asciiFrame td{font-family:'JetBrains Mono',monospace !important;background-color:transparent !important;}
 .ascii-loading{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   font-family:var(--mono);color:var(--green);font-size:11px;letter-spacing:1px;text-align:center;
@@ -214,6 +213,10 @@ section{position:relative;z-index:1;padding:120px 8vw;}
   background:var(--bg2);padding:5px 10px;border-radius:20px;
 }
 @media screen and (max-width:800px){.stat-grid{grid-template-columns:1fr;}}
+@media screen and (max-width:520px){
+  .hero-char{flex:0 0 auto;width:100%;}
+  .char-frame{width:300px;height:340px;max-width:80vw;max-height:80vw;}
+}
 
 /* ---------- CAREER MAP ---------- */
 .map-wrap{position:relative;padding-left:6px;}
@@ -1141,12 +1144,12 @@ scene.add(rimLight);
 const renderer = new THREE.WebGLRenderer({ alpha: true });
 renderer.setSize(W, H);
 
-const effect = new AsciiEffect(renderer, ' .:-=+*#%@', { invert: true, resolution: 0.18 });
+const effect = new AsciiEffect(renderer, ' .\'`^",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$', { invert: false, resolution: 0.28 });
 effect.setSize(W, H);
 effect.domElement.style.color = '#4deaff';
 effect.domElement.style.backgroundColor = 'transparent';
-effect.domElement.style.fontSize = '7px';
-effect.domElement.style.lineHeight = '7px';
+effect.domElement.style.fontSize = '4.5px';
+effect.domElement.style.lineHeight = '4.5px';
 frame.appendChild(effect.domElement);
 
 const controls = new OrbitControls(camera, effect.domElement);
@@ -1160,6 +1163,18 @@ controls.dampingFactor = 0.08;
 const loader = new GLTFLoader();
 loader.load('avatar.glb', (gltf) => {
   const model = gltf.scene;
+
+  // render the model's own photo texture unlit — our synthetic lights were
+  // re-shading it and flattening the actual facial detail into a generic sculpt
+  model.traverse((child) => {
+    if (child.isMesh && child.material) {
+      const wasArray = Array.isArray(child.material);
+      const mats = wasArray ? child.material : [child.material];
+      const newMats = mats.map(m => m.map ? new THREE.MeshBasicMaterial({ map: m.map }) : m);
+      child.material = wasArray ? newMats : newMats[0];
+    }
+  });
+
   const box = new THREE.Box3().setFromObject(model);
   const size = box.getSize(new THREE.Vector3());
   const center = box.getCenter(new THREE.Vector3());
@@ -1173,10 +1188,12 @@ loader.load('avatar.glb', (gltf) => {
   console.error('GLB load error:', err);
 });
 
+let animFrame = 0;
 function animate(){
   requestAnimationFrame(animate);
   controls.update();
-  effect.render(scene, camera);
+  animFrame++;
+  if(animFrame % 2 === 0) effect.render(scene, camera); // throttle the ASCII rebuild — it's a full DOM rewrite each call
 }
 animate();
 </script>
