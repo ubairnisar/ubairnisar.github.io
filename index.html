@@ -1144,12 +1144,12 @@ scene.add(rimLight);
 const renderer = new THREE.WebGLRenderer({ alpha: true });
 renderer.setSize(W, H);
 
-const effect = new AsciiEffect(renderer, ' .\'`^",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$', { invert: false, resolution: 0.28 });
+const effect = new AsciiEffect(renderer, ' .:-+*=%@#', { invert: false, resolution: 0.205 });
 effect.setSize(W, H);
 effect.domElement.style.color = '#4deaff';
 effect.domElement.style.backgroundColor = 'transparent';
-effect.domElement.style.fontSize = '4.5px';
-effect.domElement.style.lineHeight = '4.5px';
+effect.domElement.style.fontSize = '6px';
+effect.domElement.style.lineHeight = '6px';
 frame.appendChild(effect.domElement);
 
 const controls = new OrbitControls(camera, effect.domElement);
@@ -1164,8 +1164,8 @@ const loader = new GLTFLoader();
 loader.load('avatar.glb', (gltf) => {
   const model = gltf.scene;
 
-  // render the model's own photo texture unlit — our synthetic lights were
-  // re-shading it and flattening the actual facial detail into a generic sculpt
+  // render the model's own photo texture unlit — lit shading was flattening
+  // the actual facial detail into a generic sculpt
   model.traverse((child) => {
     if (child.isMesh && child.material) {
       const wasArray = Array.isArray(child.material);
