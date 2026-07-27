@@ -136,6 +136,14 @@ section{position:relative;z-index:1;padding:120px 8vw;}
   background:var(--bg);border:1px solid var(--amber);color:var(--amber);
   font-family:var(--pixel);font-size:9px;padding:6px 12px;border-radius:20px;white-space:nowrap;
 }
+#asciiFrame{cursor:grab;}
+#asciiFrame:active{cursor:grabbing;}
+#asciiFrame table{margin:0 auto;}
+#asciiFrame td{font-family:'JetBrains Mono',monospace !important;}
+.ascii-loading{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);color:var(--green);font-size:11px;letter-spacing:1px;text-align:center;
+}
 
 .btn{
   font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:1px;
@@ -400,10 +408,10 @@ footer a{color:var(--cyan);}
       </div>
     </div>
     <div class="hero-char">
-      <div class="char-frame">
-        <img src="profile_port.png" alt="Ubair Nisar">
+      <div class="char-frame" id="asciiFrame">
+        <div class="ascii-loading" id="asciiLoading">LOADING MODEL<span class="blink">_</span></div>
       </div>
-      <div class="char-tag">PLAYER ONE</div>
+      <div class="char-tag">PLAYER ONE · DRAG TO ROTATE</div>
     </div>
   </div>
   <div class="hero-scroll">USE ↑ ↓ ← → TO FLY THROUGH THE SITE <i class="fas fa-chevron-down"></i></div>
@@ -1097,6 +1105,80 @@ aiFab.addEventListener('click', ()=>{
 aiClose.addEventListener('click', ()=> aiPanel.classList.remove('open'));
 aiSend.addEventListener('click', ()=> handleUserMessage(aiInput.value));
 aiInput.addEventListener('keydown', e=>{ if(e.key==='Enter') handleUserMessage(aiInput.value); });
+</script>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const frame = document.getElementById('asciiFrame');
+const loadingEl = document.getElementById('asciiLoading');
+const W = frame.clientWidth, H = frame.clientHeight;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
+camera.position.set(0, 0.2, 3.2);
+
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0x222233, 1.2);
+scene.add(hemiLight);
+const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+keyLight.position.set(2, 3, 4);
+scene.add(keyLight);
+const rimLight = new THREE.DirectionalLight(0x4deaff, 1.0);
+rimLight.position.set(-3, -1, -2);
+scene.add(rimLight);
+
+const renderer = new THREE.WebGLRenderer({ alpha: true });
+renderer.setSize(W, H);
+
+const effect = new AsciiEffect(renderer, ' .:-=+*#%@', { invert: true, resolution: 0.18 });
+effect.setSize(W, H);
+effect.domElement.style.color = '#4deaff';
+effect.domElement.style.backgroundColor = 'transparent';
+effect.domElement.style.fontSize = '7px';
+effect.domElement.style.lineHeight = '7px';
+frame.appendChild(effect.domElement);
+
+const controls = new OrbitControls(camera, effect.domElement);
+controls.enableZoom = false;
+controls.enablePan = false;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 2.2;
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+
+const loader = new GLTFLoader();
+loader.load('avatar.glb', (gltf) => {
+  const model = gltf.scene;
+  const box = new THREE.Box3().setFromObject(model);
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  model.position.sub(center);
+  model.scale.setScalar(2.1 / maxDim);
+  scene.add(model);
+  loadingEl.style.display = 'none';
+}, undefined, (err) => {
+  loadingEl.textContent = 'MODEL FAILED TO LOAD';
+  console.error('GLB load error:', err);
+});
+
+function animate(){
+  requestAnimationFrame(animate);
+  controls.update();
+  effect.render(scene, camera);
+}
+animate();
 </script>
 </body>
 </html>
