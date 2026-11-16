@@ -952,39 +952,39 @@ const JOBS=[
 
 /* ================= CASE FILES (from CV) ================= */
 const CASES=[
- {t:'ADONUT: agentic document understanding',w:'Siparadigm',img:'projects/adonut.jpg',
+ {id:'adonut',t:'ADONUT: agentic document understanding',w:'Siparadigm',img:'assets/work/adonut-card.jpg',page:'work/adonut.html',
   p:'Complex documents (tables spanning pages, deep section hierarchies) break standard extraction, so downstream systems get wrong data.',
   a:'An agentic system that reconstructs a hierarchical document tree and recognises multi-page spanning tables, with a custom layout stage and a fine-tuned OCR model.',
   r:'92.2 TEDS on OmniDocBench tables (+9.7 over the next-best published method) and 0.89 / 0.85 STEDS on HRDoc hierarchy.',big:'92.2 TEDS',chips:['Agents','Layout detection','OCR','Qwen-VL']},
- {t:'A custom layout detector',w:'Siparadigm',glyph:'0.67→0.84',
+ {id:'layout',t:'A custom layout detector',w:'Siparadigm',glyph:'0.67→0.84',
   p:'Off-the-shelf detectors missed too many layout regions (mAP 0.67) for medical and financial documents.',
   a:'Designed a new architecture: Qwen-VL backbone with residual connections, multi-scale feature fusion and dilated convolutions, paired with an RT-DETR detection head.',
   r:'mAP rose from 0.67 to 0.84, and ADONUT\'s layout stage reached 99.4% F1 on RealDocBench.',big:'+0.17 mAP',chips:['PyTorch','Qwen-VL','RT-DETR']},
- {t:'Documents to an HL7 knowledge graph',w:'Siparadigm',glyph:'HL7',
+ {id:'hl7',t:'Documents to an HL7 knowledge graph',w:'Siparadigm',glyph:'HL7',
   p:'Extracted medical data has to follow strict HL7 schemas; an LLM alone will sometimes invent mappings.',
   a:'An LLM proposes HL7 ontology mappings for each element, and a deterministic rule layer enforces schema constraints and vocabulary normalisation in Neo4j.',
   r:'Mappings stay within the schema, and anomalies and discrepancies are flagged automatically.',big:'Rule-checked',chips:['Neo4j','LLMs','HL7']},
- {t:'Monteur AI: answers from huge manuals',w:'Melior ITS',img:'projects/monteur-ai.png',
+ {id:'monteur',t:'Monteur AI: answers from huge manuals',w:'Melior ITS',img:'projects/monteur-ai.png',
   p:'Machine operators lost time hunting for answers across large sets of manuals, and wrong answers are costly.',
   a:'Hybrid retrieval (BM25 + dense) with reranking and source-location grounding, self-hosted on DigitalOcean with vLLM and on-demand autoscaling, GDPR-compliant.',
   r:'90% answer accuracy, with every answer pointing to its source location.',big:'90%',chips:['RAG','Reranking','vLLM']},
- {t:'Tender Assist: RFP drafts in a day',w:'Melior ITS',glyph:'RFP',
+ {id:'tender',t:'Tender Assist: RFP drafts in a day',w:'Melior ITS',glyph:'RFP',
   p:'Writing tender responses took the team weeks, and every response had to sound like the company.',
   a:'A generator that drafts replies in the company\'s own writing and structure, learned from its past responses.',
   r:'Drafting time dropped from weeks to a day.',big:'Weeks→1 day',chips:['LLMs','Agents','Style transfer']},
- {t:'Optical-fibre sorting for AWS cable',w:'Cowlar · Viaphoton',img:'projects/optical-fibre.jpg',
+ {id:'fibre',t:'Optical-fibre sorting for AWS cable',w:'Cowlar · Viaphoton',img:'projects/optical-fibre.jpg',
   p:'Fibres had to be sorted by colour on a live factory line producing cable for AWS data centres.',
   a:'A colour-based computer-vision sorting system deployed at the Viaphoton factory in Illinois, with human-in-the-loop verification.',
   r:'99% sorting accuracy on the production line.',big:'99%',chips:['OpenCV','Industrial CV','HITL']},
- {t:'Price-tag OCR at the edge',w:'Cowlar · Al Meera',img:'projects/edge-ai-ocr.jpg',
+ {id:'ocr',t:'Price-tag OCR at the edge',w:'Cowlar · Al Meera',img:'projects/edge-ai-ocr.jpg',
   p:'Store staff needed to check that shelf price tags match SAP, quickly and without a server round-trip.',
   a:'Compared docTR, trOCR and PaddleOCR, then deployed on-device with TensorFlow Lite on Qualcomm NPUs.',
   r:'Staff verify shelf prices against SAP in real time, on the device.',big:'On-device',chips:['TFLite','Qualcomm NPU','OCR']},
- {t:'Smart carts that see what you add',w:'Cowlar · Al Meera',img:'projects/smart-cart.png',
+ {id:'carts',t:'Smart carts that see what you add',w:'Cowlar · Al Meera',img:'projects/smart-cart.png',
   p:'Carts had to recognise products and add/remove actions live, from many cameras at once.',
   a:'MoViNet + TensorFlow action recognition; video served across a multi-cluster Kubernetes pipeline on GCP with Nginx, and human-in-the-loop labelling for retraining.',
   r:'Live at Al Meera, Qatar, used by about 2,000 shoppers a day.',big:'~2,000/day',chips:['MoViNet','Kubernetes','GCP']},
- {t:'Maritime data as a graph',w:'Iknex Lab',glyph:'Neo4j',
+ {id:'maritime',t:'Maritime data as a graph',w:'Iknex Lab',glyph:'Neo4j',
   p:'Ship journey data lived in long Excel sheets, which made anomalies hard to spot.',
   a:'Modelled ships, ports, routes and locations as a Neo4j graph and built visualisations on top.',
   r:'Better anomaly detection along each ship\'s journey.',big:'Graph',chips:['Neo4j','Python']}
@@ -997,9 +997,17 @@ const ARCH=[{"cat": ["cv", "genai"], "img": "projects/satellite-roof.jpg", "tag"
     document.getElementById('dlgChips').innerHTML=chips.map(c=>'<span class="chip">'+c+'</span>').join('');
     dlg.showModal?dlg.showModal():dlg.setAttribute('open','')}
   const cases=document.getElementById('cases');
-  CASES.forEach(c=>{const b=document.createElement('button');b.className='case';
-    b.innerHTML='<div class="vis'+(c.img?'':' topo')+'"'+(c.glyph?' data-glyph="'+c.glyph+'"':'')+'>'+(c.img?'<img src="'+c.img+'" alt="" loading="lazy" decoding="async">':'')+'<span class="where">'+c.w+'</span></div><div class="body"><h3>'+c.t+'</h3><p class="prb"><span class="cap">Problem</span>'+c.p+'</p><div class="res"><b>'+c.big+'</b><span>Open case →</span></div></div>';
-    b.addEventListener('click',()=>open({tag:c.w,title:c.t,src:c.img,pas:[['Problem',c.p],['Approach',c.a],['Result',c.r]],chips:c.chips}));cases.appendChild(b)});
+  const byId={};
+  CASES.forEach(c=>{const b=document.createElement(c.page?'a':'button');b.className='case';b.id='case-'+c.id;if(c.page)b.href=c.page;
+    b.innerHTML='<div class="vis'+(c.img?'':' topo')+'"'+(c.glyph?' data-glyph="'+c.glyph+'"':'')+'>'+(c.img?'<img src="'+c.img+'" alt="" loading="lazy" decoding="async">':'')+'<span class="where">'+c.w+'</span></div><div class="body"><h3>'+c.t+'</h3><p class="prb"><span class="cap">Problem</span>'+c.p+'</p><div class="res"><b>'+c.big+'</b><span>'+(c.page?'Full case study + pipeline diagram →':'Open case →')+'</span></div></div>';
+    const show=()=>open({tag:c.w,title:c.t,src:c.img,pas:[['Problem',c.p],['Approach',c.a],['Result',c.r]],chips:c.chips});
+    if(!c.page)b.addEventListener('click',()=>{show();history.replaceState(null,'','#case-'+c.id)});
+    byId[c.id]={el:b,show,page:c.page};cases.appendChild(b)});
+  // deep links: index.html#case-<id> scrolls to the case and opens it (used by the CV)
+  function fromHash(){const m=location.hash.match(/^#case-([a-z0-9-]+)$/);if(!m||!byId[m[1]])return;const c=byId[m[1]];
+    if(c.page){location.replace(c.page);return}
+    c.el.scrollIntoView({block:'center'});setTimeout(c.show,250)}
+  addEventListener('hashchange',fromHash);fromHash();
   // archive
   const CATS=[['all','All'],['cv','Computer vision'],['genai','GenAI'],['agent','LLMs & agents'],['automation','Automation'],['fullstack','Full-stack']];
   const grid=document.getElementById('agrid'),fb=document.getElementById('filters');
@@ -1012,6 +1020,7 @@ const ARCH=[{"cat": ["cv", "genai"], "img": "projects/satellite-roof.jpg", "tag"
     b.textContent=l+' ('+(k==='all'?ARCH.length:ARCH.filter(p=>p.cat.includes(k)).length)+')';b.addEventListener('click',()=>filt(k));fb.appendChild(b)});
   filt('all');
   document.getElementById('dlgClose').addEventListener('click',()=>dlg.close());
+  dlg.addEventListener('close',()=>{if(/^#case-/.test(location.hash))history.replaceState(null,'',location.pathname+location.search)});
   dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
 })();
 
