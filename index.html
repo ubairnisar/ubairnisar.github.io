@@ -57,8 +57,13 @@ h2 em{font-style:normal;color:var(--accent)}
 header.top{position:sticky;top:0;z-index:50;background:rgba(242,244,241,.88);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid transparent;transition:border-color .3s}
 header.top.scrolled{border-bottom-color:var(--line)}
 header.top .in{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px;position:relative}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-display);font-weight:600;font-size:19px;letter-spacing:-.02em}
-.logo svg{width:28px;height:28px}
+.logo{display:flex;flex-direction:column;gap:3px;text-decoration:none;line-height:1}
+.logo .wm{font-family:var(--f-display);font-weight:700;font-size:22px;letter-spacing:-.04em;display:inline-flex;align-items:baseline;gap:.22em}
+.logo .wm span{color:var(--accent)}
+.logo .wm i{width:7px;height:7px;border-radius:50%;background:var(--ball);margin-left:-.12em;transition:transform .3s}
+.logo:hover .wm i{transform:translateY(-4px)}
+.logo .role{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:6px}
+.logo .role::before{content:'';width:14px;height:1.5px;background:var(--ball)}
 nav.links{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px}
 nav.links a{text-decoration:none;color:var(--muted);font-size:14px;padding:6px 14px;border-radius:999px;transition:background .2s,color .2s}
 nav.links a:hover{color:var(--ink)}
@@ -180,7 +185,9 @@ h1 .works{color:var(--accent)}
 .caps{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:36px}
 .capc{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;display:flex;flex-direction:column;gap:14px;min-width:0;position:relative;overflow:hidden}
 .capc .top{display:flex;align-items:center;gap:14px}
-.capc .glyph{width:46px;height:46px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:18px;flex:none}
+.capc .glyph{width:84px;height:84px;border-radius:16px;background:var(--panel);display:grid;place-items:center;flex:none;overflow:hidden}
+.capc .glyph .lot{width:84px;height:84px}
+.capc .top{align-items:center}
 .capc h3{margin:0;font-family:var(--f-display);font-weight:600;font-size:22px;letter-spacing:-.015em;line-height:1.2}
 .capc .area{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .capc p{margin:0;color:var(--text)}
@@ -413,8 +420,8 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
 <header class="top" id="hdr">
   <div class="wrap in">
     <a class="logo" href="#top" aria-label="Ubair Nisar, home">
-      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#13201d"/><g fill="none" stroke="#a9bdb4" stroke-width="1.4"><ellipse cx="16" cy="18" rx="11" ry="8"/><ellipse cx="16" cy="18" rx="6.5" ry="4.5"/></g><circle cx="16" cy="18" r="2.6" fill="#ff7a1a"/></svg>
-      Ubair Nisar
+      <span class="wm">Ubair <span>Nisar</span><i aria-hidden="true"></i></span>
+      <span class="role">ML / AI Engineer</span>
     </a>
     <nav class="links" id="navLinks" aria-label="Sections">
       <a href="#approach">Approach</a>
@@ -528,25 +535,25 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
   </div>
   <div class="caps" id="caps">
     <article class="capc">
-      <div class="top"><span class="glyph"><i class="fas fa-file-alt"></i></span><div><span class="area">Document AI</span><h3>Make complex documents machine-readable</h3></div></div>
+      <div class="top"><span class="glyph"><span class="lot" data-cap="doc"></span></span><div><span class="area">Document AI</span><h3>Make complex documents machine-readable</h3></div></div>
       <div class="gen"><p>Tables that span pages, nested sections, handwriting, medical records: I turn them into clean, structured data that systems can trust.</p></div>
       <div class="spec"><div class="chips"><span class="chip">Layout detection</span><span class="chip">Florence-2</span><span class="chip">Qwen-VL</span><span class="chip">RT-DETR</span><span class="chip">docTR</span><span class="chip">trOCR</span><span class="chip">PaddleOCR</span><span class="chip">Neo4j · HL7</span></div>
         <div class="proofline"><b>99.4% F1</b><span>ADONUT layout stage on RealDocBench</span></div></div>
     </article>
     <article class="capc">
-      <div class="top"><span class="glyph"><i class="fas fa-comments"></i></span><div><span class="area">LLMs &amp; agents</span><h3>Ground language models in your own data</h3></div></div>
+      <div class="top"><span class="glyph"><span class="lot" data-cap="llm"></span></span><div><span class="area">LLMs &amp; agents</span><h3>Ground language models in your own data</h3></div></div>
       <div class="gen"><p>Assistants that answer from your documents with sources, and agents that draft, check and route work instead of just chatting.</p></div>
       <div class="spec"><div class="chips"><span class="chip">QLoRA / LoRA</span><span class="chip">Unsloth</span><span class="chip">RAG · BM25 + dense</span><span class="chip">Reranking</span><span class="chip">LangChain</span><span class="chip">LangGraph</span><span class="chip">LLM evaluation</span><span class="chip">OpenAI · Gemini</span></div>
         <div class="proofline"><b>90%</b><span>answer accuracy for Monteur AI across large manual sets</span></div></div>
     </article>
     <article class="capc">
-      <div class="top"><span class="glyph"><i class="fas fa-eye"></i></span><div><span class="area">Computer vision</span><h3>Teach cameras to understand what they see</h3></div></div>
+      <div class="top"><span class="glyph"><span class="lot" data-cap="cv"></span></span><div><span class="area">Computer vision</span><h3>Teach cameras to understand what they see</h3></div></div>
       <div class="gen"><p>Detection, tracking and action recognition that run in factories, stores and on the road, including on small devices at the edge.</p></div>
       <div class="spec"><div class="chips"><span class="chip">Object detection</span><span class="chip">Tracking</span><span class="chip">Video action recognition</span><span class="chip">MoViNet</span><span class="chip">OpenCV</span><span class="chip">TFLite</span><span class="chip">Qualcomm NPU</span></div>
         <div class="proofline"><b>99%</b><span>fibre sorting accuracy at the Viaphoton factory, Illinois</span></div></div>
     </article>
     <article class="capc">
-      <div class="top"><span class="glyph"><i class="fas fa-tachometer-alt"></i></span><div><span class="area">Inference &amp; MLOps</span><h3>Run models faster and cheaper, reliably</h3></div></div>
+      <div class="top"><span class="glyph"><span class="lot" data-cap="inf"></span></span><div><span class="area">Inference &amp; MLOps</span><h3>Run models faster and cheaper, reliably</h3></div></div>
       <div class="gen"><p>Self-hosted serving that scales with traffic, cuts latency and cost, and keeps working when a node fails.</p></div>
       <div class="spec"><div class="chips"><span class="chip">vLLM</span><span class="chip">Quantization</span><span class="chip">Speculative decoding</span><span class="chip">FastAPI</span><span class="chip">Docker</span><span class="chip">Kubernetes</span><span class="chip">Nginx</span><span class="chip">CI/CD</span></div>
         <div class="proofline"><b>Multi-cluster</b><span>Kubernetes on GCP serving video from many smart carts</span></div></div>
@@ -858,6 +865,40 @@ function mount(node,data,{loop=false,ready}={}){
   L.ship=()=>[{p:K([c,c,0]),r:A([[0,0],[F,360]],LIN),shapes:[gr([ell(44),stroke(C.accent,3),trim(K(82))]),gr([path([[0,-27],[7,-22],[0,-17]]),stroke(C.accent,3)],{r:K(-20)})]},
     {p:K([c,c,0]),s:A([[0,[90,90,100]],[30,[105,105,100]],[60,[90,90,100]],[90,[105,105,100]],[F,[90,90,100]]],SIN),shapes:[gr([path([[-8,0],[-2,6],[9,-6]]),stroke(C.ball,3.2)])]}];
   document.querySelectorAll('[data-step]').forEach(n=>mount(n,anim(S,S,F,L[n.dataset.step]()),{loop:true}));
+})();
+
+/* ================= CAPABILITY ILLUSTRATIONS (looping Lottie) ================= */
+(function(){const S=96,c=48,F=120,L={};
+  const loopO=(t0,t1)=>A([[0,0],[t0,0],[t0+6,100],[t1,100],[t1+8,0],[F,0]]);
+  // Document AI: a page; a scan line sweeps down, regions get boxed one by one
+  L.doc=()=>{const ls=[];
+    ls.push({p:A([[0,[c,22,0]],[60,[c,74,0]],[F,[c,22,0]]],SIN),shapes:[gr([rect(52,2,1),fill(C.ball)]),gr([rect(52,10,2,[0,-5]),fill(C.ball,14)])]});
+    [[c,30,36,8],[c-8,46,20,14],[c+12,46,14,14],[c,64,36,8]].forEach(([x,y,w,h],i)=>ls.push({p:K([x,y,0]),o:loopO(10+i*14,100),shapes:[gr([rect(w+4,h+4,2),stroke(C.accent,1.6)])]}));
+    [[30,32],[30,46],[30,64]].forEach(([y,w],i)=>ls.push({p:K([c,y,0]),shapes:[gr([rect(i==1?14:w,3,1.5,[i==1?-8:0,0]),fill('#b9c6c0')]),...(i==1?[gr([rect(10,10,2,[12,0]),fill('#cdd8d2')]),gr([rect(14,10,2,[-8,0]),fill('#cdd8d2')])]:[gr([rect(w,3,1.5,[0,5]),fill('#cfd9d4')])])]}));
+    ls.push({p:K([c,c,0]),shapes:[gr([rect(60,70,6),fill('#ffffff'),stroke(C.ink,1.6)])]});return ls};
+  // LLMs: a document feeds a chat answer; the answer bubble types, then a source tag pops
+  L.llm=()=>{const ls=[];
+    [0,1,2].forEach(i=>ls.push({p:K([58+i*8,66,0]),s:A([[0,[100,100,100]],[20+i*6,[100,100,100]],[28+i*6,[150,150,100]],[36+i*6,[100,100,100]],[44+i*6,[150,150,100]],[52+i*6,[100,100,100]],[F,[100,100,100]]]),o:A([[0,0],[16,0],[18,100],[60,100],[64,0],[F,0]]),shapes:[gr([ell(4),fill(C.accent)])]}));
+    [[0,10],[1,7]].forEach(([i])=>ls.push({p:K([66,62+i*8,0]),o:A([[0,0],[64,0],[66,100],[108,100],[114,0],[F,0]]),shapes:[gr([rect(i?20:28,3,1.5),fill(C.accent)],{s:A([[64+i*6,[0,100]],[78+i*6,[100,100]]]),p:K([i?-4:0,0])})]}));
+    ls.push({p:K([76,46,0]),s:A([[0,[0,0,100]],[78,[0,0,100]],[86,[115,115,100]],[90,[100,100,100]],[108,[100,100,100]],[114,[0,0,100]],[F,[0,0,100]]]),shapes:[gr([rect(22,10,5),fill(C.ball)]),gr([path([[-5,0],[5,0]]),stroke('#ffffff',1.6)])]});
+    ls.push({p:K([66,68,0]),shapes:[gr([rect(38,26,8),fill('#ffffff'),stroke(C.accent,1.6)]),gr([path([[-12,13],[-16,19],[-6,13]],true),fill('#ffffff'),stroke(C.accent,1.6)])]});
+    ls.push({p:A([[0,[28,40,0]],[10,[28,40,0]],[22,[40,52,0]],[30,[28,40,0]],[F,[28,40,0]]],SIN),o:A([[0,100],[F,100]]),shapes:[gr([path([[-4,-4],[4,-4]]),stroke('#b9c6c0',2)]),gr([path([[-4,2],[3,2]]),stroke('#b9c6c0',2)]),gr([rect(22,28,4),fill('#ffffff'),stroke(C.ink,1.6)])]});
+    return ls};
+  // Computer vision: viewfinder brackets; a bounding box tracks a moving object, label pops
+  L.cv=()=>{const ls=[],path_=[[34,58],[60,40],[66,62],[34,58]];
+    const kf=path_.map((p,i)=>[i*40,[p[0],p[1],0]]);
+    ls.push({p:A(kf,SIN),shapes:[gr([rect(16,8,2,[0,-20]),fill(C.accent)]),gr([rect(26,26,3),stroke(C.accent,1.8)])]});
+    ls.push({p:A(kf,SIN),shapes:[gr([ell(12),fill(C.ball)]),gr([ell(4),fill('#ffffff')],{p:K([-2,-2])})]});
+    [[1,1],[-1,1],[1,-1],[-1,-1]].forEach(([sx,sy])=>ls.push({p:K([c+sx*-30,c+sy*-30,0]),shapes:[gr([path([[0,10*sy],[0,0],[10*sx,0]]),stroke(C.ink,2.2)])]}));
+    ls.push({p:K([c,c,0]),shapes:[gr([rect(76,76,10),fill('#ffffff')])]});return ls};
+  // Inference: requests flow through a fast node and fan out to replicas; latency bar shrinks
+  L.inf=()=>{const ls=[];
+    [0,1,2].forEach(i=>{const t0=i*40;ls.push({p:A([[t0,[14,c,0]],[t0+16,[c-12,c,0]],[t0+17,[c+12,c,0]],[t0+34,[80,30+i*18,0]]],LIN),o:A([[0,0],[t0,0],[t0+1,100],[t0+34,100],[t0+36,0],[F,0]].filter((k,j,a)=>j===0||k[0]>a[j-1][0])),shapes:[gr([ell(7),fill(C.ball)])]})});
+    [30,48,66].forEach((y,i)=>ls.push({p:K([82,y,0]),s:A([[0,[100,100,100]],[34+i*40>F?F:34+i*40,[100,100,100]],[Math.min(F,38+i*40),[125,125,100]],[Math.min(F,44+i*40),[100,100,100]],[F,[100,100,100]]].filter((k,j,a)=>j===0||k[0]>a[j-1][0])),shapes:[gr([ell(4),fill(C.ok)],{p:K([3,-2])}),gr([rect(14,12,3),fill(C.accentSoft),stroke(C.accent,1.4)])]}));
+    ls.push({p:K([c,c,0]),shapes:[gr([path([[-4,-7],[2,-1],[-2,-1],[4,7]]),stroke(C.ball,2)]),gr([rect(24,24,6),fill(C.ink)])]});
+    [[c+12,c,82,30],[c+12,c,82,48],[c+12,c,82,66],[14,c,c-12,c]].forEach(([x1,y1,x2,y2])=>ls.push({shapes:[gr([path([[x1,y1],[x2-8,y2]]),stroke(C.line,1.4,100,[3,3])])]}));
+    return ls};
+  document.querySelectorAll('[data-cap]').forEach(n=>mount(n,anim(S,S,F,L[n.dataset.cap]()),{loop:true}));
 })();
 
 /* general / specific toggle */
