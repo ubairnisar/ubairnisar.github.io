@@ -144,6 +144,21 @@ h1 .works{color:var(--accent)}
 .pf b{display:block;font-family:var(--f-display);font-weight:600;font-size:30px;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
 .pf>span{font-size:13.5px;color:var(--muted)}
 
+.flow{margin-top:20px;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:18px 18px 20px}
+.flow-head{display:flex;justify-content:space-between;gap:12px;padding:0 6px 4px}
+.flow-now{color:var(--accent)}
+@media (max-width:640px){.flow-now{display:none}.flow{padding:14px 10px 16px}}
+.flow-scroll{overflow-x:auto;scrollbar-width:thin}
+.flow-inner{min-width:780px}
+.flow .lot{width:100%;aspect-ratio:1200/190}
+.flow-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,1fr);gap:8px;counter-reset:f}
+.flow-steps li{text-align:center;counter-increment:f;padding:0 4px;transition:opacity .3s;min-width:0}
+.flow-steps li::before{content:'0' counter(f);display:block;font-family:var(--f-mono);font-size:10.5px;color:var(--faint)}
+.flow-steps b{display:block;font-weight:600;font-size:15px;transition:color .3s}
+.flow-steps span{display:block;font-size:13px;color:var(--muted);line-height:1.4;margin-top:2px}
+.flow-steps li.on b{color:var(--accent)}
+.flow-steps li.on::before{color:var(--ball)}
+
 /* ---------- how I work (general) ---------- */
 .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:44px;position:relative}
 .steps::before{content:'';position:absolute;left:4%;right:4%;top:59px;border-top:1.5px dashed var(--line-2);z-index:0}
@@ -472,11 +487,21 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
     </div>
   </div>
 
-  <div class="proof">
-    <div class="pf"><b><span data-count="4">4</span>+ yrs</b><span>building and shipping AI</span></div>
-    <div class="pf"><b data-count="92.2" data-dec="1">92.2</b><span>TEDS on OmniDocBench tables, +9.7 over next-best</span></div>
-    <div class="pf"><b>~<span data-count="2000">2,000</span>/day</b><span>shoppers using my smart-cart CV in Qatar</span></div>
-    <div class="pf"><b>3</b><span>countries my current lab operates in</span></div>
+  <div class="flow" aria-label="How a problem becomes a production system">
+    <div class="flow-head"><span class="cap">From problem to production</span><span class="cap flow-now" id="flowNow">01 · The problem</span></div>
+    <div class="flow-scroll">
+      <div class="flow-inner">
+        <div class="lot" id="lotFlow" role="img" aria-label="Animation: a tangled problem is broken into first principles, one option is picked from three, an architecture is drawn, a demo runs, and the system is deployed and replicated to scale"></div>
+        <ol class="flow-steps" id="flowSteps">
+          <li><b>The problem</b><span>Messy, vague, often misframed</span></li>
+          <li><b>First principles</b><span>Break it into what's actually true</span></li>
+          <li><b>Pick the solution</b><span>Compare options, decide on evidence</span></li>
+          <li><b>Architecture</b><span>Design the system end to end</span></li>
+          <li><b>Demo</b><span>Prove it works on real data</span></li>
+          <li><b>Production &amp; scale</b><span>Ship, monitor, replicate</span></li>
+        </ol>
+      </div>
+    </div>
   </div>
 </div></div>
 
@@ -643,7 +668,7 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 <script>
 const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const C={ink:'#13201d',accent:'#4a35e8',accentSoft:'#e4e0ff',ball:'#ff7a1a',ballSoft:'#ffe6d1',contour:'#a9bdb4',contour2:'#8fa79c',panel:'#e7ede9',white:'#ffffff',line:'#bccac3'};
+const C={ink:'#13201d',accent:'#4a35e8',accentSoft:'#e4e0ff',ball:'#ff7a1a',ballSoft:'#ffe6d1',contour:'#a9bdb4',contour2:'#8fa79c',panel:'#e7ede9',white:'#ffffff',line:'#bccac3',ok:'#2f9e6e'};
 
 /* ===== Lottie kit: animations are generated as Lottie JSON in code ===== */
 const K=v=>({a:0,k:v});
@@ -738,6 +763,63 @@ function mount(node,data,{loop=false,ready}={}){
     a.addEventListener('enterFrame',()=>{if(shown>=5)return;let n=0;STN.forEach((s,k)=>{if(a.currentFrame>=T(k+1)-1)n=k+1});if(n>shown)reach(n)});
     a.addEventListener('complete',function once(){a.removeEventListener('complete',once);reach(5);a.loop=true;a.playSegments([INTRO,F],true)});
   }});
+})();
+
+/* ================= HERO STRIP: problem -> production (looping Lottie) ================= */
+(function(){
+  const W=1200,H=190,F=360,cy=88,X=i=>100+i*200,T=[6,56,106,156,206,256],END=330;
+  const fo=A([[0,100],[END,100],[END+14,0],[F,0]]);           // everything resets before the loop restarts
+  const L=[];const add=(l)=>{l.o=l.o||fo;L.push(l)};
+  const at=(i,dx=0,dy=0)=>K([X(i)+dx,cy+dy,0]);
+  // ---- pulse travelling between stages
+  const kfs=[];T.forEach((t,i)=>{if(i<5){kfs.push([t+36,[X(i)+62,cy,0]],[t+50,[X(i+1)-62,cy,0]])}});
+  L.push({p:A(kfs,LIN),o:A([[0,0],[T[0]+35,0],[T[0]+37,100],[T[5]+2,100],[T[5]+6,0],[F,0]]),shapes:[gr([ell(9),fill(C.ball)]),gr([ell(20),fill(C.ball,22)])]});
+  // ---- 1 problem: tangled scribble
+  const sc=[];for(let j=0;j<15;j++){const a=j*2.35,r=14+16*Math.abs(Math.sin(j*1.9));sc.push([Math.cos(a)*r,Math.sin(a)*r*.85])}
+  add({p:at(0),r:A([[T[0],-6],[T[0]+40,4],[END,4]],SIN),shapes:[gr([smooth(sc),stroke(C.ball,2.4),trim(A([[T[0]+2,0],[T[0]+38,100]]))])]});
+  add({p:at(0,32,-32),s:pop(T[0]+30),shapes:[gr([ell(2.6),fill('#ffffff')],{p:K([0,6])}),gr([path([[-4,-4],[-2,-7.5],[2,-7.5],[4,-4],[0,-1],[0,2.5]]),stroke('#ffffff',2)]),gr([ell(24),fill(C.ink)])]});
+  // ---- 2 first principles: primitives split out
+  const prim=[[-27,14,'sq',C.ink],[0,-20,'ci',C.accent],[27,14,'tr',C.ball]];
+  prim.forEach(([dx,dy,k,c],j)=>{const t=T[1]+8+j*6;
+    add({shapes:[gr([path([[X(1),cy],[X(1)+dx,cy+dy]]),stroke(C.line,1.4,100,[3,3]),trim(A([[T[1],0],[T[1]+12,100]]))])]});
+    const sh=k==='sq'?rect(16,16,2):k==='ci'?ell(17):path([[0,-10],[9,7],[-9,7]],true);
+    add({p:at(1,dx,dy),s:pop(t),shapes:[gr([sh,fill(c)])]});});
+  add({p:at(1),s:pop(T[1]),shapes:[gr([ell(8),fill(C.contour2)])]});
+  // ---- 3 pick the solution
+  const opts=[-28,0,28];
+  opts.forEach((dy,j)=>add({p:at(2,22,dy),s:j===1?A([[T[2]+10,[0,0,100]],[T[2]+18,[100,100,100]],[T[2]+28,[100,100,100]],[T[2]+36,[150,150,100]],[T[2]+40,[140,140,100]]]):pop(T[2]+10+j*4),
+     o:j===1?fo:A([[0,100],[T[2]+26,100],[T[2]+34,30],[END,30],[END+14,0],[F,0]]),
+     shapes:j===1?[gr([path([[-4,0],[-1,3],[4,-3]]),stroke('#ffffff',1.6),trim(A([[T[2]+36,0],[T[2]+44,100]]))]),gr([ell(14),fill(C.accent)])]:[gr([ell(14),fill('#ffffff'),stroke(C.contour2,1.6)])]}));
+  opts.forEach((dy,j)=>add({shapes:[gr([path([[X(2)-34,cy],[X(2)+18,cy+dy]]),stroke(j===1?C.accent:C.line,j===1?2:1.4),trim(A([[T[2]+2+j*3,0],[T[2]+14+j*3,100]]))])],
+     o:j===1?fo:A([[0,100],[T[2]+26,100],[T[2]+34,30],[END,30],[END+14,0],[F,0]])}));
+  add({p:at(2,-34,0),s:pop(T[2]),shapes:[gr([ell(9),fill(C.ink)])]});
+  // ---- 4 architecture
+  const box=(dx,dy,w,h,f,t)=>add({p:at(3,dx,dy),s:pop(t),shapes:[gr([rect(w,h,4),fill(f),stroke(C.ink,1.6)])]});
+  box(-30,0,22,16,'#ffffff',T[3]);box(2,-24,24,14,C.accentSoft,T[3]+10);box(2,24,24,14,C.accentSoft,T[3]+14);box(34,0,18,18,C.accent,T[3]+24);
+  [[[-30,0],[2,-24]],[[-30,0],[2,24]],[[2,-24],[34,0]],[[2,24],[34,0]]].forEach(([a,b],j)=>add({shapes:[gr([path([[X(3)+a[0],cy+a[1]],[X(3)+b[0],cy+b[1]]]),stroke(C.ink,1.4),trim(A([[T[3]+8+j*4,0],[T[3]+20+j*4,100]]))])]}));
+  // ---- 5 demo: screen, play, progress
+  add({p:at(4,0,-8),s:pop(T[4]),shapes:[gr([path([[-6,-8],[9,0],[-6,8]],true),fill(C.accent)],{s:A([[T[4]+6,[0,0]],[T[4]+14,[120,120]],[T[4]+18,[100,100]]])}),gr([rect(70,48,7),fill('#ffffff'),stroke(C.ink,1.8)])]});
+  add({p:at(4,-35,28),shapes:[gr([rect(70,4,2,[35,0]),fill(C.ok)],{s:A([[T[4]+16,[0,100]],[T[4]+44,[100,100]]])})]});
+  add({p:at(4,0,28),s:pop(T[4]+4),shapes:[gr([rect(70,4,2),fill('#dbe3df')])]});
+  // ---- 6 production & scale: node, then replicas
+  [-30,0,30].forEach((dx,j)=>add({p:at(5,dx,22),s:pop(T[5]+20+j*6),shapes:[gr([ell(5),fill(C.ok)],{p:K([6,-4])}),gr([rect(24,22,5),fill(C.accentSoft),stroke(C.accent,1.4)])]}));
+  add({p:at(5,0,-16),s:pop(T[5]),shapes:[gr([path([[-5,0],[-1.5,3.5],[5,-3]]),stroke('#ffffff',2),trim(A([[T[5]+8,0],[T[5]+16,100]]))]),gr([rect(34,26,6),fill(C.ink)])]});
+  [-30,0,30].forEach((dx,j)=>add({shapes:[gr([path([[X(5),cy-12],[X(5)+dx,cy+22]]),stroke(C.line,1.4),trim(A([[T[5]+14+j*3,0],[T[5]+24+j*3,100]]))])]}));
+  add({p:at(5,44,-30),s:pop(T[5]+40),shapes:[gr([path([[0,6],[0,-6]]),stroke(C.ok,2)]),gr([path([[-4,-2],[0,-6],[4,-2]]),stroke(C.ok,2)])]});
+  // ---- connectors + stage tiles (static, always visible)
+  for(let i=0;i<5;i++){
+    L.push({o:A([[0,0],[T[i]+36,0],[T[i]+37,100],[END,100],[END+14,0],[F,0]]),shapes:[gr([path([[X(i)+62,cy],[X(i+1)-62,cy]]),stroke(C.accent,2),trim(A([[T[i]+36,0],[T[i]+50,100]],LIN))])]});
+    L.push({shapes:[gr([path([[X(i)+62,cy],[X(i+1)-62,cy]]),stroke(C.line,1.4,100,[4,5])])]});}
+  for(let i=0;i<6;i++){
+    L.push({p:at(i),o:A([[0,0],[T[i],0],[T[i]+6,100],[END,100],[END+14,0],[F,0]]),shapes:[gr([rect(118,118,22),stroke(C.accent,1.6)])]});
+    L.push({p:at(i),shapes:[gr([rect(118,118,22),fill(C.panel)])]});}
+  const steps=[...document.querySelectorAll('#flowSteps li')],now=document.getElementById('flowNow');
+  const names=steps.map(li=>li.querySelector('b').textContent);
+  let cur=-1;const set=i=>{if(i===cur)return;cur=i;steps.forEach((li,k)=>li.classList.toggle('on',k===i));now.textContent=i<0?'':String(i+1).padStart(2,'0')+' · '+names[i]};
+  const data=anim(W,H,F,L);
+  mount(document.getElementById('lotFlow'),data,{loop:true,ready:(a,instant)=>{
+    if(instant){a.goToAndStop(END-2,true);set(5);return}
+    a.addEventListener('enterFrame',()=>{const f=a.currentFrame;let i=-1;T.forEach((t,k)=>{if(f>=t)i=k});if(f>END)i=5;set(i)})}});
 })();
 
 /* passport: pointer tilt + flip */
