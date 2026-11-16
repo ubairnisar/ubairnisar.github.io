@@ -289,6 +289,19 @@ dialog h3{margin:0;font-family:var(--f-display);font-weight:600;font-size:clamp(
 .pas div:nth-child(3) .cap{color:var(--accent)}
 .pas p{margin:0;color:var(--text)}
 
+
+/* video */
+.vid{margin-top:32px;display:flex;flex-direction:column;gap:12px;max-width:980px}
+.yt{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:20px;overflow:hidden;background:var(--ink);border:1px solid var(--line)}
+.yt img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease,opacity .3s}
+.yt:hover img{transform:scale(1.02);opacity:.92}
+.yt .play{position:absolute;inset:0;display:grid;place-items:center}
+.yt .play svg{transition:transform .25s;filter:drop-shadow(0 8px 20px rgba(0,0,0,.35))}
+.yt:hover .play svg{transform:scale(1.08)}
+.yt:hover .play path:first-child{fill:var(--ball)}
+.yt:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vmeta{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 /* ---------- achievements ---------- */
 .ach{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:40px}
 .ac{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;gap:16px;align-items:flex-start;min-width:0}
@@ -616,6 +629,20 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
     <div class="chips" id="dlgChips"></div>
   </div>
 </dialog>
+
+
+<!-- ================= VIDEO ================= -->
+<section id="video" style="padding-top:0"><div class="wrap">
+  <span class="eyebrow cap">On video</span>
+  <h2>Watch me <em>walk through the work.</em></h2>
+  <div class="vid">
+    <button class="yt" id="yt" type="button" data-id="UkBdOraG3wA" aria-label="Play the video">
+      <img src="https://i.ytimg.com/vi/UkBdOraG3wA/hqdefault.jpg" alt="" loading="lazy" decoding="async" onerror="this.style.visibility='hidden'">
+      <span class="play" aria-hidden="true"><svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.5 7.7A8.5 8.5 0 0 0 60.5 1.6C55.2.2 34 .2 34 .2s-21.2 0-26.5 1.4A8.5 8.5 0 0 0 1.5 7.7C.1 13 .1 24 .1 24s0 11 1.4 16.3a8.5 8.5 0 0 0 6 6C12.8 47.8 34 47.8 34 47.8s21.2 0 26.5-1.4a8.5 8.5 0 0 0 6-6C67.9 35 67.9 24 67.9 24s0-11-1.4-16.3z" fill="#13201d"/><path d="M27 34.3 45 24 27 13.7z" fill="#fff"/></svg></span>
+    </button>
+    <div class="vmeta"><span class="cap">YouTube</span><a class="btn" href="https://youtu.be/UkBdOraG3wA" target="_blank" rel="noopener">Watch on YouTube ↗</a></div>
+  </div>
+</div></section>
 
 <!-- ================= ABOUT ================= -->
 <section id="about" style="padding-top:0"><div class="wrap">
@@ -1023,6 +1050,12 @@ const ARCH=[{"cat": ["cv", "genai"], "img": "projects/satellite-roof.jpg", "tag"
   dlg.addEventListener('close',()=>{if(/^#case-/.test(location.hash))history.replaceState(null,'',location.pathname+location.search)});
   dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
 })();
+
+/* YouTube: load the player only when clicked */
+(function(){const b=document.getElementById('yt');if(!b)return;b.addEventListener('click',()=>{
+  const f=document.createElement('iframe');f.src='https://www.youtube-nocookie.com/embed/'+b.dataset.id+'?autoplay=1&rel=0';
+  f.title='YouTube video';f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';f.allowFullscreen=true;
+  b.replaceChildren(f);b.style.cursor='default'},{once:true})})();
 
 /* ================= BADGES (Lottie) ================= */
 (function(){
