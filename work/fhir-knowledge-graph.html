@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>FHIR Knowledge Graph · Case study · Ubair Nisar</title>
+<meta name="description" content="Turning document JSON into a validated HL7 FHIR knowledge graph: funnel classification, schemas built from HL7's live spec, official FHIR validation, UMLS-grounded codes, and Neo4j/RDF export.">
+<meta property="og:title" content="Documents into a FHIR knowledge graph">
+<meta property="og:description" content="Real-world entities joined by real FHIR relationships, validated against HL7's own spec and exported to Neo4j and RDF.">
+<meta property="og:image" content="../assets/work/fhir-kg-card.jpg">
+<meta name="theme-color" content="#f2f4f1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2313201d'/%3E%3Ccircle cx='16' cy='18' r='3' fill='%23ff7a1a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Same system as the portfolio: sage paper, ultramarine accent, orange signal. Diagram = colour-coded module bands. */
+:root{
+  --bg:#f2f4f1; --surface:#ffffff; --panel:#e7ede9; --ink:#13201d; --text:#34423e; --muted:#66746f; --faint:#9aa7a2;
+  --line:#d5ddd8; --line-2:#bccac3; --accent:#4a35e8; --accent-soft:#e4e0ff; --ball:#ff7a1a; --ball-soft:#ffe6d1; --ok:#2f9e6e;
+  /* module colours (from the original diagram) */
+  --m-init:#fff7e6; --m-init-b:#efd9a8; --m-ocr:#eef7ee; --m-ocr-b:#bfdcc0; --m-dig:#f3f2fd; --m-dig-b:#cfcaf3;
+  --s1:#f4f6ff; --s1-b:#c9cff2; --s2:#eefaf0; --s2-b:#b8e0c0; --s3:#fff0f5; --s3-b:#f0bfd2; --s4:#fffbea; --s4-b:#ecdca0;
+  --s5:#faf2ff; --s5-b:#dcc2f0; --s6:#ecfbfb; --s6-b:#b2e2e2; --note:#fff6c9; --note-b:#e6d27a;
+  --f-display:'Bricolage Grotesque','Inter',system-ui,sans-serif; --f-sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif; --f-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --gl:max(16px,env(safe-area-inset-left,0px)); --gr:max(16px,env(safe-area-inset-right,0px));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1200px;margin:0 auto;padding-left:var(--gl);padding-right:var(--gr)}
+.cap{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.eyebrow{display:inline-flex;align-items:center;gap:10px}
+.eyebrow::before{content:'';width:22px;height:1.5px;background:var(--accent)}
+h1,h2,h3{font-family:var(--f-display);letter-spacing:-.025em;text-wrap:balance}
+h2{font-weight:600;font-size:clamp(28px,3.6vw,42px);line-height:1.08;margin:12px 0 0;max-width:24ch}
+h2 em{font-style:normal;color:var(--accent)}
+.sub{color:var(--text);max-width:64ch;margin:14px 0 0;font-size:17px}
+section{padding-block:clamp(48px,7vw,88px)}
+.chip{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line-2);border-radius:999px;padding:3px 10px;color:var(--text);background:var(--surface);white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.btn{display:inline-flex;align-items:center;gap:10px;font-weight:500;font-size:14.5px;padding:10px 18px;border-radius:999px;border:1.5px solid var(--ink);background:transparent;text-decoration:none;cursor:pointer;transition:transform .2s,background .2s,color .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.solid{background:var(--ink);color:var(--bg)}
+.btn.solid:hover{background:var(--accent);border-color:var(--accent)}
+
+/* header */
+header.top{position:sticky;top:0;z-index:50;background:rgba(242,244,241,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header .in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
+.logo{display:flex;flex-direction:column;gap:3px;text-decoration:none;line-height:1}
+.logo .wm{font-family:var(--f-display);font-weight:700;font-size:21px;letter-spacing:-.04em;display:inline-flex;align-items:baseline;gap:.22em}
+.logo .wm span{color:var(--accent)}
+.logo .wm i{width:7px;height:7px;border-radius:50%;background:var(--ball);margin-left:-.12em}
+.logo .role{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:6px}
+.logo .role::before{content:'';width:14px;height:1.5px;background:var(--ball)}
+.hbtns{display:flex;gap:8px}
+
+/* hero */
+.hero{padding-block:clamp(36px,6vw,72px) 20px}
+.crumb{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-decoration:none}
+.crumb:hover{color:var(--accent)}
+h1{font-weight:700;font-size:clamp(40px,5.6vw,72px);line-height:1;margin:18px 0 18px;letter-spacing:-.035em}
+h1 span{color:var(--accent)}
+.lede{font-size:18.5px;color:var(--text);max-width:62ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:22px;color:var(--muted);font-size:14px}
+.meta b{color:var(--ink);font-weight:600}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:34px}
+.mt{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;min-width:0}
+.mt:first-child{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mt:first-child span{color:#a9b8b2}
+.mt b{display:block;font-family:var(--f-display);font-weight:600;font-size:clamp(26px,2.8vw,34px);letter-spacing:-.02em;line-height:1.05;font-variant-numeric:tabular-nums}
+.mt span{display:block;font-size:13.5px;color:var(--muted);margin-top:6px}
+
+/* PAR */
+.par{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:34px}
+.par div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;min-width:0}
+.par .cap{display:block;margin-bottom:6px}
+.par div:nth-child(1) .cap{color:var(--ball)}
+.par div:nth-child(3) .cap{color:var(--accent)}
+.par p{margin:0;color:var(--text)}
+
+/* ================= PIPELINE DIAGRAM ================= */
+.dg-bar{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
+.dg-ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dg-ctrl .cap{min-width:12ch}
+.diagram{margin-top:28px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+.flow{display:flex;flex-direction:column;gap:0;min-width:0}
+.mod{border:1.5px solid var(--b);background:var(--bg-m);border-radius:16px;padding:14px;position:relative}
+.mod>.tag,.stage>.tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11px;font-weight:500;color:var(--ink);background:var(--surface);border:1px solid var(--b);border-radius:6px;padding:2px 8px;margin-bottom:12px}
+.stage{border:1.5px solid var(--b);background:var(--bg-m);border-radius:14px;padding:12px;position:relative}
+.stage+.stage{margin-top:0}
+.mod.init{--bg-m:var(--m-init);--b:var(--m-init-b)}
+.mod.ocr{--bg-m:var(--m-ocr);--b:var(--m-ocr-b)}
+.mod.dig{--bg-m:var(--m-dig);--b:var(--m-dig-b)}
+.mod.out{--bg-m:var(--m-init);--b:var(--m-init-b)}
+.stage.s1{--bg-m:var(--s1);--b:var(--s1-b)}.stage.s2{--bg-m:var(--s2);--b:var(--s2-b)}.stage.s3{--bg-m:var(--s3);--b:var(--s3-b)}
+.stage.s4{--bg-m:var(--s4);--b:var(--s4-b)}.stage.s5{--bg-m:var(--s5);--b:var(--s5-b)}.stage.s6{--bg-m:var(--s6);--b:var(--s6-b)}
+.dig-inner{display:flex;flex-direction:column}
+.row{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap;min-width:0}
+.row+.row{margin-top:10px}
+.node{all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 0;min-width:0;background:var(--surface);border:1.5px solid var(--line-2);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;transition:border-color .2s,box-shadow .25s,transform .2s;position:relative}
+.node:hover{border-color:var(--ink);transform:translateY(-2px)}
+.node:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.node b{font-weight:600;font-size:13.5px;line-height:1.25}
+.node small{font-size:12px;color:var(--muted);line-height:1.35}
+.node .ico{font-size:14px;line-height:1;margin-bottom:2px}
+.node.term{flex:0 0 auto;border-radius:999px;justify-content:center;align-items:center;padding:10px 18px}
+.node.q{border-style:solid;border-color:var(--ball);background:var(--ball-soft)}
+.node.q b::before{content:'◇ ';color:var(--ball)}
+.node.data{background:var(--note);border-color:var(--note-b);border-radius:10px 10px 10px 2px}
+.node.model{border-color:var(--accent);border-left-width:5px;padding-left:10px}
+.col>.node,.br>.node{flex:0 0 auto}
+.node.sel{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.node.lit{border-color:var(--ball);box-shadow:0 0 0 4px var(--ball-soft),0 10px 24px rgba(255,122,26,.18)}
+.ar{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 6px;min-width:56px;color:var(--muted)}
+.ar::before{content:'';width:100%;height:1.5px;background:var(--ink);opacity:.55;mask:linear-gradient(90deg,#000 calc(100% - 7px),transparent 0)}
+.ar::after{content:'';width:0;height:0;border-left:7px solid rgba(19,32,29,.6);border-top:4.5px solid transparent;border-bottom:4.5px solid transparent;margin-top:-6px;align-self:flex-end}
+.ar span{font-family:var(--f-mono);font-size:10px;line-height:1.2;text-align:center;order:-1;margin-bottom:3px;white-space:nowrap}
+.down{display:flex;flex-direction:column;align-items:center;padding:6px 0;color:var(--muted)}
+.down::before{content:'';width:1.5px;height:20px;background:rgba(19,32,29,.5)}
+.down::after{content:'';border-top:7px solid rgba(19,32,29,.6);border-left:4.5px solid transparent;border-right:4.5px solid transparent}
+.down span{font-family:var(--f-mono);font-size:10.5px;margin:2px 0}
+.down.flow-lit::before{background:var(--ball)}
+.lanehead{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin:0 0 6px 2px}
+
+/* stage 4 routing */
+.router{display:flex;justify-content:center;margin-bottom:12px}
+.router .node{flex:0 1 340px;text-align:center;align-items:center}
+.lanes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.lane{background:rgba(255,255,255,.55);border:1px dashed var(--b);border-radius:12px;padding:10px;min-width:0}
+.lane .lh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.lane .lh b{font-family:var(--f-mono);font-size:11px;font-weight:500;background:var(--surface);border:1px solid var(--b);border-radius:6px;padding:1px 8px}
+.col{display:flex;flex-direction:column;gap:0}
+.branch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.branch .bl{font-family:var(--f-mono);font-size:10px;color:var(--muted);text-align:center;margin-bottom:4px}
+.br{display:flex;flex-direction:column;min-width:0}
+.sink{margin-top:12px;display:flex;justify-content:flex-end}
+.sink .node{flex:0 1 360px}
+
+/* detail panel */
+.detail{position:sticky;top:84px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}
+.detail h3{margin:6px 0 6px;font-weight:600;font-size:20px;line-height:1.2}
+.detail p{margin:0;color:var(--text);font-size:14.5px}
+.detail .why{margin-top:12px;background:var(--panel);border-radius:10px;padding:10px 12px;font-size:13.5px;color:var(--text)}
+.detail .why b{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.detail .why[hidden]{display:none}
+.legend{display:flex;flex-direction:column;gap:6px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:8px}
+.legend i{width:18px;height:12px;border-radius:4px;border:1.5px solid var(--line-2);background:var(--surface);flex:none}
+.legend i.q{border-color:var(--ball);background:var(--ball-soft)}
+.legend i.d{border-color:var(--note-b);background:var(--note)}
+.legend i.m{border-color:var(--accent);border-left-width:5px}
+
+/* decisions */
+.dec{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:34px}
+.dc{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;min-width:0}
+.dc h3{margin:0 0 6px;font-weight:600;font-size:19px;line-height:1.25}
+.dc p{margin:0;color:var(--text);font-size:15px}
+.dc .n{font-family:var(--f-mono);font-size:11px;color:var(--ball)}
+.stack{margin-top:30px}
+.cta{background:var(--ink);color:#e7ede9;border-radius:24px;padding:clamp(24px,4vw,44px);display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.cta h2{color:#f2f4f1;margin:0}
+.cta h2 em{color:#ffb27a}
+.cta .btn{border-color:#f2f4f1;color:#f2f4f1}
+.cta .btn.solid{background:#f2f4f1;color:var(--ink)}
+footer{padding-block:24px 36px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+footer a{color:var(--text)}
+
+@media (max-width:1020px){
+  .diagram{grid-template-columns:1fr}
+  .detail{position:static;order:-1}
+  .metrics{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:760px){
+  .row{flex-direction:column}
+  .ar{min-width:0;padding:4px 0;flex-direction:column}
+  .ar::before{width:1.5px;height:16px;mask:none}
+  .ar::after{border-left:4.5px solid transparent;border-right:4.5px solid transparent;border-top:7px solid rgba(19,32,29,.6);border-bottom:none;margin-top:0;align-self:center}
+  .ar span{order:1;margin:2px 0 0}
+  .node.term{align-self:center}
+  .lanes{grid-template-columns:1fr}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .par,.dec{grid-template-columns:1fr}
+  .hbtns .btn span{display:none}
+}
+@media (max-width:420px){.branch{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+<style>
+/* page-specific additions on top of the shared case-study styles */
+.kgwrap{margin-top:28px;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);gap:16px;align-items:start}
+.kgfig{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:10px;position:relative;overflow:hidden}
+.kgfig svg{display:block;width:100%;height:auto}
+.kgfig .note{position:absolute;left:14px;bottom:10px;font-family:var(--f-mono);font-size:10.5px;color:var(--faint)}
+.kn{cursor:pointer}
+.kn rect{transition:stroke .2s,stroke-width .2s}
+.kn:hover rect,.kn.on rect{stroke:var(--accent);stroke-width:2.4}
+.ke{transition:opacity .25s}
+.ke path{fill:none;stroke:#8fa79c;stroke-width:1.5}
+.ke text{font-family:var(--f-mono);font-size:10.5px;fill:var(--muted)}
+.ke.on path{stroke:var(--accent);stroke-width:2.2}
+.ke.on text{fill:var(--accent);font-weight:500}
+.kgfig.focus .ke:not(.on){opacity:.18}
+.kgfig.focus .kn:not(.on):not(.nb){opacity:.35}
+.ke path.draw{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw 1s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.kside{display:flex;flex-direction:column;gap:12px}
+.kcard{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}
+.kcard h3{margin:4px 0 6px;font-weight:600;font-size:19px}
+.kcard p{margin:0;color:var(--text);font-size:14.5px}
+.kcard ul{margin:10px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.kcard li{font-family:var(--f-mono);font-size:12px;color:var(--text);background:var(--panel);border-radius:8px;padding:6px 10px;overflow-wrap:anywhere}
+.kcard li b{color:var(--accent);font-weight:500}
+
+/* funnel */
+.funnel{margin-top:28px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.fsteps{display:flex;flex-direction:column;gap:8px}
+.flvl{display:grid;grid-template-columns:86px minmax(0,1fr);gap:10px;align-items:stretch}
+.flvl .lv{font-family:var(--f-mono);font-size:11px;color:var(--muted);display:flex;align-items:center;justify-content:center;background:var(--panel);border-radius:10px;text-align:center;line-height:1.3;padding:6px}
+.doms{display:flex;flex-wrap:wrap;gap:6px;padding:8px;border:1.5px dashed var(--line-2);border-radius:12px}
+.dom{all:unset;cursor:pointer;font-size:13.5px;font-weight:500;background:var(--surface);border:1.5px solid var(--line-2);border-radius:999px;padding:5px 12px;transition:.2s}
+.dom:hover{border-color:var(--ink)}
+.dom.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.dom:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.fl-1 .doms{margin-right:22%}.fl-2 .doms{margin-right:8%}
+.fout{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;position:sticky;top:84px;min-width:0}
+.fout h3{margin:4px 0 8px;font-weight:600;font-size:20px}
+.fout .types{display:flex;flex-wrap:wrap;gap:6px}
+.fout .types span{font-family:var(--f-mono);font-size:12px;border:1px solid var(--accent);color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:3px 10px}
+.fout .rule{margin-top:14px;font-size:14px;color:var(--text);background:var(--panel);border-radius:10px;padding:10px 12px}
+
+/* guardrails */
+.guards{margin-top:28px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gd{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.gd .n{font-family:var(--f-mono);font-size:11px;color:var(--ball)}
+.gd h3{margin:0;font-weight:600;font-size:17px;line-height:1.25}
+.gd p{margin:0;font-size:14px;color:var(--text)}
+.gd .chk{margin-top:auto;font-family:var(--f-mono);font-size:11.5px;color:var(--ok)}
+
+/* output */
+.outs{margin-top:28px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.code{background:var(--ink);color:#d8e2dd;border-radius:16px;padding:16px 18px;min-width:0}
+.code .cap{color:#8fa29a;display:block;margin-bottom:8px}
+.code pre{margin:0;overflow-x:auto;font-family:var(--f-mono);font-size:12.5px;line-height:1.6}
+.code .k{color:#ffb27a}.code .s{color:#b9e3c6}.code .c{color:#7d8f88}.code .p{color:#b3a9ff}
+.fmt{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.fmt span{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px}
+.fmt b{display:block;font-family:var(--f-display);font-size:17px}
+@media (max-width:1020px){.kgwrap,.funnel{grid-template-columns:1fr}.fout{position:static}.guards{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.guards,.outs{grid-template-columns:1fr}.flvl{grid-template-columns:64px minmax(0,1fr)}.fl-1 .doms,.fl-2 .doms{margin-right:0}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap in">
+  <a class="logo" href="../index.html" aria-label="Ubair Nisar, back to portfolio"><span class="wm">Ubair <span>Nisar</span><i aria-hidden="true"></i></span><span class="role">ML / AI Engineer</span></a>
+  <div class="hbtns">
+    <a class="btn" href="../index.html#work">← <span>All case files</span></a>
+    <a class="btn solid" href="../assets/Ubair_Nisar_CV.pdf" download="Ubair_Nisar_CV.pdf"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v9M4 7.5 8 11.5l4-4M3 14h10"/></svg><span>Download CV</span></a>
+  </div>
+</div></header>
+<main>
+<div class="hero"><div class="wrap">
+  <a class="crumb" href="../index.html#work">Case files / Siparadigm Diagnostic</a>
+  <h1>Documents into a <span>FHIR knowledge graph</span></h1>
+  <p class="lede">ADONUT turns a scanned medical document into structured JSON. This pipeline goes one step further: it reads that JSON and builds a <b>knowledge graph, not a document graph</b>. The only nodes are real-world entities (a patient, a practitioner, a specimen, a condition, an order) joined by real HL7 FHIR relationships, ready for Neo4j and RDF tools.</p>
+  <div class="meta"><span><b>Role</b> design and build</span><span><b>Where</b> Siparadigm Diagnostic</span><span><b>Input</b> ADONUT document JSON</span><span><b>Output</b> Neo4j · RDF (Turtle, JSON-LD, TriG)</span></div>
+  <div class="metrics">
+    <div class="mt"><b>0</b><span>invented predicates: every edge is re-checked against HL7's own element list</span></div>
+    <div class="mt"><b>Live</b><span>FHIR resource types and elements pulled from HL7's published spec, not hard-coded</span></div>
+    <div class="mt"><b>7</b><span>clinical vocabularies for code lookup via UMLS (ICD-10, SNOMED CT, LOINC, RxNorm, CPT…)</span></div>
+    <div class="mt"><b>3</b><span>relationship passes: per chunk, document-wide, and isolated entities</span></div>
+    <div class="mt"><b>4</b><span>export formats from one entity registry</span></div>
+  </div>
+  <div class="par">
+    <div><span class="cap">Problem</span><p>Clinical data on forms is scattered: a patient's name in a header, the ordering physician in a footer, a diagnosis code with no name next to it, a lab panel that continues on a later page. LLMs extracting this will happily invent fields, duplicate the same person, and link things with relationships that don't exist in HL7.</p></div>
+    <div><span class="cap">Approach</span><p>Let the model reason, but never trust it on structure. Types come from HL7's live resource list, properties from each type's real element list, values are validated with HL7's official FHIR models, codes are grounded in UMLS, and every relationship is re-checked before it is written.</p></div>
+    <div><span class="cap">Result</span><p>One deduplicated graph per document that only says what FHIR allows it to say: entities merged across pages, fields topped up but never overwritten, and outputs that load straight into Neo4j or any RDF store.</p></div>
+  </div>
+</div></div>
+
+<!-- ============ EXAMPLE GRAPH ============ -->
+<section id="graph" style="padding-top:28px"><div class="wrap">
+  <span class="eyebrow cap">What comes out</span>
+  <h2>Real-world entities, <em>joined by real FHIR edges.</em></h2>
+  <p class="sub">An illustrative graph of the shape the pipeline produces for a lab requisition. No document furniture, no page or section nodes. Click any entity to see its connections.</p>
+  <div class="kgwrap">
+    <div class="kgfig" id="kgfig">
+      <svg id="kg" viewBox="0 0 760 520" role="img" aria-label="Example knowledge graph: a ServiceRequest links to Patient, Practitioner, Specimen and Condition; a DiagnosticReport links to the ServiceRequest, Observations and the Patient"></svg>
+      <span class="note">illustrative example · not real patient data</span>
+    </div>
+    <div class="kside">
+      <div class="kcard" id="kinfo"><span class="cap" id="kType">Entity</span><h3 id="kName">Click an entity</h3><p id="kDesc">Each node is a FHIR resource. Each arrow is a real reference element of the source type, for example <b>ServiceRequest.subject → Patient</b>.</p><ul id="kEdges"></ul></div>
+      <div class="kcard"><span class="cap">Never in the graph</span><p>Logos, QR codes, page numbers, empty instructional labels, and any Document / Section / page structure. If text is document furniture, it simply isn't represented.</p></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ PIPELINE ============ -->
+<section id="pipeline" style="padding-top:0"><div class="wrap">
+  <div class="dg-bar">
+    <div><span class="eyebrow cap">Pipeline</span><h2>From document JSON <em>to a validated graph.</em></h2>
+      <p class="sub">Click a step for details, or play the flow.</p></div>
+    <div class="dg-ctrl"><button class="btn solid" id="play" type="button">▶ Play the flow</button><span class="cap" id="playLbl"></span></div>
+  </div>
+  <div class="diagram">
+    <div class="flow" id="flow">
+      <div class="mod init"><span class="tag">Input</span>
+        <div class="row">
+          <button class="node data" data-k="json"><span class="ico">{ }</span><b>ADONUT document JSON</b><small>Sections → text/table blocks → elements</small></button>
+          <div class="ar"><span>sections</span></div>
+          <button class="node" data-k="parse"><span class="ico">⊢</span><b>Parse blocks</b><small>Key-values, checkboxes, signatures, list items, paragraphs, tables</small></button>
+          <div class="ar"><span>block families</span></div>
+          <button class="node" data-k="chunk"><span class="ico">▤</span><b>Chunk</b><small>At most 10 root families per call, each family kept whole</small></button>
+        </div>
+      </div>
+      <div class="down"><span>chunk + everything known so far</span></div>
+      <div class="mod dig"><span class="tag">Per chunk</span>
+        <div class="dig-inner">
+          <div class="stage s1"><span class="tag">1 · Entity discovery</span>
+            <div class="row">
+              <button class="node model" data-k="discover"><span class="ico">⌕</span><b>Funnel classification</b><small>Domain first, then a resource type from HL7's live list</small></button>
+              <div class="ar"><span>tools</span></div>
+              <button class="node" data-k="umls"><span class="ico">⚕</span><b>UMLS lookup</b><small>Resolve bare codes and abbreviations to real concepts</small></button>
+              <div class="ar"><span>entities + edges</span></div>
+              <button class="node q" data-k="dedup"><b>Seen before?</b><small>type + normalised name, then identifier</small></button>
+            </div>
+          </div>
+          <div class="down"><span>new or merged entities · run in parallel</span></div>
+          <div class="stage s3"><span class="tag">2 · Properties from the real HL7 schema</span>
+            <div class="row">
+              <button class="node" data-k="schema"><span class="ico">⌗</span><b>Build schema per type</b><small>Fields = that type's real HL7 elements, with HL7's own descriptions and types</small></button>
+              <div class="ar"><span>JSON schema</span></div>
+              <button class="node model" data-k="props"><span class="ico">✎</span><b>Fill properties</b><small>Only what the chunk or a UMLS lookup supports</small></button>
+              <div class="ar"><span>values</span></div>
+              <button class="node q" data-k="validate"><b>Valid FHIR?</b><small>Checked with HL7's official FHIR models</small></button>
+            </div>
+            <div class="row" style="margin-top:8px;justify-content:flex-end">
+              <button class="node" data-k="repair" style="flex:0 1 420px"><span class="ico">↺</span><b>Targeted repair, at most 2 rounds</b><small>The real validation error goes back to the model for just the failing fields; unfixable fields are dropped</small></button>
+            </div>
+          </div>
+          <div class="down"><span>properties</span></div>
+          <div class="stage s5"><span class="tag">3 · Registry</span>
+            <div class="row">
+              <button class="node" data-k="topup"><span class="ico">＋</span><b>Top up, never overwrite</b><small>A later, partial mention only fills empty fields</small></button>
+              <div class="ar"><span>relationships</span></div>
+              <button class="node q" data-k="pred"><b>Real reference element?</b><small>Checked against the source type's HL7 references</small></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="down"><span>after every chunk</span></div>
+      <div class="mod ocr"><span class="tag">Whole document</span>
+        <div class="row">
+          <button class="node model" data-k="docrel"><span class="ico">⛓</span><b>Document-wide relationships</b><small>Links between entities that never shared a chunk</small></button>
+          <div class="ar"><span>still unlinked?</span></div>
+          <button class="node model" data-k="iso"><span class="ico">◎</span><b>Isolated-entity pass</b><small>One case = one connected picture; find the missed link</small></button>
+        </div>
+      </div>
+      <div class="down"><span>one registry</span></div>
+      <div class="mod out"><span class="tag">Export</span>
+        <div class="row">
+          <button class="node data" data-k="rdf"><span class="ico">◇</span><b>RDF</b><small>Turtle · JSON-LD · TriG</small></button>
+          <div class="ar"></div>
+          <button class="node data" data-k="cypher"><span class="ico">⬡</span><b>Neo4j</b><small>Keyed on real data, safe to reload</small></button>
+        </div>
+      </div>
+    </div>
+    <aside class="detail" aria-live="polite">
+      <span class="cap" id="dMod">Select a step</span>
+      <h3 id="dTitle">Click any box in the diagram</h3>
+      <p id="dBody">Orange diamonds are checks the model's output must pass. Boxes with a thick blue edge call a model.</p>
+      <div class="why" id="dWhy" hidden><b>Why this design</b><span id="dWhyT"></span></div>
+      <div class="legend"><span><i></i>Processing step</span><span><i class="m"></i>Calls a model</span><span><i class="q"></i>Check / decision</span><span><i class="d"></i>Data</span></div>
+    </aside>
+  </div>
+</div></section>
+
+<!-- ============ FUNNEL ============ -->
+<section id="funnel" style="padding-top:0"><div class="wrap">
+  <span class="eyebrow cap">Funnel classification</span>
+  <h2>Decide <em>what</em> it is <em>before</em> deciding how to store it.</h2>
+  <p class="sub">The model classifies top-down the way HL7 itself organises FHIR: first the domain, then the specific resource, and only then does it look up that resource's real fields. Click a domain.</p>
+  <div class="funnel">
+    <div class="fsteps" id="fsteps">
+      <div class="flvl fl-1"><span class="lv">Level 3<br>Admin</span><div class="doms"><button class="dom" data-d="admin">Administration</button></div></div>
+      <div class="flvl fl-2"><span class="lv">Level 4<br>Clinical &amp; ops</span><div class="doms">
+        <button class="dom" data-d="clinical">Clinical</button><button class="dom" data-d="meds">Medications</button><button class="dom" data-d="workflow">Workflow</button><button class="dom" data-d="fin">Financial</button><button class="dom" data-d="dx">Diagnostics</button><button class="dom" data-d="dev">Devices</button><button class="dom" data-d="nut">Nutrition</button><button class="dom" data-d="bio">Biological products</button></div></div>
+      <div class="flvl"><span class="lv">Level 5<br>Reasoning</span><div class="doms"><button class="dom" data-d="cr">Clinical reasoning</button><button class="dom" data-d="md">Medication definition</button></div></div>
+    </div>
+    <div class="fout"><span class="cap" id="fLvl">Level 4</span><h3 id="fDom">Diagnostics</h3><div class="types" id="fTypes"></div>
+      <div class="rule"><b>Then:</b> the chosen type's real element list (from HL7's published profile) becomes the exact JSON schema the model fills, with each field's HL7 type, e.g. <i>(CodeableConcept)</i>, shown to it.</div></div>
+  </div>
+</div></section>
+
+<!-- ============ GUARDRAILS ============ -->
+<section style="padding-top:0"><div class="wrap">
+  <span class="eyebrow cap">Guardrails</span>
+  <h2>The model reasons. <em>The spec decides.</em></h2>
+  <div class="guards">
+    <div class="gd"><span class="n">01</span><h3>Types from HL7, live</h3><p>The resource type list is read from HL7's published spec, so it can't drift. Anything else falls back to Basic.</p><span class="chk">✓ no invented types</span></div>
+    <div class="gd"><span class="n">02</span><h3>Schema built per type</h3><p>Each entity's output schema is generated from its type's real elements, so a field HL7 doesn't define can't even be written.</p><span class="chk">✓ no invented fields</span></div>
+    <div class="gd"><span class="n">03</span><h3>Official FHIR validation</h3><p>Values are reshaped into proper FHIR data types (coded concepts, quantities, dates, repeating fields) and validated with HL7's official FHIR models.</p><span class="chk">✓ structurally valid FHIR</span></div>
+    <div class="gd"><span class="n">04</span><h3>Repair from real errors</h3><p>Failures go back to the model as the actual validation message, for only the failing fields, at most twice. No endless loops for data that isn't there.</p><span class="chk">✓ bounded cost</span></div>
+    <div class="gd"><span class="n">05</span><h3>Codes grounded in UMLS</h3><p>A bare "Z00.129" or "FISH" is looked up in the National Library of Medicine's UMLS across ICD-10, SNOMED CT, LOINC, RxNorm, CPT and HCPCS, never guessed from memory.</p><span class="chk">✓ no hallucinated codes</span></div>
+    <div class="gd"><span class="n">06</span><h3>Predicates re-checked</h3><p>Every relationship is verified against the source type's real reference elements before it's written, even if the model says it called the tool.</p><span class="chk">✓ 0 invented edges</span></div>
+    <div class="gd"><span class="n">07</span><h3>Dedup without data loss</h3><p>The same person in a letterhead and a footer becomes one node. New mentions only fill empty fields; existing values are never overwritten.</p><span class="chk">✓ one node per real entity</span></div>
+    <div class="gd"><span class="n">08</span><h3>Budgets and metering</h3><p>Each model call has a cap on lookups, entities are processed in parallel, and usage is tracked across every call.</p><span class="chk">✓ predictable cost</span></div>
+  </div>
+</div></section>
+
+<!-- ============ OUTPUT ============ -->
+<section style="padding-top:0"><div class="wrap">
+  <span class="eyebrow cap">Output</span>
+  <h2>One graph, <em>four formats.</em></h2>
+  <div class="fmt"><span><b>Neo4j</b>graph database, safe to reload</span><span><b>Turtle</b>RDF triples</span><span><b>JSON-LD</b>linked data for APIs</span><span><b>TriG</b>named graph</span></div>
+  <div class="stack"><span class="cap">Built with</span><div class="chips" style="margin-top:10px"><span class="chip">Python</span><span class="chip">Gemini Flash</span><span class="chip">HL7 FHIR R4</span><span class="chip">UMLS (National Library of Medicine)</span><span class="chip">Neo4j</span><span class="chip">RDF / linked data</span></div></div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+  <div class="cta"><h2>Upstream of this: <em>ADONUT.</em></h2>
+    <div class="chips" style="gap:10px"><a class="btn solid" href="adonut.html">How documents become JSON →</a><a class="btn" href="../index.html#contact">Get in touch</a></div></div>
+</div></section>
+</main>
+<footer><div class="wrap"><span>© 2026 Ubair Nisar</span><a href="../index.html">← Back to portfolio</a></div></footer>
+
+<script>
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* ---------- example knowledge graph ---------- */
+(function(){
+  const N={
+    pat:{x:380,y:460,t:'Patient',n:'Patient',d:'The person the whole document is about.'},
+    prac:{x:110,y:290,t:'Practitioner',n:'Ordering physician',d:'Named once in a header and again in a signature block: merged into one node.'},
+    org:{x:110,y:60,t:'Organization',n:'Clinic',d:'Shared phone and address belong here, not to each physician listed under it.'},
+    role:{x:110,y:170,t:'PractitionerRole',n:'Physician at clinic',d:'Connects the practitioner to the organization they act for.'},
+    sr:{x:380,y:290,t:'ServiceRequest',n:'Flow cytometry panel',d:'The ordered test: a checked box among many unchecked options.'},
+    spec:{x:650,y:460,t:'Specimen',n:'Peripheral blood',d:'Collection date converted to ISO 8601 by the repair loop if needed.'},
+    cond:{x:650,y:290,t:'Condition',n:'Suspected leukemia',d:'Stage, severity and ICD-10 code are this condition’s own fields, not new Conditions.'},
+    dr:{x:380,y:60,t:'DiagnosticReport',n:'Lab report',d:'Groups the individual results and carries the interpretive summary.'},
+    obs:{x:650,y:60,t:'Observation',n:'CD34 %',d:'Each separately measured result is its own Observation.'}
+  };
+  const E=[['sr','pat','subject'],['sr','prac','requester'],['sr','spec','specimen'],['sr','cond','reasonReference'],
+    ['dr','sr','basedOn'],['dr','obs','result'],['spec','pat','subject'],['role','prac','practitioner'],['role','org','organization']];
+  const svg=document.getElementById('kg'),fig=document.getElementById('kgfig'),NS='http://www.w3.org/2000/svg';
+  const mk=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e};
+  const defs=mk('defs',{});const m=mk('marker',{id:'ah',viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'7',markerHeight:'7',orient:'auto-start-reverse'},defs);mk('path',{d:'M0 0L10 5L0 10z',fill:'#8fa79c'},m);
+  const W=150,H=50;const edges=[];
+  E.forEach(([a,b,p],i)=>{const A=N[a],B=N[b];const g=mk('g',{class:'ke'});
+    // clip line to box edges
+    const dx=B.x-A.x,dy=B.y-A.y;const clip=(dx,dy)=>{const sx=Math.abs(dx)>0?(W/2+4)/Math.abs(dx):1e9,sy=Math.abs(dy)>0?(H/2+4)/Math.abs(dy):1e9;return Math.min(sx,sy)};
+    const s=clip(dx,dy);const x1=A.x+dx*s,y1=A.y+dy*s,x2=B.x-dx*s,y2=B.y-dy*s;
+    const path=mk('path',{d:`M${x1} ${y1}L${x2} ${y2}`,'marker-end':'url(#ah)'},g);
+    const len=Math.hypot(x2-x1,y2-y1);path.style.setProperty('--len',len);if(!RM){path.classList.add('draw');path.style.animationDelay=(0.2+i*0.12)+'s'}
+    const tx=mk('text',{x:(x1+x2)/2,y:(y1+y2)/2-5,'text-anchor':'middle'},g);tx.textContent=p;
+    const bg=tx.getBBox?null:null;
+    edges.push({a,b,p,g})});
+  const nodes={};
+  Object.entries(N).forEach(([k,v])=>{const g=mk('g',{class:'kn',tabindex:'0',role:'button','aria-label':v.t+': '+v.n,transform:`translate(${v.x-W/2},${v.y-H/2})`});
+    mk('rect',{width:W,height:H,rx:12,fill:k==='pat'?'#13201d':'#ffffff',stroke:k==='pat'?'#13201d':'#bccac3','stroke-width':1.6},g);
+    const t1=mk('text',{x:12,y:20,'font-family':'IBM Plex Mono, monospace','font-size':10,fill:k==='pat'?'#a9b8b2':'#4a35e8'},g);t1.textContent=v.t;
+    const t2=mk('text',{x:12,y:38,'font-family':'Inter, sans-serif','font-size':13.5,'font-weight':600,fill:k==='pat'?'#f2f4f1':'#13201d'},g);t2.textContent=v.n;
+    nodes[k]=g;g.addEventListener('click',()=>pick(k));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(k)}})});
+  // labels behind nodes: move edge group to the back
+  edges.forEach(e=>svg.insertBefore(e.g,svg.children[1]));
+  function pick(k){fig.classList.add('focus');Object.values(nodes).forEach(n=>n.classList.remove('on','nb'));nodes[k].classList.add('on');
+    const lis=[];edges.forEach(e=>{const on=e.a===k||e.b===k;e.g.classList.toggle('on',on);if(on){nodes[e.a===k?e.b:e.a].classList.add('nb');
+      lis.push(e.a===k?`<b>${N[k].t}.${e.p}</b> → ${N[e.b].t}`:`${N[e.a].t}.<b>${e.p}</b> → this`)}});
+    document.getElementById('kType').textContent=N[k].t;document.getElementById('kName').textContent=N[k].n;document.getElementById('kDesc').textContent=N[k].d;
+    document.getElementById('kEdges').innerHTML=lis.map(l=>'<li>'+l+'</li>').join('')}
+  svg.addEventListener('click',e=>{if(e.target===svg){fig.classList.remove('focus');Object.values(nodes).forEach(n=>n.classList.remove('on','nb'));edges.forEach(x=>x.g.classList.remove('on'))}});
+})();
+
+/* ---------- funnel ---------- */
+(function(){const D={
+  admin:['Level 3','Administration',['Patient','Practitioner','PractitionerRole','CareTeam','Organization','Location','HealthcareService','RelatedPerson','Device']],
+  clinical:['Level 4','Clinical',['Condition','AllergyIntolerance','Procedure','CarePlan','Goal','FamilyMemberHistory','RiskAssessment']],
+  meds:['Level 4','Medications',['Medication','MedicationRequest','MedicationDispense','MedicationAdministration','MedicationStatement','Immunization']],
+  workflow:['Level 4','Workflow',['Task','Appointment','Schedule','ServiceRequest','PlanDefinition']],
+  fin:['Level 4','Financial',['Claim','Account','ChargeItem','Coverage','CoverageEligibilityRequest','CoverageEligibilityResponse','ExplanationOfBenefit']],
+  dx:['Level 4','Diagnostics',['Observation','DiagnosticReport','DocumentReference','Specimen','ImagingStudy']],
+  dev:['Level 4','Devices',['Device','DeviceRequest','DeviceMetric']],
+  nut:['Level 4','Nutrition',['NutritionOrder','NutritionIntake']],
+  bio:['Level 4','Biological products',['BiologicallyDerivedProduct']],
+  cr:['Level 5','Clinical reasoning',['Library','PlanDefinition','GuidanceResponse','Measure','MeasureReport']],
+  md:['Level 5','Medication definition',['MedicinalProductDefinition','PackagedProductDefinition','AdministrableProductDefinition','RegulatedAuthorization']]};
+  const btns=[...document.querySelectorAll('.dom')];
+  function pick(k){btns.forEach(b=>b.classList.toggle('on',b.dataset.d===k));const v=D[k];
+    document.getElementById('fLvl').textContent=v[0];document.getElementById('fDom').textContent=v[1];
+    document.getElementById('fTypes').innerHTML=v[2].map(t=>'<span>'+t+'</span>').join('')}
+  btns.forEach(b=>b.addEventListener('click',()=>pick(b.dataset.d)));pick('dx');
+})();
+
+/* ---------- pipeline details + play ---------- */
+const INFO={
+ json:['Input','ADONUT document JSON','The structured output of ADONUT: sections containing text and table blocks, each with typed elements.'],
+ parse:['Input','Parse blocks','Walks the section tree and collects each block’s facts: key-value pairs, checked and unchecked boxes, signatures, list items and paragraphs. Tables are rendered as a real row/column grid, handling colspan and rowspan.','Checked boxes and key-values are tagged as concrete facts so they don’t get lost among prose. Block ids and layout never reach the graph.'],
+ chunk:['Input','Chunk','Groups at most 10 root block families into one model call, always keeping each family whole.','A bounded chunk keeps the model’s attention on the content instead of running out partway through a huge section.'],
+ discover:['1 · Discovery','Funnel classification','The model acts as a clinician: it decides the domain, then a resource type from HL7’s live list, and lists which blocks each entity comes from. It also sees every entity already found earlier, with properties and relationships, so it can reuse names instead of duplicating.','Stage, grade or an ICD-10 code of a known condition are that condition’s own data, not new Conditions.'],
+ umls:['1 · Discovery','UMLS lookup','Bare codes, abbreviations and brand names are resolved through the National Library of Medicine’s UMLS API across ICD-10-CM, ICD-9-CM, SNOMED CT, LOINC, RxNorm, CPT and HCPCS, broadening to all vocabularies on a miss.','Lets the model recognise that a code and a separately mentioned name are the same real thing. Calls are cached and capped.'],
+ dedup:['1 · Discovery','Seen before?','Entities are matched across the whole document on resource type + normalised name, with a secondary match on identifier once one is known.'],
+ schema:['2 · Properties','Build schema per type','A form is generated at run time from the type’s real HL7 elements (from HL7’s published profile, cached locally), with each field labelled with its FHIR type and HL7’s own description.','The model literally cannot output a field HL7 doesn’t define for that type.'],
+ props:['2 · Properties','Fill properties','One call per entity, run in parallel, over the entity’s whole chunk. Values must come from the content or a UMLS result; contact details shared by a clinic aren’t copied onto each physician listed under it.'],
+ validate:['2 · Properties','Valid FHIR?','Values are reshaped into proper FHIR data types (coded concepts, identifiers, quantities, dates), then checked against HL7’s official FHIR models.','Validation uses the same FHIR version as the rest of the pipeline, so a failure means a real data problem, not a version quirk.'],
+ repair:['2 · Properties','Targeted repair','Only the failing fields are sent back with the real validation message (for example, a date that isn’t ISO 8601). At most two rounds; anything still invalid is dropped.','The model learns from the real error message, but the loop is bounded so missing data never causes endless retries.'],
+ topup:['3 · Registry','Top up, never overwrite','A repeated mention only fills fields that are still empty; a field with a real value is never replaced by a second, possibly partial mention. Writes from parallel calls are lock-protected.'],
+ pred:['3 · Registry','Real reference element?','Every relationship’s predicate must be one of the source type’s real reference elements (for example ServiceRequest.specimen). Anything else is discarded.','Nothing is trusted just because the model claims it called the tool.'],
+ docrel:['Whole document','Document-wide relationships','After all chunks, one pass sees the full document and the complete entity list, catching links between entities that were never in the same chunk.'],
+ iso:['Whole document','Isolated-entity pass','A document is one patient’s case, so an entity with no edges usually means a missed link. This pass looks for it, without forcing one if none exists.'],
+ rdf:['Export','RDF','Turtle, JSON-LD and TriG, using FHIR\u2019s own vocabulary for every relationship.'],
+ cypher:['Export','Neo4j','Each entity is keyed on real data (its identifier when known, otherwise its name), so reloading is safe and there are no made-up ids.']
+};
+const nodes=[...document.querySelectorAll('.node[data-k]')];const $=id=>document.getElementById(id);
+function show(k){const v=INFO[k];if(!v)return;nodes.forEach(n=>n.classList.toggle('sel',n.dataset.k===k));$('dMod').textContent=v[0];$('dTitle').textContent=v[1];$('dBody').textContent=v[2];const w=$('dWhy');if(v[3]){w.hidden=false;$('dWhyT').textContent=v[3]}else w.hidden=true}
+nodes.forEach(n=>n.addEventListener('click',()=>{stop();show(n.dataset.k)}));show('discover');
+const PATH=['json','parse','chunk','discover','umls','dedup','schema','props','validate','repair','topup','pred','docrel','iso','rdf','cypher'];
+let timer=null,idx=0;const btn=$('play'),lbl=$('playLbl');
+function stop(){if(timer){clearInterval(timer);timer=null}nodes.forEach(n=>n.classList.remove('lit'));btn.textContent='▶ Play the flow';lbl.textContent=''}
+function step(){nodes.forEach(n=>n.classList.remove('lit'));if(idx>=PATH.length){stop();return}const k=PATH[idx],el=document.querySelector('.node[data-k="'+k+'"]');el.classList.add('lit');show(k);lbl.textContent='step '+(idx+1)+' / '+PATH.length;const r=el.getBoundingClientRect();if(r.top<90||r.bottom>innerHeight-20)el.scrollIntoView({block:'center',behavior:RM?'auto':'smooth'});idx++}
+btn.addEventListener('click',()=>{if(timer){stop();return}idx=0;btn.textContent='■ Stop';step();timer=setInterval(step,1400)});
+</script>
+</body>
+</html>
