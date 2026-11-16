@@ -63,6 +63,10 @@ nav.links{display:flex;gap:4px;background:var(--surface);border:1px solid var(--
 nav.links a{text-decoration:none;color:var(--muted);font-size:14px;padding:6px 14px;border-radius:999px;transition:background .2s,color .2s}
 nav.links a:hover{color:var(--ink)}
 nav.links a.on{background:var(--ink);color:var(--bg)}
+.cvbtn{padding:8px 16px;font-size:14px;background:var(--surface);border-color:var(--line-2)}
+.cvbtn svg{transition:transform .25s}
+.cvbtn:hover{border-color:var(--ink)}
+.cvbtn:hover svg{transform:translateY(2px)}
 .ham{display:none;background:var(--surface);border:1px solid var(--line);border-radius:999px;width:40px;height:40px;cursor:pointer}
 
 /* ---------- hero ---------- */
@@ -342,6 +346,7 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
   nav.links a{padding:12px 14px}
   .ham{display:grid;place-items:center}
   .hire{display:none}
+  .cvbtn{padding:8px 13px;font-size:13px}
   .hero-grid{grid-template-columns:1fr}
   .map{min-height:0;aspect-ratio:640/600}
   .proof{grid-template-columns:repeat(2,1fr)}
@@ -374,6 +379,8 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
   form.cform{grid-template-columns:1fr}
   .edu{grid-template-columns:1fr}.edu .g{text-align:left}
   .ai-fab{padding:6px}.ai-fab .lbl{display:none}
+  .cvbtn span{display:none}
+  .cvbtn{width:40px;height:40px;padding:0;justify-content:center}
 }
 @media (max-width:420px){
   .steps{grid-template-columns:1fr}
@@ -403,8 +410,9 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
       <a href="#contact">Contact</a>
     </nav>
     <div style="display:flex;gap:8px;align-items:center">
+      <a class="btn cvbtn" href="assets/Ubair_Nisar_CV.pdf" download="Ubair_Nisar_CV.pdf" aria-label="Download CV (PDF)"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v9M4 7.5 8 11.5l4-4M3 14h10"/></svg><span>Download CV</span></a>
       <a class="btn solid hire" href="#contact" style="padding:9px 18px;font-size:14px"><span class="dot"></span>Hire me</a>
-      <button class="ham" id="ham" aria-label="Open menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
+      <button class="ham" id="ham" aria-label="Open menu" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg></button>
     </div>
   </div>
 </header>
@@ -607,6 +615,7 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
       <a class="clink" href="tel:+923096128600"><i class="fas fa-phone"></i><span>+92 309 612 8600</span><small>Phone</small></a>
       <a class="clink" href="https://www.linkedin.com/in/ubairnisar0/" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i><span>linkedin.com/in/ubairnisar0</span><small>LinkedIn ↗</small></a>
       <a class="clink" href="https://www.upwork.com/freelancers/ubairn" target="_blank" rel="noopener"><i class="fab fa-upwork"></i><span>upwork.com/freelancers/ubairn</span><small>Upwork ↗</small></a>
+      <a class="clink" href="assets/Ubair_Nisar_CV.pdf" download="Ubair_Nisar_CV.pdf"><i class="fas fa-file-download"></i><span>Download my CV (PDF)</span><small>PDF · 2 pages</small></a>
       <button class="clink" type="button" data-copy="ubair.nisar15@gmail.com" style="cursor:pointer;font:inherit;color:inherit;text-align:left"><i class="far fa-copy"></i><span>Copy email address</span><small class="cpst">Copy</small></button>
     </div>
     <form class="cform" id="contact-me" method="post" action="https://forms.un-static.com/forms/8e79cc75f73da83d8e580033016262bb463512d6">
