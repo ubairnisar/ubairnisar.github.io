@@ -141,7 +141,7 @@ h1 .works{color:var(--accent)}
 .visa b{font-size:7.6px}
 .visa:nth-child(1){color:#8c5a1d;transform:rotate(-8deg)}.visa:nth-child(2){color:#2f7a55;transform:rotate(6deg)}
 .visa:nth-child(3){color:#c2501f;transform:rotate(-3deg)}.visa:nth-child(4){color:#6a4bb0;transform:rotate(9deg)}
-.visa:nth-child(5){color:var(--accent);grid-column:span 2;border-radius:8px;aspect-ratio:auto;padding:5px;transform:rotate(-2deg)}
+.visa:nth-child(4){color:var(--accent)}
 .pp-hint{text-align:center;font-family:var(--f-mono);font-size:9px;color:var(--muted);margin-top:8px}
 
 .proof{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
@@ -396,7 +396,7 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
 }
 @media (max-width:640px){
   .stn,.axis{display:none}
-  .legend{display:grid;list-style:none;margin:12px 0 0;padding:0;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;counter-reset:j}
+  .legend{display:grid;list-style:none;margin:12px 0 0;padding:0;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;counter-reset:j}
   .legend li{font-size:11px;line-height:1.25;color:var(--muted);counter-increment:j;min-width:0}
   .legend li::before{content:'0' counter(j);display:block;font-family:var(--f-mono);font-size:9.5px;color:var(--faint)}
   .legend li b{display:block;color:var(--ink);font-size:12px;font-weight:600;overflow-wrap:anywhere}
@@ -471,11 +471,11 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
 
     <div>
       <div class="map" id="map">
-        <div class="lot" id="lotMap" role="img" aria-label="Animated contour map: a ball descends a loss landscape through five career checkpoints, Bytewise, Iknex Lab, Cowlar, Melior ITS, and settles at Siparadigm"></div>
-        <span class="axis y">( fig. 1 · my loss landscape, 2023 → now )</span>
+        <div class="lot" id="lotMap" role="img" aria-label="Animated contour map: a ball descends a loss landscape through four career checkpoints, freelancing on Upwork from December 2022, Cowlar, Melior ITS, and settles at Siparadigm"></div>
+        <span class="axis y">( fig. 1 · my loss landscape, 2022 → now )</span>
         <div class="hud" aria-hidden="true">
           <div class="row"><span>optimizer</span><b>curiosity</b></div>
-          <div class="row"><span>checkpoint</span><b id="hudCk">00 / 05</b></div>
+          <div class="row"><span>checkpoint</span><b id="hudCk">00 / 04</b></div>
           <div class="row"><span>at</span><b id="hudAt">initialising…</b></div>
           <div class="bar"><i id="hudBar"></i></div>
         </div>
@@ -490,10 +490,9 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
               <span class="stamp">Open to work</span>
             </div>
             <div class="pp-face pp-back">
-              <div class="pp-head"><span>Visas</span><span>2023 →</span></div>
+              <div class="pp-head"><span>Visas</span><span>2022 →</span></div>
               <div class="visas">
-                <div class="visa"><b>Bytewise</b>Feb 23</div>
-                <div class="visa"><b>Iknex</b>Jun 23</div>
+                <div class="visa"><b>Upwork</b>Dec 22</div>
                 <div class="visa"><b>Cowlar</b>YC W17</div>
                 <div class="visa"><b>Melior</b>Sep 24</div>
                 <div class="visa"><b>Siparadigm</b>Aug 2025 · now</div>
@@ -503,7 +502,7 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
           <div class="pp-hint">hover · tap to flip</div>
         </div>
       </div>
-      <ol class="legend" aria-hidden="true"><li><b>Bytewise</b>2023</li><li><b>Iknex Lab</b>2023</li><li><b>Cowlar</b>YC W17</li><li><b>Melior ITS</b>2024–25</li><li class="now"><b>Siparadigm</b>now</li></ol>
+      <ol class="legend" aria-hidden="true"><li><b>Upwork</b>Dec 2022 →</li><li><b>Cowlar</b>YC W17</li><li><b>Melior ITS</b>2024–25</li><li class="now"><b>Siparadigm</b>now</li></ol>
     </div>
   </div>
 
@@ -649,12 +648,12 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
   <span class="eyebrow cap">Along the way</span>
   <h2>Recognition <em>and foundations.</em></h2>
   <div class="ach">
-    <div class="ac"><div class="lot" data-badge="toprated"></div><div><h3>Top Rated on Upwork</h3><p>Working with clients worldwide, from requirements through delivery.</p></div></div>
-    <div class="ac"><div class="lot" data-badge="rocket"></div><div><h3>YC company alum</h3><p>Shipped production AI at Cowlar LLC (Y Combinator W17).</p></div></div>
-    <div class="ac"><div class="lot" data-badge="bug"></div><div><h3>Runner-up, NASCON</h3><p>Bug Hunting programme.</p></div></div>
-    <div class="ac"><div class="lot" data-badge="medal"></div><div><h3>Dean's List ×4</h3><p>Recognised four times for academic excellence.</p></div></div>
-    <div class="ac"><div class="lot" data-badge="bronze"></div><div><h3>Bronze Medalist</h3><p>Academic performance, third semester.</p></div></div>
-    <div class="ac"><div class="lot" data-badge="bolt"></div><div><h3>First to an offer</h3><p>First in my batch to secure a job offer.</p></div></div>
+    <div class="ac"><div class="lot" data-badge="bug"></div><div><h3>Runner-up, NASCON Bug Hunting Competition</h3><p>Placed second in the Bug Hunting contest at NASCON, FAST NUCES' annual national computing competition.</p></div></div>
+    <div class="ac"><div class="lot" data-badge="bronze"></div><div><h3>Bronze Medal for Academic Excellence</h3><p>Awarded by FAST NUCES for outstanding results in the third semester of the BS Artificial Intelligence program.</p></div></div>
+    <div class="ac"><div class="lot" data-badge="medal"></div><div><h3>Dean's List of Honors, four times</h3><p>Recognized by FAST NUCES in four separate semesters for consistently high academic performance. <a href="https://www.nu.edu.pk/Campus/Islamabad/DeanLists" target="_blank" rel="noopener">Reference ↗</a></p></div></div>
+    <div class="ac"><div class="lot" data-badge="toprated"></div><div><h3>Top Rated on Upwork</h3><p>19+ production AI projects for clients worldwide, from requirements through delivery.</p></div></div>
+    <div class="ac"><div class="lot" data-badge="rocket"></div><div><h3>Y Combinator company alum</h3><p>Shipped production AI at Cowlar LLC (YC W17), live in a factory and in retail stores.</p></div></div>
+    <div class="ac"><div class="lot" data-badge="bolt"></div><div><h3>First in my batch to an offer</h3><p>First student in my batch to secure a job offer.</p></div></div>
   </div>
   <div class="edu">
     <div><span class="cap">Education · 2020 – 2024</span><h3>Bachelor of Artificial Intelligence, FAST NUCES Islamabad</h3><p>Programming for AI, Machine Learning, Computer Vision, NLP and MLOps.</p></div>
@@ -739,13 +738,12 @@ function mount(node,data,{loop=false,ready}={}){
 (function(){
   const W=640,H=600,M=[300,420],INTRO=156,F=336;
   const STN=[
-    {p:[590,104],co:'Bytewise',     d:'Flask Lead · 2023'},
-    {p:[530,186],co:'Iknex Lab',    d:'Research Fellow · 2023'},
-    {p:[478,268],co:'Cowlar · YC W17',d:'ML/AI Engineer · 2023–24'},
-    {p:[398,336],co:'Melior ITS',   d:'ML/AI Engineer L2 · 2024–25'},
+    {p:[584,118],co:'Upwork',       d:'Freelance AI Engineer · Dec 2022 → now'},
+    {p:[516,214],co:'Cowlar · YC W17',d:'ML/AI Engineer · 2023–24'},
+    {p:[414,320],co:'Melior ITS',   d:'ML/AI Engineer L2 · 2024–25'},
     {p:M,        co:'Siparadigm',   d:'ML/AI Engineer L5 · Aug 2025 → now',min:true}];
   const route=[[636,40],...STN.map(s=>s.p)];
-  const T=i=>18+i*27;                       // ball reaches route[i] at frame T(i)
+  const T=i=>18+i*34;                       // ball reaches route[i] at frame T(i)
   const layers=[];
   // ball (top layer) follows the same smooth curve using spatial tangents
   const tg=tangents(route,false);
@@ -790,12 +788,12 @@ function mount(node,data,{loop=false,ready}={}){
   const ck=document.getElementById('hudCk'),at=document.getElementById('hudAt'),bar=document.getElementById('hudBar');
   let shown=0;
   const reach=n=>{for(;shown<n;shown++)labels[shown].classList.add('in');
-    ck.textContent=String(n).padStart(2,'0')+' / 05';at.textContent=n?STN[n-1].co.split(' ·')[0]:'initialising…';bar.style.width=(n/5*100)+'%';
-    if(n===5)at.textContent='Siparadigm ✓'};
+    ck.textContent=String(n).padStart(2,'0')+' / '+String(STN.length).padStart(2,'0');at.textContent=n?STN[n-1].co.split(' ·')[0]:'initialising…';bar.style.width=(n/STN.length*100)+'%';
+    if(n===STN.length)at.textContent='Siparadigm ✓'};
   mount(document.getElementById('lotMap'),data,{ready:(a,instant)=>{
-    if(instant){reach(5);return}
-    a.addEventListener('enterFrame',()=>{if(shown>=5)return;let n=0;STN.forEach((s,k)=>{if(a.currentFrame>=T(k+1)-1)n=k+1});if(n>shown)reach(n)});
-    a.addEventListener('complete',function once(){a.removeEventListener('complete',once);reach(5);a.loop=true;a.playSegments([INTRO,F],true)});
+    if(instant){reach(STN.length);return}
+    a.addEventListener('enterFrame',()=>{if(shown>=STN.length)return;let n=0;STN.forEach((s,k)=>{if(a.currentFrame>=T(k+1)-1)n=k+1});if(n>shown)reach(n)});
+    a.addEventListener('complete',function once(){a.removeEventListener('complete',once);reach(STN.length);a.loop=true;a.playSegments([INTRO,F],true)});
   }});
 })();
 
@@ -956,12 +954,13 @@ const JOBS=[
        'Built real-time product recognition and cart-action detection for smart carts (MoViNet, TensorFlow), live at Al Meera, Qatar, with <b>~2,000 shoppers/day</b>; served across a multi-cluster Kubernetes pipeline on GCP with Nginx and human-in-the-loop retraining.',
        'Built queue-management analytics from real-time CCTV with object detection and tracking.'],
   chips:['TFLite','Qualcomm NPU','MoViNet','Kubernetes','GCP','Nginx']},
- {k:'iknex',co:'Iknex Lab',role:'Research Fellow (part-time)',when:'Jun 2023 – Jul 2023',
-  pts:['Transformed lengthy Excel data into a structured Neo4j graph of ships, ports, routes and locations for advanced analytics.','Enabled visualisation of maritime data, improving anomaly detection along ship journeys.'],
-  chips:['Neo4j','Graph analytics']},
- {k:'bytewise',co:'Bytewise Limited',role:'Flask Lead',when:'Feb 2023 – Apr 2023',
-  pts:['Led a small team building Flask web applications and mentored junior developers on day-to-day backend work.'],
-  chips:['Flask','Mentoring']}
+ {k:'upwork',co:'Upwork',role:'Freelance AI Engineer',lvl:'Top Rated',or:true,when:'Dec 2022 – Present',now:true,
+  ctx:'Freelancing alongside full-time roles, for clients worldwide.',
+  pts:['Top Rated freelancer who has delivered <b>19+ production AI projects</b>, owning each one end to end: scoping the real problem with the client, designing the system, building it and deploying it.',
+       'Built a first-of-its-kind <b>rooftop measurement SaaS</b> from satellite imagery: roof-section segmentation, structural-edge classification and slope prediction with dense prediction models trained on millions of point-annotated images.',
+       'Automated customer operations with LLM agents: a lead-scoring and auto-reply system that answers new leads in <b>under 2 minutes</b> with all spam filtered out, and a Freshdesk + Shopify support agent that cut response time by <b>80%</b>.',
+       'Built a building-permit data platform covering <b>60+ US city portals</b> (Playwright, LLM parsing, MongoDB, FastAPI) and an MCP server that answers natural-language questions over live US Treasury data.'],
+  chips:['LLM agents','n8n','Computer vision','Segmentation','Playwright','FastAPI','MCP']}
 ];
 (function(){const tabs=document.getElementById('tabs'),panel=document.getElementById('panel');
   const order=JOBS.slice().reverse(); // oldest -> newest, like descending the curve
@@ -1010,11 +1009,7 @@ const CASES=[
  {id:'carts',t:'Smart carts that see what you add',w:'Cowlar · Al Meera',img:'projects/smart-cart.png',
   p:'Carts had to recognise products and add/remove actions live, from many cameras at once.',
   a:'MoViNet + TensorFlow action recognition; video served across a multi-cluster Kubernetes pipeline on GCP with Nginx, and human-in-the-loop labelling for retraining.',
-  r:'Live at Al Meera, Qatar, used by about 2,000 shoppers a day.',big:'~2,000/day',chips:['MoViNet','Kubernetes','GCP']},
- {id:'maritime',t:'Maritime data as a graph',w:'Iknex Lab',glyph:'Neo4j',
-  p:'Ship journey data lived in long Excel sheets, which made anomalies hard to spot.',
-  a:'Modelled ships, ports, routes and locations as a Neo4j graph and built visualisations on top.',
-  r:'Better anomaly detection along each ship\'s journey.',big:'Graph',chips:['Neo4j','Python']}
+  r:'Live at Al Meera, Qatar, used by about 2,000 shoppers a day.',big:'~2,000/day',chips:['MoViNet','Kubernetes','GCP']}
 ];
 const ARCH=[{"cat": ["cv", "genai"], "img": "projects/satellite-roof.jpg", "tag": "Computer Vision", "title": "Satellite Roof AI Segmentation, Edge Classification & Depth Prediction", "desc": "First-of-its-kind rooftop measurement SaaS using satellite imagery + Solar API — segments roof sections, classifies structural edges, and predicts slope via dense prediction models, trained on millions of point-annotated images.", "chips": ["Semantic Segmentation", "3D Modeling"]}, {"cat": ["genai", "agent"], "img": "projects/cognivision.png", "tag": "GenAI", "title": "CogniVision — RAG + CLIP Text-to-Video Retrieval & T5 Summaries", "desc": "Chat with any video or YouTube link using RAG + CLIP for text-to-video alignment, with automatic segment titles via Google's T5-Flan and an interactive transcript.", "chips": ["Vision-Language Model", "Llama 3"]}, {"cat": ["automation", "agent"], "img": "projects/gohighlevel.jpg", "tag": "Automation", "title": "GoHighLevel AI Lead Engagement & Intelligent Scoring — n8n", "desc": "Intelligent lead system for a marketing agency — classifies leads, filters spam, and auto-replies via Gemini. Cut response time to under 2 minutes with 100% spam eliminated.", "chips": ["n8n", "Gemini"]}, {"cat": ["cv"], "img": "projects/crack-segmentation.jpg", "tag": "Computer Vision", "title": "Crack Segmentation using YOLOv8-seg", "desc": "Trained a crack detection and segmentation model with Ultralytics YOLOv8n-Seg to find cracks in tiles and walls.", "chips": ["YOLO", "OpenCV"]}, {"cat": ["cv"], "img": "projects/edge-ai-ocr.jpg", "tag": "Computer Vision", "title": "Edge AI Price Tag OCR — YOLOv8 + TFLite + DocTR/TrOCR/PaddleOCR", "desc": "Mobile-ready price tag OCR pipeline: TFLite-converted YOLOv8 detection + fine-tuned OCR models validating shelf prices against catalog data in real time on edge devices.", "chips": ["Edge AI", "TensorFlow Lite"]}, {"cat": ["cv"], "img": "projects/optical-fibre.jpg", "tag": "Computer Vision", "title": "Optical Fibre Detection — 95% Accuracy, 500% Throughput", "desc": "Industrial CV system sorting 250-micron optical fibers at 95% color accuracy — cut sort time from 3 minutes to 8 seconds, scaling output 500% in a live Aurora, IL production line.", "chips": ["MLOps", "CI/CD"]}, {"cat": ["cv"], "img": "projects/smart-cart.png", "tag": "Computer Vision", "title": "Smart Cart AI — Action Recognition, Android NPU + Docker Swarm", "desc": "Production-grade real-time action recognition for smart shopping carts — edge inference on Android NPU with a multi-node GPU cluster (Docker Swarm, NGINX) for cloud-side streaming.", "chips": ["Edge AI", "Docker Swarm"]}, {"cat": ["automation", "fullstack"], "img": "projects/us-permit.jpg", "tag": "Automation", "title": "US Permit Data Platform — 60+ Cities, Playwright + LLM + FastAPI", "desc": "Production permit-data aggregator scraping 60+ US city portals with Playwright + public APIs, using LLMs to parse unstructured HTML, deduped in MongoDB, served via FastAPI with scheduled email exports.", "chips": ["Web Scraping", "MongoDB"]}, {"cat": ["fullstack"], "img": "projects/3d-product.jpg", "tag": "Full-Stack", "title": "3D Product Rendering SaaS — Next.js, Stripe & Supabase", "desc": "Full-stack SaaS where e-commerce sellers order 3D product renders for Amazon/GS1 — Stripe checkout, file uploads, approval workflow, and a real-time order dashboard.", "chips": ["Next.js", "Supabase"]}, {"cat": ["agent", "genai"], "img": "projects/monteur-ai.png", "tag": "LLM & Agents", "title": "Monteur AI — RAG Document Grounding, Open-Source LLM + Embeddings", "desc": "RAG-powered document grounding for mechanics — every answer is grounded to the exact document, page, and section, built on a self-hosted open-source LLM for fully private inference.", "chips": ["RAG", "Document AI"]}, {"cat": ["agent"], "img": "projects/fiscalchat.jpg", "tag": "LLM & Agents", "title": "FiscalChat — MCP Server + Treasury API + FastAPI Conversational AI", "desc": "Real-time conversational AI over US Treasury data via a custom-built MCP server — instant spending summaries, historical comparisons, and debt insights in natural language.", "chips": ["MCP", "FastAPI"]}, {"cat": ["agent", "cv"], "img": "projects/adonut.jpg", "tag": "Document AI", "title": "ADONUT — SOTA Document Extraction: LLM, OCR & Complex Layout AI", "desc": "Agentic Document Understanding system — SOTA complex-layout extraction benchmarked across medical, financial, and general documents. Currently shipping in production at Siparadigm.", "chips": ["AI Agent Development", "OCR"]}, {"cat": ["agent"], "img": "projects/react-agent.jpg", "tag": "LLM & Agents", "title": "ReAct Agent — DeepSeek LLM, Stripe & Calendar API, Telegram Bot", "desc": "Reasoning + Acting agent on DeepSeek LLM deployed as a Telegram bot — autonomously verifies payments, parses transactions, and books calendar invites through natural conversation.", "chips": ["Prompt Engineering", "Telegram API"]}, {"cat": ["genai"], "img": "projects/face-emotion.jpg", "tag": "GenAI", "title": "Face Emotion Changer (ComfyUI)", "desc": "Robust generative-AI face emotion changer built on a custom ComfyUI workflow, deployed via API and packaged into a Python script.", "chips": ["Stable Diffusion", "FastAPI"]}, {"cat": ["cv"], "img": "projects/ascii-camera.jpg", "tag": "Computer Vision", "title": "ASCII Camera", "desc": "Live camera feed converted into real-time ASCII art using Python and OpenCV — a playful desktop app, terminal and GUI included.", "chips": ["OpenCV", "PyQt"]}, {"cat": ["genai"], "img": "projects/virtual-tryon.jpg", "tag": "GenAI", "title": "Virtual Try-On Cloth", "desc": "Gradio app for virtual try-ons — body segmentation, upper-body masking, and latent-space inpainting with a diffusion model to render clothing onto any photo.", "chips": ["Gradio", "Image Segmentation"]}, {"cat": ["automation", "agent"], "img": "projects/freshdesk.jpg", "tag": "Automation", "title": "Freshdesk Customer Support Agent with Shopify — n8n", "desc": "Autonomous support automation integrating Freshdesk, OpenAI and Shopify — classifies tickets by intent/sentiment, drafts contextual replies, and flags low-confidence cases for humans. Cut response time 80%.", "chips": ["n8n", "OpenAI API"]}, {"cat": ["cv"], "img": "projects/cctv-queue.png", "tag": "Computer Vision", "title": "CCTV-Based Queue Intelligence — Object Detection, Tracking & Analytics", "desc": "Scalable queue management solution delivering customer and cashier waiting analytics from real-time CCTV footage using object detection and multi-face tracking.", "chips": ["Object Tracking", "MLflow"]}, {"cat": ["agent"], "img": "projects/nl-database.jpg", "tag": "LLM & Agents", "title": "AI-Powered NL Database Engine — Dual LLM & Graph Schema Intelligence", "desc": "Manage databases through natural language — dual LLM orchestration (GPT-4o-mini + Claude), a conversational schema planner, and graph-based schema intelligence via FalkorDB.", "chips": ["Knowledge Graph", "Prompt Engineering"]}];
 (function(){const dlg=document.getElementById('dlg'),vis=document.getElementById('dlgVis'),img=document.getElementById('dlgImg');
@@ -1038,16 +1033,20 @@ const ARCH=[{"cat": ["cv", "genai"], "img": "projects/satellite-roof.jpg", "tag"
   // archive
   const CATS=[['all','All'],['cv','Computer vision'],['genai','GenAI'],['agent','LLMs & agents'],['automation','Automation'],['fullstack','Full-stack']];
   const grid=document.getElementById('agrid'),fb=document.getElementById('filters');
-  ARCH.forEach(p=>{const b=document.createElement('button');b.className='acard';b.dataset.cat=p.cat.join(' ');
+  const archById={};
+  ARCH.forEach(p=>{const b=document.createElement('button');b.className='acard';b.dataset.cat=p.cat.join(' ');const pid=p.img.split('/').pop().replace(/\.[a-z]+$/,'');b.id='p-'+pid;
     b.innerHTML='<img src="'+p.img+'" alt="" loading="lazy" decoding="async"><div class="t"><span>'+p.tag+'</span><b>'+p.title+'</b></div>';
-    b.addEventListener('click',()=>open({tag:'Upwork · '+p.tag,title:p.title,src:p.img,pas:[['Summary',p.desc]],chips:p.chips}));grid.appendChild(b)});
+    const showA=()=>open({tag:'Upwork · '+p.tag,title:p.title,src:p.img,pas:[['Summary',p.desc]],chips:p.chips});archById[pid]={el:b,show:showA};
+    b.addEventListener('click',()=>{showA();history.replaceState(null,'','#p-'+pid)});grid.appendChild(b)});
   function filt(cat){[...fb.children].forEach(b=>{const on=b.dataset.f===cat;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
     let n=0;[...grid.children].forEach(c=>{const s=cat==='all'||c.dataset.cat.split(' ').includes(cat);c.hidden=!s;if(s)n++});document.getElementById('acount').textContent=n}
   CATS.forEach(([k,l])=>{const b=document.createElement('button');b.className='fbtn';b.dataset.f=k;
     b.textContent=l+' ('+(k==='all'?ARCH.length:ARCH.filter(p=>p.cat.includes(k)).length)+')';b.addEventListener('click',()=>filt(k));fb.appendChild(b)});
   filt('all');
+  function archHash(){const m=location.hash.match(/^#p-([a-z0-9-]+)$/);if(!m||!archById[m[1]])return;const c=archById[m[1]];c.el.scrollIntoView({block:'center'});setTimeout(c.show,250)}
+  addEventListener('hashchange',archHash);archHash();
   document.getElementById('dlgClose').addEventListener('click',()=>dlg.close());
-  dlg.addEventListener('close',()=>{if(/^#case-/.test(location.hash))history.replaceState(null,'',location.pathname+location.search)});
+  dlg.addEventListener('close',()=>{if(/^#(case|p)-/.test(location.hash))history.replaceState(null,'',location.pathname+location.search)});
   dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
 })();
 
@@ -1088,7 +1087,7 @@ const ARCH=[{"cat": ["cv", "genai"], "img": "projects/satellite-roof.jpg", "tag"
 (function(){const fab=document.getElementById('aiFab'),panel=document.getElementById('aiPanel'),body=document.getElementById('aiBody'),inp=document.getElementById('aiInput'),qr=document.getElementById('qr');
   const KB={
     approach:"How Ubair works: understand the real problem with the people who'll use it, start simple and go custom only when numbers demand it, measure honestly on benchmarks and held-out data, make it fast and cheap to run, then ship it and own it in production.",
-    experience:"4+ years:\n▸ Siparadigm Diagnostic (ML/AI Engineer L5, now): ADONUT document AI, custom layout detector, vLLM serving\n▸ Melior ITS (L2): Monteur AI, Tender Assist, Mart AI, Surveillance AI\n▸ Cowlar LLC (YC W17): Viaphoton fibre sorting, Al Meera price-tag OCR and smart carts\n▸ Iknex Lab: Neo4j maritime graph\n▸ Bytewise: Flask lead",
+    experience:"4+ years:\n▸ Siparadigm Diagnostic (ML/AI Engineer L5, now): ADONUT document AI, custom layout detector, vLLM serving\n▸ Melior ITS (L2): Monteur AI, Tender Assist, Mart AI, Surveillance AI\n▸ Cowlar LLC (YC W17): Viaphoton fibre sorting, Al Meera price-tag OCR and smart carts\n▸ Upwork (Top Rated, Dec 2022 → now): 19+ freelance AI projects for clients worldwide",
     skills:"Generally: document AI, LLMs & agents, computer vision, and fast/cheap inference.\nSpecifically: Python, PyTorch, TensorFlow, Hugging Face, Unsloth, QLoRA/LoRA, RAG with reranking, LangChain/LangGraph, vLLM, Florence-2, Qwen-VL, RT-DETR, docTR/trOCR/PaddleOCR, TFLite on Qualcomm NPUs, FastAPI, Docker, Kubernetes, GCP, AWS, Azure, DigitalOcean.",
     projects:"Highlights: ADONUT (92.2 TEDS on OmniDocBench tables), a custom layout detector (mAP 0.67→0.84), Monteur AI (90% answer accuracy), Tender Assist (weeks→a day), Viaphoton fibre sorting (99%), Al Meera smart carts (~2,000 shoppers/day). The Work section has each case, plus 19 Upwork projects.",
     achievements:"Top Rated on Upwork, YC company alum, Runner-up in NASCON's Bug Hunting programme, Dean's List ×4, Bronze Medalist, and first in his batch to get a job offer.",
@@ -1098,7 +1097,7 @@ const ARCH=[{"cat": ["cv", "genai"], "img": "projects/satellite-roof.jpg", "tag"
     hello:"Hi! Ask me how Ubair approaches problems, or about his experience, skills, projects, or how to reach him."};
   function match(t){t=t.toLowerCase();
     if(/approach|solve|process|how do|work style|problem/.test(t))return KB.approach;
-    if(/exper|career|job|company|siparadigm|melior|cowlar|iknex|bytewise|yc/.test(t))return KB.experience;
+    if(/exper|career|job|company|siparadigm|melior|cowlar|upwork|freelanc|yc/.test(t))return KB.experience;
     if(/skill|stack|tech|tool|python|llm|vision|ocr|vllm/.test(t))return KB.skills;
     if(/project|build|portfolio|case|adonut|monteur/.test(t))return KB.projects;
     if(/achiev|award|medal|dean|upwork rating|top rated/.test(t))return KB.achievements;
