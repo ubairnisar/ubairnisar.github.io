@@ -1080,7 +1080,7 @@ const CASES=[
   p:'Complex documents (tables spanning pages, deep section hierarchies) break standard extraction, so downstream systems get wrong data.',
   a:'An agentic system that reconstructs a hierarchical document tree and recognises multi-page spanning tables, with a custom layout stage and a fine-tuned OCR model.',
   r:'92.2 TEDS on OmniDocBench tables (+9.7 over the next-best published method) and 0.89 / 0.85 STEDS on HRDoc hierarchy.',big:'92.2 TEDS',chips:['Agents','Layout detection','OCR','Qwen-VL']},
- {id:'layout',t:'A custom layout detector',w:'Siparadigm',img:'projects/adonut.jpg',
+ {id:'layout',t:'A custom layout detector',w:'Siparadigm',img:'projects/adonut.jpg',page:'work/layout-detector.html',
   p:'Off-the-shelf detectors missed too many layout regions (mAP 0.67) for medical and financial documents.',
   a:'Designed a new architecture: Qwen-VL backbone with residual connections, multi-scale feature fusion and dilated convolutions, paired with an RT-DETR detection head.',
   r:'mAP rose from 0.67 to 0.84, and ADONUT\'s layout stage reached 99.4% F1 on RealDocBench.',big:'+0.17 mAP',chips:['PyTorch','Qwen-VL','RT-DETR']},

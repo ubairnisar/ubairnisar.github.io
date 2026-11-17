@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Layout Detector · Case study · Ubair Nisar</title>
+<meta name="description" content="How I built a fast layout detector on top of an OCR-tuned vision-language model's vision tower: the idea, seven iterations, the architecture and what I learned.">
+<meta property="og:title" content="A layout detector built on an OCR model's eyes">
+<meta property="og:description" content="Keeping a VLM's vision, dropping its slow text generation: a one-pass layout detector, from first draft to state-of-the-art-inspired architecture.">
+<meta property="og:image" content="../projects/adonut.jpg">
+<meta name="theme-color" content="#f2f4f1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2313201d'/%3E%3Ccircle cx='16' cy='18' r='3' fill='%23ff7a1a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Same system as the portfolio: sage paper, ultramarine accent, orange signal. Diagram = colour-coded module bands. */
+:root{
+  --bg:#f2f4f1; --surface:#ffffff; --panel:#e7ede9; --ink:#13201d; --text:#34423e; --muted:#66746f; --faint:#9aa7a2;
+  --line:#d5ddd8; --line-2:#bccac3; --accent:#4a35e8; --accent-soft:#e4e0ff; --ball:#ff7a1a; --ball-soft:#ffe6d1; --ok:#2f9e6e;
+  /* module colours (from the original diagram) */
+  --m-init:#fff7e6; --m-init-b:#efd9a8; --m-ocr:#eef7ee; --m-ocr-b:#bfdcc0; --m-dig:#f3f2fd; --m-dig-b:#cfcaf3;
+  --s1:#f4f6ff; --s1-b:#c9cff2; --s2:#eefaf0; --s2-b:#b8e0c0; --s3:#fff0f5; --s3-b:#f0bfd2; --s4:#fffbea; --s4-b:#ecdca0;
+  --s5:#faf2ff; --s5-b:#dcc2f0; --s6:#ecfbfb; --s6-b:#b2e2e2; --note:#fff6c9; --note-b:#e6d27a;
+  --f-display:'Bricolage Grotesque','Inter',system-ui,sans-serif; --f-sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif; --f-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --gl:max(16px,env(safe-area-inset-left,0px)); --gr:max(16px,env(safe-area-inset-right,0px));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1200px;margin:0 auto;padding-left:var(--gl);padding-right:var(--gr)}
+.cap{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.eyebrow{display:inline-flex;align-items:center;gap:10px}
+.eyebrow::before{content:'';width:22px;height:1.5px;background:var(--accent)}
+h1,h2,h3{font-family:var(--f-display);letter-spacing:-.025em;text-wrap:balance}
+h2{font-weight:600;font-size:clamp(28px,3.6vw,42px);line-height:1.08;margin:12px 0 0;max-width:24ch}
+h2 em{font-style:normal;color:var(--accent)}
+.sub{color:var(--text);max-width:64ch;margin:14px 0 0;font-size:17px}
+section{padding-block:clamp(48px,7vw,88px)}
+.chip{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line-2);border-radius:999px;padding:3px 10px;color:var(--text);background:var(--surface);white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.btn{display:inline-flex;align-items:center;gap:10px;font-weight:500;font-size:14.5px;padding:10px 18px;border-radius:999px;border:1.5px solid var(--ink);background:transparent;text-decoration:none;cursor:pointer;transition:transform .2s,background .2s,color .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.solid{background:var(--ink);color:var(--bg)}
+.btn.solid:hover{background:var(--accent);border-color:var(--accent)}
+
+/* header */
+header.top{position:sticky;top:0;z-index:50;background:rgba(242,244,241,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header .in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
+.logo{display:flex;flex-direction:column;gap:3px;text-decoration:none;line-height:1}
+.logo .wm{font-family:var(--f-display);font-weight:700;font-size:21px;letter-spacing:-.04em;display:inline-flex;align-items:baseline;gap:.22em}
+.logo .wm span{color:var(--accent)}
+.logo .wm i{width:7px;height:7px;border-radius:50%;background:var(--ball);margin-left:-.12em}
+.logo .role{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:6px}
+.logo .role::before{content:'';width:14px;height:1.5px;background:var(--ball)}
+.hbtns{display:flex;gap:8px}
+
+/* hero */
+.hero{padding-block:clamp(36px,6vw,72px) 20px}
+.crumb{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-decoration:none}
+.crumb:hover{color:var(--accent)}
+h1{font-weight:700;font-size:clamp(40px,5.6vw,72px);line-height:1;margin:18px 0 18px;letter-spacing:-.035em}
+h1 span{color:var(--accent)}
+.lede{font-size:18.5px;color:var(--text);max-width:62ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:22px;color:var(--muted);font-size:14px}
+.meta b{color:var(--ink);font-weight:600}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:34px}
+.mt{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;min-width:0}
+.mt:first-child{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mt:first-child span{color:#a9b8b2}
+.mt b{display:block;font-family:var(--f-display);font-weight:600;font-size:clamp(26px,2.8vw,34px);letter-spacing:-.02em;line-height:1.05;font-variant-numeric:tabular-nums}
+.mt span{display:block;font-size:13.5px;color:var(--muted);margin-top:6px}
+
+/* PAR */
+.par{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:34px}
+.par div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;min-width:0}
+.par .cap{display:block;margin-bottom:6px}
+.par div:nth-child(1) .cap{color:var(--ball)}
+.par div:nth-child(3) .cap{color:var(--accent)}
+.par p{margin:0;color:var(--text)}
+
+/* ================= PIPELINE DIAGRAM ================= */
+.dg-bar{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
+.dg-ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dg-ctrl .cap{min-width:12ch}
+.diagram{margin-top:28px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+.flow{display:flex;flex-direction:column;gap:0;min-width:0}
+.mod{border:1.5px solid var(--b);background:var(--bg-m);border-radius:16px;padding:14px;position:relative}
+.mod>.tag,.stage>.tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11px;font-weight:500;color:var(--ink);background:var(--surface);border:1px solid var(--b);border-radius:6px;padding:2px 8px;margin-bottom:12px}
+.stage{border:1.5px solid var(--b);background:var(--bg-m);border-radius:14px;padding:12px;position:relative}
+.stage+.stage{margin-top:0}
+.mod.init{--bg-m:var(--m-init);--b:var(--m-init-b)}
+.mod.ocr{--bg-m:var(--m-ocr);--b:var(--m-ocr-b)}
+.mod.dig{--bg-m:var(--m-dig);--b:var(--m-dig-b)}
+.mod.out{--bg-m:var(--m-init);--b:var(--m-init-b)}
+.stage.s1{--bg-m:var(--s1);--b:var(--s1-b)}.stage.s2{--bg-m:var(--s2);--b:var(--s2-b)}.stage.s3{--bg-m:var(--s3);--b:var(--s3-b)}
+.stage.s4{--bg-m:var(--s4);--b:var(--s4-b)}.stage.s5{--bg-m:var(--s5);--b:var(--s5-b)}.stage.s6{--bg-m:var(--s6);--b:var(--s6-b)}
+.dig-inner{display:flex;flex-direction:column}
+.row{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap;min-width:0}
+.row+.row{margin-top:10px}
+.node{all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 0;min-width:0;background:var(--surface);border:1.5px solid var(--line-2);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;transition:border-color .2s,box-shadow .25s,transform .2s;position:relative}
+.node:hover{border-color:var(--ink);transform:translateY(-2px)}
+.node:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.node b{font-weight:600;font-size:13.5px;line-height:1.25}
+.node small{font-size:12px;color:var(--muted);line-height:1.35}
+.node .ico{font-size:14px;line-height:1;margin-bottom:2px}
+.node.term{flex:0 0 auto;border-radius:999px;justify-content:center;align-items:center;padding:10px 18px}
+.node.q{border-style:solid;border-color:var(--ball);background:var(--ball-soft)}
+.node.q b::before{content:'◇ ';color:var(--ball)}
+.node.data{background:var(--note);border-color:var(--note-b);border-radius:10px 10px 10px 2px}
+.node.model{border-color:var(--accent);border-left-width:5px;padding-left:10px}
+.col>.node,.br>.node{flex:0 0 auto}
+.node.sel{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.node.lit{border-color:var(--ball);box-shadow:0 0 0 4px var(--ball-soft),0 10px 24px rgba(255,122,26,.18)}
+.ar{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 6px;min-width:56px;color:var(--muted)}
+.ar::before{content:'';width:100%;height:1.5px;background:var(--ink);opacity:.55;mask:linear-gradient(90deg,#000 calc(100% - 7px),transparent 0)}
+.ar::after{content:'';width:0;height:0;border-left:7px solid rgba(19,32,29,.6);border-top:4.5px solid transparent;border-bottom:4.5px solid transparent;margin-top:-6px;align-self:flex-end}
+.ar span{font-family:var(--f-mono);font-size:10px;line-height:1.2;text-align:center;order:-1;margin-bottom:3px;white-space:nowrap}
+.down{display:flex;flex-direction:column;align-items:center;padding:6px 0;color:var(--muted)}
+.down::before{content:'';width:1.5px;height:20px;background:rgba(19,32,29,.5)}
+.down::after{content:'';border-top:7px solid rgba(19,32,29,.6);border-left:4.5px solid transparent;border-right:4.5px solid transparent}
+.down span{font-family:var(--f-mono);font-size:10.5px;margin:2px 0}
+.down.flow-lit::before{background:var(--ball)}
+.lanehead{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin:0 0 6px 2px}
+
+/* stage 4 routing */
+.router{display:flex;justify-content:center;margin-bottom:12px}
+.router .node{flex:0 1 340px;text-align:center;align-items:center}
+.lanes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.lane{background:rgba(255,255,255,.55);border:1px dashed var(--b);border-radius:12px;padding:10px;min-width:0}
+.lane .lh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.lane .lh b{font-family:var(--f-mono);font-size:11px;font-weight:500;background:var(--surface);border:1px solid var(--b);border-radius:6px;padding:1px 8px}
+.col{display:flex;flex-direction:column;gap:0}
+.branch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.branch .bl{font-family:var(--f-mono);font-size:10px;color:var(--muted);text-align:center;margin-bottom:4px}
+.br{display:flex;flex-direction:column;min-width:0}
+.sink{margin-top:12px;display:flex;justify-content:flex-end}
+.sink .node{flex:0 1 360px}
+
+/* detail panel */
+.detail{position:sticky;top:84px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}
+.detail h3{margin:6px 0 6px;font-weight:600;font-size:20px;line-height:1.2}
+.detail p{margin:0;color:var(--text);font-size:14.5px}
+.detail .why{margin-top:12px;background:var(--panel);border-radius:10px;padding:10px 12px;font-size:13.5px;color:var(--text)}
+.detail .why b{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.detail .why[hidden]{display:none}
+.legend{display:flex;flex-direction:column;gap:6px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:8px}
+.legend i{width:18px;height:12px;border-radius:4px;border:1.5px solid var(--line-2);background:var(--surface);flex:none}
+.legend i.q{border-color:var(--ball);background:var(--ball-soft)}
+.legend i.d{border-color:var(--note-b);background:var(--note)}
+.legend i.m{border-color:var(--accent);border-left-width:5px}
+
+/* decisions */
+.dec{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:34px}
+.dc{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;min-width:0}
+.dc h3{margin:0 0 6px;font-weight:600;font-size:19px;line-height:1.25}
+.dc p{margin:0;color:var(--text);font-size:15px}
+.dc .n{font-family:var(--f-mono);font-size:11px;color:var(--ball)}
+.stack{margin-top:30px}
+.cta{background:var(--ink);color:#e7ede9;border-radius:24px;padding:clamp(24px,4vw,44px);display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.cta h2{color:#f2f4f1;margin:0}
+.cta h2 em{color:#ffb27a}
+.cta .btn{border-color:#f2f4f1;color:#f2f4f1}
+.cta .btn.solid{background:#f2f4f1;color:var(--ink)}
+footer{padding-block:24px 36px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+footer a{color:var(--text)}
+
+@media (max-width:1020px){
+  .diagram{grid-template-columns:1fr}
+  .detail{position:static;order:-1}
+  .metrics{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:760px){
+  .row{flex-direction:column}
+  .ar{min-width:0;padding:4px 0;flex-direction:column}
+  .ar::before{width:1.5px;height:16px;mask:none}
+  .ar::after{border-left:4.5px solid transparent;border-right:4.5px solid transparent;border-top:7px solid rgba(19,32,29,.6);border-bottom:none;margin-top:0;align-self:center}
+  .ar span{order:1;margin:2px 0 0}
+  .node.term{align-self:center}
+  .lanes{grid-template-columns:1fr}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .par,.dec{grid-template-columns:1fr}
+  .hbtns .btn span{display:none}
+}
+@media (max-width:420px){.branch{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+<style>
+/* page additions */
+.idea{margin-top:28px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.idea div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;min-width:0}
+.idea div:nth-child(2){background:var(--accent-soft);border-color:#d3cdfb}
+.idea .cap{display:block;margin-bottom:6px}
+.idea h3{margin:0 0 6px;font-weight:600;font-size:19px;line-height:1.25}
+.idea p{margin:0;color:var(--text);font-size:15px}
+.tl{margin-top:30px;position:relative;display:flex;flex-direction:column;gap:14px}
+.tl::before{content:'';position:absolute;left:19px;top:10px;bottom:10px;width:2px;background:linear-gradient(var(--line-2),var(--accent))}
+.it{position:relative;display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px}
+.it .dot{width:40px;height:40px;border-radius:50%;background:var(--surface);border:2px solid var(--line-2);display:grid;place-items:center;font-family:var(--f-mono);font-size:11px;color:var(--muted);z-index:1}
+.it.key .dot{border-color:var(--accent);color:var(--accent)}
+.it.now .dot{background:var(--ball);border-color:var(--ball);color:#fff}
+.it .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;min-width:0}
+.it .card h3{margin:0;font-weight:600;font-size:18.5px;line-height:1.3}
+.it .card .cap{display:block;margin-bottom:4px}
+.it .card p{margin:8px 0 0;color:var(--text);font-size:15px}
+.it .card .why{margin-top:10px;background:var(--panel);border-radius:10px;padding:9px 12px;font-size:14px;color:var(--text)}
+.it .card .why b{color:var(--accent);font-weight:600}
+.nums{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.nums span{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line-2);border-radius:999px;padding:3px 10px;background:var(--surface)}
+.nums span b{color:var(--accent);font-weight:500}
+.frag{margin-top:28px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.frag figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;min-width:0}
+.frag svg{display:block;width:100%;height:auto}
+.frag figcaption{margin-top:8px;font-size:14px;color:var(--text)}
+.frag figcaption b{display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.lessons{margin-top:28px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ls{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;min-width:0}
+.ls .n{font-family:var(--f-mono);font-size:11px;color:var(--ball)}
+.ls h3{margin:4px 0 6px;font-weight:600;font-size:18px;line-height:1.25}
+.ls p{margin:0;color:var(--text);font-size:15px}
+@media (max-width:1020px){.lessons{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:760px){.idea,.frag,.lessons{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap in">
+  <a class="logo" href="../index.html" aria-label="Ubair Nisar, back to portfolio"><span class="wm">Ubair <span>Nisar</span><i aria-hidden="true"></i></span><span class="role">ML / AI Engineer</span></a>
+  <div class="hbtns">
+    <a class="btn" href="../index.html#work">← <span>All case files</span></a>
+    <a class="btn solid" href="../assets/Ubair_Nisar_CV.pdf" download="Ubair_Nisar_CV.pdf"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v9M4 7.5 8 11.5l4-4M3 14h10"/></svg><span>Download CV</span></a>
+  </div>
+</div></header>
+<main>
+<div class="hero"><div class="wrap">
+  <a class="crumb" href="../index.html#work">Case files / Siparadigm Diagnostic</a>
+  <h1>A layout detector built on <span>an OCR model's eyes</span></h1>
+  <p class="lede">A vision-language model could already draw accurate layout boxes, but it wrote them out one token at a time: slow, and sometimes inventing boxes that weren't there. The question was whether we could keep what the model sees, drop the slow text generation, and get the same understanding in a single fast pass.</p>
+  <div class="meta"><span><b>Role</b> research, design and training</span><span><b>Where</b> Siparadigm Diagnostic</span><span><b>Classes</b> text · image · table · marginalia</span><span><b>Status</b> powers ADONUT's layout stage</span></div>
+  <div class="metrics">
+    <div class="mt"><b>0.67→0.84</b><span>mAP after redesigning the detector</span></div>
+    <div class="mt"><b>99.4%</b><span>F1 for ADONUT's layout stage on RealDocBench</span></div>
+    <div class="mt"><b>~62 ms</b><span>model time per page, in one pass instead of token-by-token</span></div>
+    <div class="mt"><b>74k</b><span>labelled document pages available for training</span></div>
+    <div class="mt"><b>7</b><span>design iterations, each driven by a measured failure</span></div>
+  </div>
+</div></div>
+
+<section style="padding-top:28px"><div class="wrap">
+  <span class="eyebrow cap">The idea</span>
+  <h2>Keep the eyes, <em>replace the mouth.</em></h2>
+  <div class="idea">
+    <div><span class="cap">What worked</span><h3>A VLM reads layout well</h3><p>An OCR-tuned vision-language model placed layout boxes accurately because its vision encoder had learned what documents look like.</p></div>
+    <div><span class="cap">The bet</span><h3>Attach a detector to its vision tower</h3><p>Reuse the model's vision encoder as the backbone and put a real detection head on top: every box predicted at once, each with a confidence score, nothing generated token by token.</p></div>
+    <div><span class="cap">What it fixes</span><h3>Speed and invented boxes</h3><p>One forward pass per page instead of long text generation, and a detector can't hallucinate coordinates for something it never scored.</p></div>
+  </div>
+</div></section>
+
+<!-- ============ ARCHITECTURE ============ -->
+<section id="architecture" style="padding-top:0"><div class="wrap">
+  <div class="dg-bar">
+    <div><span class="eyebrow cap">Architecture</span><h2>How the current model <em>sees a page.</em></h2>
+      <p class="sub">Click any step for details, or play the flow.</p></div>
+    <div class="dg-ctrl"><button class="btn solid" id="play" type="button">▶ Play the flow</button><span class="cap" id="playLbl"></span></div>
+  </div>
+  <div class="diagram">
+    <div class="flow" id="flow">
+      <div class="mod init"><span class="tag">Input</span>
+        <div class="row"><button class="node data" data-k="page"><span class="ico">▦</span><b>Document page</b><small>Rendered at 1024 px, layout-safe augmentation in training</small></button></div>
+      </div>
+      <div class="down"><span>two paths, in parallel</span></div>
+      <div class="mod dig"><span class="tag">Backbone</span>
+        <div class="dig-inner">
+          <div class="stage s1"><span class="tag">Path A · OCR-VLM vision tower</span>
+            <div class="row">
+              <button class="node model" data-k="tower"><span class="ico">◎</span><b>Vision tower</b><small>From an OCR-tuned VLM; early blocks frozen, last blocks fine-tuned</small></button>
+              <div class="ar"><span>4 depths</span></div>
+              <button class="node" data-k="taps"><span class="ico">≣</span><b>Multi-level taps</b><small>Shallow to deep layers fused at stride 16</small></button>
+              <div class="ar"><span>+ final map</span></div>
+              <button class="node data" data-k="vfeat"><b>Meaning features</b><small>stride 16 and 32</small></button>
+            </div>
+          </div>
+          <div class="stage s2" style="margin-top:10px"><span class="tag">Path B · pixel adapter</span>
+            <div class="row">
+              <button class="node" data-k="cnn"><span class="ico">⌗</span><b>Lightweight CNN on raw pixels</b><small>Trained from scratch for fine edges and table rules</small></button>
+              <div class="ar"><span>strides 8 · 16 · 32</span></div>
+              <button class="node data" data-k="pfeat"><b>Detail features</b><small>sharp boundaries</small></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="down"><span>fuse per scale</span></div>
+      <div class="mod ocr"><span class="tag">Neck</span>
+        <div class="row">
+          <button class="node" data-k="fuse"><span class="ico">⊕</span><b>Scale fusion</b><small>Meaning + detail at strides 8, 16, 32</small></button>
+          <div class="ar"></div>
+          <button class="node" data-k="crm"><span class="ico">◌</span><b>Multi-receptive block</b><small>Same filters at 3 dilations: one-line titles to full-page tables</small></button>
+          <div class="ar"></div>
+          <button class="node" data-k="pan"><span class="ico">⇅</span><b>Top-down + bottom-up paths</b><small>Context flows down, precise edges flow up</small></button>
+        </div>
+      </div>
+      <div class="down"><span>3 feature maps</span></div>
+      <div class="mod dig"><span class="tag">Head (two variants tested)</span>
+        <div class="row">
+          <button class="node model" data-k="e2e"><span class="ico">◇</span><b>End-to-end dense head</b><small>One prediction per object, no NMS needed in principle</small></button>
+          <div class="ar"><span>or</span></div>
+          <button class="node model" data-k="detr"><span class="ico">✦</span><b>Query-based decoder</b><small>Set-level reasoning over the whole page</small></button>
+        </div>
+      </div>
+      <div class="down"><span>boxes + classes + scores</span></div>
+      <div class="mod out"><span class="tag">Calibrated output</span>
+        <div class="row">
+          <button class="node q" data-k="thr"><b>Per-class thresholds</b><small>Tuned on held-out pages</small></button>
+          <div class="ar"></div>
+          <button class="node" data-k="tta"><span class="ico">⧉</span><b>Multi-scale + box fusion</b><small>Tighter edges</small></button>
+          <div class="ar"></div>
+          <button class="node q" data-k="tables"><b>Table structure check</b><small>Rejoin a split table, keep the whole one</small></button>
+        </div>
+      </div>
+    </div>
+    <aside class="detail" aria-live="polite">
+      <span class="cap" id="dMod">Select a step</span>
+      <h3 id="dTitle">Click any box in the diagram</h3>
+      <p id="dBody">Boxes with a thick blue edge are trained or run a model, orange boxes are decisions, and yellow notes are features handed on.</p>
+      <div class="why" id="dWhy" hidden><b>Why this design</b><span id="dWhyT"></span></div>
+      <div class="legend"><span><i></i>Processing step</span><span><i class="m"></i>Model / trained</span><span><i class="q"></i>Decision</span><span><i class="d"></i>Features / data</span></div>
+    </aside>
+  </div>
+</div></section>
+
+<!-- ============ JOURNEY ============ -->
+<section id="journey" style="padding-top:0"><div class="wrap">
+  <span class="eyebrow cap">How it got here</span>
+  <h2>Seven iterations, <em>each driven by a failure.</em></h2>
+  <p class="sub">The model wasn't designed in one go. Each version fixed the weakest point the previous one exposed, and every change had to show up in the numbers or in real pages.</p>
+  <div class="tl">
+    <div class="it"><span class="dot">01</span><div class="card"><span class="cap">Starting point</span><h3>A query-based head on frozen features</h3>
+      <p>The first draft bolted a DETR-style decoder onto the frozen vision tower. A critical review before any long training run found it would never converge into a usable detector: no confidence score per box, boxes that could come out inverted, and no positional information for the decoder.</p>
+      <div class="why"><b>Decision:</b> stop and rethink before spending GPU days on a design that couldn't work.</div></div></div>
+    <div class="it key"><span class="dot">02</span><div class="card"><span class="cap">Proof that the idea works</span><h3>A dense head on the 2D feature grid</h3>
+      <p>A CenterNet-style head that predicts a confidence heatmap and box edges per grid cell, trained on features cached once from the tower. It learned quickly, which confirmed the tower's features carry real layout information.</p>
+      <div class="nums"><span>AP50 <b>0.28 → 0.59</b> in 4 epochs</span><span>~1 min per epoch on cached features</span></div>
+      <div class="why"><b>Then:</b> swapped in an OCR-tuned VLM's tower, loading only the vision weights instead of the whole 5B-parameter model.</div></div></div>
+    <div class="it"><span class="dot">03</span><div class="card"><span class="cap">Scaling up</span><h3>From 8k pages to a 74k-page, 4-class dataset</h3>
+      <p>The cache that made iteration fast would have needed about 390 GB for 74k pages. Features moved to on-the-fly computation with random subsets each epoch, and the head became multi-class with per-class confidence and class-aware evaluation.</p>
+      <div class="why"><b>Engineering:</b> the cost math came first. Caching, sampling and micro-batching were chosen from measured throughput, not guessed.</div></div></div>
+    <div class="it key"><span class="dot">04</span><div class="card"><span class="cap">v1 · production-grade training</span><h3>Plugged into a mature detector training stack</h3>
+      <p>Rather than re-implement training, the custom backbone was wired into Ultralytics' trainer to reuse its loss, augmentation, EMA and mAP evaluation.</p>
+      <div class="nums"><span>mAP50 <b>0.853</b></span><span>mAP50-95 <b>0.688</b></span><span>marginalia AP50 <b>0.78</b></span><span>1,500 validation pages · 15.5k boxes</span></div>
+      <div class="why"><b>Diagnosis:</b> a high mAP50 with a much lower mAP50-95 means the right regions are found but the edges are loose, because the tower's final map sees the page in 32-pixel cells.</div></div></div>
+    <div class="it key"><span class="dot">05</span><div class="card"><span class="cap">v2 → v3 · research-driven redesign</span><h3>Finer features, a fine-tuned tower, a better head</h3>
+      <p>Ideas from current state-of-the-art detectors and document models: features from four depths of the tower, a pixel CNN for detail at stride 8, a multi-receptive block for the huge range of element sizes, and a top-down plus bottom-up neck. Then the last tower blocks were unfrozen and the head switched to an end-to-end design.</p>
+      <div class="nums"><span>epoch 2 already at <b>0.856 / 0.691</b></span><span>= v1's fully trained result</span></div>
+      <div class="why"><b>Found along the way:</b> the training framework silently re-enabled gradients on "frozen" weights, which would have trained the whole tower. Frozen weights were moved out of its reach.</div></div></div>
+    <div class="it"><span class="dot">06</span><div class="card"><span class="cap">The semantics gap</span><h3>Why it still acted like a pattern detector</h3>
+      <p>On a 1983 typewriter financial report, a borderless table came out as six fragments. The vision tower is the model's eyes, but the interpretation in a VLM happens in its language layers. And mosaic augmentation, which stitches four pages together, was erasing exactly the page-level cues that layout depends on.</p>
+      <div class="why"><b>Response:</b> structure-aware post-processing that rejoins fragments whose column gutters line up and keeps a complete table over its pieces, plus per-class thresholds and multi-scale box fusion tuned on held-out pages.</div></div></div>
+    <div class="it now"><span class="dot">07</span><div class="card"><span class="cap">Now</span><h3>A set-level decoder, and a controlled study</h3>
+      <p>A query-based decoder that reasons about all boxes together was trained head-to-head with the dense head, since a set-level loss penalises cutting one table into many. It reached similar accuracy, and the investigation showed that "NMS-free" in principle is not the same as duplicate-free in practice.</p>
+      <div class="nums"><span>query decoder: epoch 1 → 2 <b>+10.9</b> mAP50-95</span><span>similar to the dense head by epoch 12</span></div>
+      <div class="why"><b>Next:</b> a controlled study on a public benchmark: do OCR-tuned VLM vision towers make better layout backbones than generic ones, and do the language layers add semantics the tower lacks?</div></div></div>
+  </div>
+</div></section>
+
+<!-- ============ FRAGMENT ============ -->
+<section style="padding-top:0"><div class="wrap">
+  <span class="eyebrow cap">One failure, up close</span>
+  <h2>When one table <em>looks like six.</em></h2>
+  <p class="sub">A borderless table with only whitespace between sections. A local detector sees six blocks; a person sees one table, because the columns line up. Schematic, not the real page.</p>
+  <div class="frag">
+    <figure><svg viewBox="0 0 300 360" role="img" aria-label="Before: a table split into six separately detected fragments">
+      <rect x="1" y="1" width="298" height="358" rx="10" fill="#fbfcfb" stroke="#d5ddd8"/>
+      <g fill="#cfd9d4"><rect x="30" y="24" width="120" height="8" rx="3"/><rect x="30" y="38" width="80" height="6" rx="3"/></g>
+      <g id="rows"></g>
+      <g fill="none" stroke-width="2" stroke-dasharray="5 3">
+        <rect x="24" y="66" width="252" height="34" rx="4" stroke="#4a35e8"/>
+        <rect x="24" y="108" width="252" height="54" rx="4" stroke="#4a35e8"/>
+        <rect x="24" y="170" width="252" height="18" rx="4" stroke="#ff7a1a"/>
+        <rect x="24" y="196" width="252" height="54" rx="4" stroke="#4a35e8"/>
+        <rect x="24" y="258" width="252" height="18" rx="4" stroke="#ff7a1a"/>
+        <rect x="24" y="284" width="252" height="54" rx="4" stroke="#4a35e8"/>
+      </g>
+    </svg><figcaption><b>Before</b>Six separate boxes: four labelled table, two rows labelled text, all with modest confidence.</figcaption></figure>
+    <figure><svg viewBox="0 0 300 360" role="img" aria-label="After: one table box with aligned column gutters highlighted">
+      <rect x="1" y="1" width="298" height="358" rx="10" fill="#fbfcfb" stroke="#d5ddd8"/>
+      <g fill="#cfd9d4"><rect x="30" y="24" width="120" height="8" rx="3"/><rect x="30" y="38" width="80" height="6" rx="3"/></g>
+      <g id="rows2"></g>
+      <g fill="#4a35e8" opacity=".12"><rect x="128" y="66" width="10" height="272"/><rect x="180" y="66" width="10" height="272"/><rect x="230" y="66" width="10" height="272"/></g>
+      <rect x="20" y="62" width="260" height="280" rx="6" fill="none" stroke="#2f9e6e" stroke-width="2.5"/>
+    </svg><figcaption><b>After</b>Column gutters line up across every fragment, so they are rejoined into one table and the complete box wins over its pieces.</figcaption></figure>
+  </div>
+</div></section>
+
+<!-- ============ LESSONS ============ -->
+<section style="padding-top:0"><div class="wrap">
+  <span class="eyebrow cap">What I learned</span>
+  <h2>The thinking <em>behind the model.</em></h2>
+  <div class="lessons">
+    <div class="ls"><span class="n">01</span><h3>The eyes aren't the brain</h3><p>A VLM's vision tower encodes what each region looks like; reading and relating happen later, in its language layers. Borrowing the tower gives perception, not understanding.</p></div>
+    <div class="ls"><span class="n">02</span><h3>Read the gap between metrics</h3><p>mAP50 high, mAP50-95 low pointed straight at loose edges and coarse features, which told me where to add resolution instead of guessing.</p></div>
+    <div class="ls"><span class="n">03</span><h3>Augmentation can erase meaning</h3><p>Mosaic is great for photos but stitches four pages into one, destroying the headers, columns and margins that define a document's layout.</p></div>
+    <div class="ls"><span class="n">04</span><h3>Scores aren't comparable across sizes</h3><p>A complete table scored lower than its own sections, and a filter that summed fragment scores always preferred splitting. Decisions on structure beat decisions on raw scores.</p></div>
+    <div class="ls"><span class="n">05</span><h3>"NMS-free" isn't duplicate-free</h3><p>End-to-end heads learn not to need NMS, but at low thresholds the same box can still appear once per class. Measure duplicates directly; don't trust the label.</p></div>
+    <div class="ls"><span class="n">06</span><h3>Do the cost math first</h3><p>A 390 GB cache, 2-hour epochs and a crashing machine all had the same fix: measure throughput and memory, then choose caching, sampling and batch sizes from the numbers.</p></div>
+  </div>
+  <div class="stack"><span class="cap">Built with</span><div class="chips" style="margin-top:10px"><span class="chip">PyTorch</span><span class="chip">OCR-tuned VLM vision tower</span><span class="chip">Ultralytics training stack</span><span class="chip">YOLO26-style end-to-end head</span><span class="chip">RT-DETR-style decoder</span><span class="chip">Weighted box fusion</span><span class="chip">RTX A6000</span></div></div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+  <div class="cta"><h2>Where this detector runs: <em>ADONUT.</em></h2>
+    <div class="chips" style="gap:10px"><a class="btn solid" href="adonut.html">See the full pipeline →</a><a class="btn" href="../index.html#contact">Get in touch</a></div></div>
+</div></section>
+</main>
+<footer><div class="wrap"><span>© 2026 Ubair Nisar</span><a href="../index.html">← Back to portfolio</a></div></footer>
+
+<script>
+/* schematic rows for the fragment figures */
+(function(){const NS='http://www.w3.org/2000/svg';
+  [['rows',0],['rows2',1]].forEach(([id])=>{const g=document.getElementById(id);
+    const ys=[72,86,114,128,142,176,202,216,230,264,290,304,318];
+    ys.forEach(y=>[[30,90],[142,34],[194,32],[244,28]].forEach(([x,w],k)=>{const r=document.createElementNS(NS,'rect');
+      r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',k===0&&(y===176||y===264)?140:w);r.setAttribute('height',6);r.setAttribute('rx',2);
+      r.setAttribute('fill',k===0?'#9aa7a2':'#bccac3');if(!(k>0&&(y===176||y===264)))g.appendChild(r)}))})})();
+
+const INFO={
+ page:['Input','Document page','Each page is rendered at 1024 px. Training uses only layout-safe augmentation: no flips, and only tiny rotations and skew, so headers stay at the top and columns stay in order.'],
+ tower:['Path A','Vision tower','The vision encoder of an OCR-tuned vision-language model, already trained on huge numbers of document pages. Only the vision weights are loaded; the language model is never run.','Early blocks hold generic stroke and glyph features and stay frozen; the last blocks are fine-tuned at a small learning rate so they adapt from reading text to placing box edges.'],
+ taps:['Path A','Multi-level taps','Features are taken from four depths of the tower and fused on a stride-16 grid, twice as fine as the tower’s final output.','Shallow layers keep local detail and deep layers keep meaning. Using only the last layer was the main reason v1 boxes were loose.'],
+ vfeat:['Path A','Meaning features','What each region of the page is: text, image, table or margin content.'],
+ cnn:['Path B','Pixel adapter','A small CNN reads the raw image directly and produces features at strides 8, 16 and 32.','The tower has nothing finer than stride 16, so this path supplies the sharp edges and table rules that tight boxes need.'],
+ pfeat:['Path B','Detail features','Where exactly things begin and end.'],
+ fuse:['Neck','Scale fusion','At each scale, meaning features from the tower and detail features from the pixel adapter are joined and mixed.'],
+ crm:['Neck','Multi-receptive block','The same filters are applied at three dilation rates and combined, so one set of weights covers small and very large receptive fields.','Document elements range from a one-line title to a full-page table, a much wider spread than in natural photos.'],
+ pan:['Neck','Top-down + bottom-up','Coarse, wide-context information flows down to the fine maps, and precise localisation flows back up to the coarse ones.','Large objects like whole tables get precise edges; small ones get page context.'],
+ e2e:['Head','End-to-end dense head','A YOLO26-style head trained with a one-to-many and a one-to-one branch; inference uses the one-to-one branch, which is designed to output one box per object without NMS.'],
+ detr:['Head','Query-based decoder','An RT-DETR-style decoder: a fixed set of learned queries attends to the whole page and each query outputs one object.','A set-level loss penalises predicting six boxes for one table, which a per-cell head doesn’t.'],
+ thr:['Output','Per-class thresholds','Each class gets its own confidence threshold, tuned on held-out validation pages to a chosen precision or recall target.','A single default threshold is rarely right for layout; tuned thresholds are scored on pages they weren’t tuned on.'],
+ tta:['Output','Multi-scale + box fusion','The page is predicted at several sizes and the boxes are merged with weighted box fusion.','Mostly tightens edges; it’s only kept if it wins on held-out pages.'],
+ tables:['Output','Table structure check','Fragments whose column gutters line up are rejoined, and a complete table is kept over its own sections.','Decides from structure, not raw scores, because large boxes systematically score lower than their parts.']
+};
+const nodes=[...document.querySelectorAll('.node[data-k]')];const $=id=>document.getElementById(id);
+function show(k){const v=INFO[k];if(!v)return;nodes.forEach(n=>n.classList.toggle('sel',n.dataset.k===k));$('dMod').textContent=v[0];$('dTitle').textContent=v[1];$('dBody').textContent=v[2];const w=$('dWhy');if(v[3]){w.hidden=false;$('dWhyT').textContent=v[3]}else w.hidden=true}
+nodes.forEach(n=>n.addEventListener('click',()=>{stop();show(n.dataset.k)}));show('tower');
+const PATH=['page','tower','taps','vfeat','cnn','pfeat','fuse','crm','pan','e2e','detr','thr','tta','tables'];
+let timer=null,idx=0;const btn=$('play'),lbl=$('playLbl');const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function stop(){if(timer){clearInterval(timer);timer=null}nodes.forEach(n=>n.classList.remove('lit'));btn.textContent='▶ Play the flow';lbl.textContent=''}
+function step(){nodes.forEach(n=>n.classList.remove('lit'));if(idx>=PATH.length){stop();return}const k=PATH[idx],el=document.querySelector('.node[data-k="'+k+'"]');el.classList.add('lit');show(k);lbl.textContent='step '+(idx+1)+' / '+PATH.length;const r=el.getBoundingClientRect();if(r.top<90||r.bottom>innerHeight-20)el.scrollIntoView({block:'center',behavior:RM?'auto':'smooth'});idx++}
+btn.addEventListener('click',()=>{if(timer){stop();return}idx=0;btn.textContent='■ Stop';step();timer=setInterval(step,1400)});
+</script>
+</body>
+</html>
